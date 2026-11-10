@@ -1,0 +1,1074 @@
+[
+  {
+    "id": "dropbox",
+    "name": "Dropbox",
+    "category": "Files and documents",
+    "reviewed": "2026-11-10",
+    "provisional": false,
+    "steps": [
+      {
+        "id": "downloaded",
+        "label": "Download your files",
+        "text": "Sign in at dropbox.com, select the checkboxes beside the files or folders you want, then choose Download. Folder downloads arrive as ZIP files. Each folder must currently be below 250 GB uncompressed and contain fewer than 10,000 files, including nested files. Split larger downloads into batches."
+      },
+      {
+        "id": "documents",
+        "label": "Check Paper documents and comments",
+        "text": "For a Paper document, use its more-options menu, choose Save as and a format, then download the converted file. To keep comments, open the file’s comments panel and use its more-options menu to download comments separately as text."
+      },
+      {
+        "id": "unpacked",
+        "label": "Prepare your local export",
+        "text": "Keep the downloaded ZIP, or unpack it and check a few files. Home accepts either a ZIP or a complete local folder. If using a synced folder, make every file available offline and pause syncing before this import. Home does not fetch online-only placeholders."
+      },
+      {
+        "id": "reviewed",
+        "label": "Choose what to preserve",
+        "text": "Choose your export below, then a separate destination. Review the file count, space requirement and limitations before starting. This copies downloaded files; it does not recreate sharing permissions, version history or Dropbox features."
+      }
+    ],
+    "checks": "Open files offline from the delivered location. Check shared-folder boundaries, several large files, long filenames, and a folder containing many small items. Confirm that online-only placeholders were not copied in place of bytes. Reconcile archive errors, excluded folders, and downloaded file counts before declaring success.",
+    "sources": [
+      {
+        "title": "Dropbox",
+        "url": "https://www.dropbox.com/"
+      },
+      {
+        "title": "Dropbox download instructions",
+        "url": "https://help.dropbox.com/sync/download-entire-folders"
+      }
+    ]
+  },
+  {
+    "id": "google-drive",
+    "name": "Google Drive",
+    "category": "Files and documents",
+    "reviewed": "2026-11-10",
+    "provisional": false,
+    "steps": [
+      {
+        "id": "takeout",
+        "label": "Prepare a Takeout export",
+        "text": "For an account export, open takeout.google.com, deselect unrelated products, select Drive, and inspect the inclusion and format options. Choose a one-time ZIP export with email delivery. Download every part. Generation can take minutes to days; managed accounts can restrict exports. Keep the selected options with your download."
+      },
+      {
+        "id": "step-1",
+        "label": "Prepare your export",
+        "text": "For a smaller job, open Google Drive, select files or folders, and choose Download from the context menu."
+      },
+      {
+        "id": "step-2",
+        "label": "Choose what to keep",
+        "text": "For a native Google document requiring a particular format, open it and use File → Download. Choose DOCX for editable text, XLSX for workbooks, PPTX for presentations, or PDF for a fixed visual reference."
+      },
+      {
+        "id": "step-3",
+        "label": "Check the download",
+        "text": "Save the downloads outside any folder whose contents will be removed or synchronized during the move. Download permission can be disabled by the owner. Drive download instructions."
+      }
+    ],
+    "checks": "Compare a folder inventory with the archive, then open a document with comments, a formula-heavy workbook, a presentation, and a binary attachment. Treat version history, permissions, collaboration state, scripts, and external references as unverified unless independently captured. Check that a spreadsheet has usable formulas and multiple sheets; a CSV derivative is not a workbook substitute. If links point to unavailable files, deliver a broken-reference report rather than claiming a complete library.",
+    "sources": [
+      {
+        "title": "Google Drive",
+        "url": "https://drive.google.com/"
+      },
+      {
+        "title": "Drive download instructions",
+        "url": "https://support.google.com/drive/answer/2423534?hl=en"
+      },
+      {
+        "title": "Google Takeout instructions",
+        "url": "https://support.google.com/accounts/answer/3024190"
+      }
+    ]
+  },
+  {
+    "id": "google-photos",
+    "name": "Google Photos",
+    "category": "Photos and video",
+    "reviewed": "2026-11-10",
+    "provisional": false,
+    "steps": [
+      {
+        "id": "takeout",
+        "label": "Prepare a Takeout export",
+        "text": "For an account export, open takeout.google.com, deselect unrelated products, select Google Photos, and inspect the inclusion and format options. Choose a one-time ZIP export with email delivery. Download every part. Generation can take minutes to days; managed accounts can restrict exports. Keep the selected options with your download."
+      },
+      {
+        "id": "step-1",
+        "label": "Prepare your export",
+        "text": "In Takeout, select Google Photos. Inspect the album selection control; include all intended albums and date-based groups."
+      },
+      {
+        "id": "step-2",
+        "label": "Choose what to keep",
+        "text": "Download every part before reorganizing anything. Keep media files and adjacent JSON files together."
+      },
+      {
+        "id": "step-3",
+        "label": "Check the download",
+        "text": "Google documents that embedded media metadata can retain original timestamps while the operating system gives downloaded files a new filesystem timestamp. Additional service metadata may be delivered in JSON sidecars. Google Photos export and metadata guidance."
+      }
+    ],
+    "checks": "Sample an old photo, a scan with no EXIF, a video, a manually adjusted date, and a photo appearing in several albums. Check orientation, time zone, captions, and video playback. Report media count, sidecar count, unpaired sidecars, unique byte count, and album memberships separately. Do not promise recognition labels, every shared-library item, or fully reversible editing history without testing actual exports.",
+    "sources": [
+      {
+        "title": "Google Photos export and metadata guidance",
+        "url": "https://support.google.com/photos/answer/3024190"
+      },
+      {
+        "title": "Google Takeout instructions",
+        "url": "https://support.google.com/accounts/answer/3024190"
+      }
+    ]
+  },
+  {
+    "id": "flickr",
+    "name": "Flickr",
+    "category": "Photos and video",
+    "reviewed": "2026-11-10",
+    "provisional": false,
+    "steps": [
+      {
+        "id": "request",
+        "label": "Request your full Flickr data",
+        "text": "On the Flickr website, select your profile photo, then Settings. Under Your Flickr Data, choose Request My Flickr Data. Preparation can take hours to weeks; Flickr emails when the download is ready."
+      },
+      {
+        "id": "download",
+        "label": "Download every numbered part",
+        "text": "Return to account settings and download each ZIP link under Your Flickr Data before the links expire. Keep both media and JSON data. Large exports have multiple numbered links; one ZIP is not necessarily the whole account."
+      },
+      {
+        "id": "check",
+        "label": "Check originals and metadata",
+        "text": "Inspect an original photo, a video and an edited caption. Original EXIF remains in media; details added after uploading can be in separate JSON. Album and Camera Roll bulk downloads have different limits and exclude videos; use the full-data export for account preservation."
+      }
+    ],
+    "checks": "Keep the JSON alongside the media. Home preserves these files but does not yet rebuild Flickr albums, captions or permissions. Import each numbered ZIP separately and confirm that you have all parts.",
+    "sources": [
+      {
+        "title": "Flickr download instructions",
+        "url": "https://www.flickrhelp.com/hc/en-us/articles/4404079675156-Downloading-content-from-Flickr"
+      },
+      {
+        "title": "Opening every Flickr data ZIP",
+        "url": "https://www.flickrhelp.com/hc/en-us/articles/4404071661844-Opening-Your-Flickr-Data-Zip-Files"
+      }
+    ]
+  },
+  {
+    "id": "icloud-photos",
+    "name": "iCloud Photos",
+    "category": "Photos and video",
+    "reviewed": "2026-11-10",
+    "provisional": false,
+    "steps": [
+      {
+        "id": "step-1",
+        "label": "Prepare your export",
+        "text": "On a Mac with the intended library available in Photos, select a representative batch."
+      },
+      {
+        "id": "step-2",
+        "label": "Choose what to keep",
+        "text": "Choose File → Export → Export Unmodified Original. Include available metadata-sidecar options when useful."
+      },
+      {
+        "id": "step-3",
+        "label": "Check the download",
+        "text": "If the visible edited appearance matters, make a second export using File → Export → Export Photos into a separate edited folder. Original and edited exports serve different purposes."
+      },
+      {
+        "id": "step-4",
+        "label": "Keep related files together",
+        "text": "Keep paired Live Photo components together. Apple documents that an unmodified Live Photo export produces a still image and a video. Photos export guide."
+      }
+    ],
+    "checks": "Test Live Photos, HEIC, RAW-plus-JPEG pairs, edited images, slow-motion clips, and an item with a manually changed date. Verify the originals open offline. Compare logical item count and physical file count separately because one library item can produce multiple files. Face groups, shared-library ownership, and nondestructive editing state should remain outside the promise unless validated with the selected route.",
+    "sources": [
+      {
+        "title": "Photos export guide",
+        "url": "https://support.apple.com/en-gb/guide/photos/pht6e157c5f/12.0/mac/27"
+      }
+    ]
+  },
+  {
+    "id": "gmail",
+    "name": "Gmail",
+    "category": "Messages and social",
+    "reviewed": "2026-11-10",
+    "provisional": false,
+    "steps": [
+      {
+        "id": "takeout",
+        "label": "Prepare a Takeout export",
+        "text": "For an account export, open takeout.google.com, deselect unrelated products, select Mail, and inspect the inclusion and format options. Choose a one-time ZIP export with email delivery. Download every part. Generation can take minutes to days; managed accounts can restrict exports. Keep the selected options with your download."
+      },
+      {
+        "id": "step-1",
+        "label": "Prepare your export",
+        "text": "Use Takeout with Mail selected. Inspect the label/category selection and preserve the resulting mailbox files, normally MBOX, along with other exported settings files."
+      },
+      {
+        "id": "step-2",
+        "label": "Choose what to keep",
+        "text": "Google's export can include message content, headers, attachments, and labels. Encrypted messages remain encrypted in the download. Gmail export scope."
+      },
+      {
+        "id": "step-3",
+        "label": "Check the download",
+        "text": "Preserve the X-Gmail-Labels header, which Google uses for label information. A general date-range export is not supported by the documented Takeout workflow. Google Takeout guidance."
+      }
+    ],
+    "checks": "Reconcile message counts rather than Gmail's conversation count. Test a long thread, an attachment, an inline image, a non-English subject, a forwarded message, a draft, and one message with multiple labels. Do not infer thread membership from subject alone. Check earliest and latest timestamps and a known important message by its ID where possible. Retain unsupported encrypted content unchanged.",
+    "sources": [
+      {
+        "title": "Gmail export scope",
+        "url": "https://support.google.com/mail/answer/10016932?hl=en-ca"
+      },
+      {
+        "title": "Google Takeout instructions",
+        "url": "https://support.google.com/accounts/answer/3024190"
+      }
+    ]
+  },
+  {
+    "id": "amazon-s3",
+    "name": "Amazon S3",
+    "category": "Files and documents",
+    "reviewed": "2026-11-10",
+    "provisional": false,
+    "steps": [
+      {
+        "id": "prepare",
+        "label": "Choose a bucket and prefix",
+        "text": "Use an AWS account authorized to read the intended objects. Create an empty local folder for this snapshot. Home does not sign in to AWS or hold AWS credentials."
+      },
+      {
+        "id": "download",
+        "label": "Download with the AWS CLI",
+        "text": "In your own configured AWS CLI, preview with: aws s3 sync s3://YOUR-BUCKET/YOUR-PREFIX/ ./s3-export/ --dryrun. Replace the bucket and prefix. Check the direction, then repeat without --dryrun to download. Do not add --delete. Review transfer failures before continuing; retrieval and data-transfer charges depend on your storage and account."
+      },
+      {
+        "id": "review",
+        "label": "Review the local snapshot",
+        "text": "Check representative files and compare the intended object inventory with the download. Import the completed s3-export folder into Home. This route captures current downloadable object content; it does not preserve all versions, ACLs, object tags or bucket configuration. Archived objects may need restoration before they can be downloaded."
+      }
+    ],
+    "checks": "S3 object keys are not always portable local paths. Review key collisions, skipped objects and errors in the download. Keep a separate source inventory if versions or object metadata matter. Home can verify the local files it receives, not prove remote bucket completeness.",
+    "sources": [
+      {
+        "title": "AWS CLI S3 sync reference",
+        "url": "https://docs.aws.amazon.com/cli/latest/reference/s3/sync.html"
+      },
+      {
+        "title": "AWS S3 command guide",
+        "url": "https://docs.aws.amazon.com/cli/latest/userguide/cli-services-s3-commands.html"
+      }
+    ]
+  },
+  {
+    "id": "icloud-drive",
+    "name": "iCloud Drive",
+    "category": "Files and documents",
+    "reviewed": "2026-11-10",
+    "provisional": false,
+    "steps": [
+      {
+        "id": "step-1",
+        "label": "Prepare your export",
+        "text": "In Finder, open iCloud Drive, select the intended files, and copy them to a separate local or external destination."
+      },
+      {
+        "id": "step-2",
+        "label": "Choose what to keep",
+        "text": "Let downloads finish. Apple states that optimized iCloud files download before being copied."
+      },
+      {
+        "id": "step-3",
+        "label": "Check the download",
+        "text": "Alternatively, sign in to iCloud, open Drive, select a file, and download it. Shared-folder copies do not carry the source sharing access. Some third-party app data requires that app's own export. Apple's archive instructions."
+      }
+    ],
+    "checks": "Disconnect from the network and open representative copied documents. Compare path counts and byte sizes with the agreed source folders. Check a shared document, a package, a large file, and a filename containing non-ASCII characters. Record whether Desktop and Documents were included through iCloud. This guide does not cover iPhone device backups, Keychain, Health, or all app-specific databases.",
+    "sources": [
+      {
+        "title": "iCloud",
+        "url": "https://www.icloud.com/"
+      },
+      {
+        "title": "Apple's archive instructions",
+        "url": "https://support.apple.com/en-ca/108306"
+      }
+    ]
+  },
+  {
+    "id": "onedrive",
+    "name": "OneDrive",
+    "category": "Files and documents",
+    "reviewed": "2026-11-10",
+    "provisional": false,
+    "steps": [
+      {
+        "id": "step-1",
+        "label": "Prepare your export",
+        "text": "Open the OneDrive web interface, select the required files or folders, and choose Download. Multiple items normally arrive in a ZIP."
+      },
+      {
+        "id": "step-2",
+        "label": "Choose what to keep",
+        "text": "Split large requests into manageable folders. Microsoft's documented limits include 250 GB per file and 10,000 files; additional limits apply to collections of compressed files."
+      },
+      {
+        "id": "step-3",
+        "label": "Check the download",
+        "text": "Handle shared content individually where necessary. OneNote notebooks are excluded from ordinary folder ZIP downloads and may produce an error text file instead. OneDrive download instructions and limits."
+      }
+    ],
+    "checks": "Inspect the ZIP for error files and zero-byte anomalies. Test a workbook with formulas, a large video, a shared file, and a deeply nested path. Check that an ordinary downloaded file opens offline and is not a .url shortcut. Do not represent permissions or document version history as preserved merely because the latest file downloaded successfully.",
+    "sources": [
+      {
+        "title": "OneDrive download instructions and limits",
+        "url": "https://support.microsoft.com/en-us/onedrive/download-files-and-folders-from-onedrive-or-sharepoint"
+      }
+    ]
+  },
+  {
+    "id": "facebook",
+    "name": "Facebook",
+    "category": "Messages and social",
+    "reviewed": "2026-11-10",
+    "provisional": true,
+    "steps": [
+      {
+        "id": "step-1",
+        "label": "Prepare your export",
+        "text": "Open Facebook settings and locate Accounts Center or Meta Account, then the information/privacy area and the download/export-information control. Meta moved information downloads into Accounts Center and is gradually replacing it with Meta Account. Information controls, 2026 Meta Account rollout."
+      },
+      {
+        "id": "step-2",
+        "label": "Choose what to keep",
+        "text": "Select the intended Facebook profile. In the available export controls, choose the required categories, all-time range if offered, and local-device delivery. Choose JSON to retain structured data; request HTML separately if a browsable archive is useful. Select the highest offered media quality appropriate to the job."
+      },
+      {
+        "id": "step-3",
+        "label": "Check the download",
+        "text": "Record the settings and download all parts when ready. Exact current labels and encrypted-message coverage could not be verified through the help pages, which redirected to login during preparation. Check these in your account before assuming the export is complete."
+      }
+    ],
+    "checks": "Inspect the earliest and latest expected posts, one photo album, a video, and a known message thread. Count records and local media independently. Missing comments or context from other people must remain visible as gaps. A personal export is not a copy of Facebook's entire social graph or every group the user has joined.",
+    "sources": [
+      {
+        "title": "Information controls",
+        "url": "https://about.fb.com/news/2023/10/manage-your-information-across-apps/"
+      },
+      {
+        "title": "2026 Meta Account rollout",
+        "url": "https://about.fb.com/news/2026/04/meta-account/"
+      }
+    ]
+  },
+  {
+    "id": "instagram",
+    "name": "Instagram",
+    "category": "Messages and social",
+    "reviewed": "2026-11-10",
+    "provisional": true,
+    "steps": [
+      {
+        "id": "step-1",
+        "label": "Prepare your export",
+        "text": "Open Instagram settings and find Accounts Center or Meta Account. Locate the information download/export function and choose the correct Instagram profile. Facebook and Instagram exports can be requested separately. Meta's information controls."
+      },
+      {
+        "id": "step-2",
+        "label": "Choose what to keep",
+        "text": "Select the intended categories and date range. Choose JSON to retain structured data and the best available media setting; optionally request HTML for direct browsing."
+      },
+      {
+        "id": "step-3",
+        "label": "Check the download",
+        "text": "Download all archive parts and keep the export settings. Current button labels and category coverage require confirmation in the account; Instagram's help page returned a rate-limit error during preparation."
+      }
+    ],
+    "checks": "Inspect a carousel, reel, old post, emoji-rich caption, and message attachment. Check aspect ratio and playback rather than only checking filenames. Distinguish the export date from publication date. Do not promise every expired story, unsent message, or licensed music component without export evidence. A thumbnail or remote URL does not satisfy a media-preservation requirement.",
+    "sources": [
+      {
+        "title": "Meta's information controls",
+        "url": "https://about.fb.com/news/2023/10/manage-your-information-across-apps/"
+      }
+    ]
+  },
+  {
+    "id": "whatsapp",
+    "name": "WhatsApp",
+    "category": "Messages and social",
+    "reviewed": "2026-11-10",
+    "provisional": false,
+    "steps": [
+      {
+        "id": "step-1",
+        "label": "Prepare your export",
+        "text": "On Android, open the chat and choose More options → More → Export chat. On iPhone, open chat/contact or group information and look for Export Chat."
+      },
+      {
+        "id": "step-2",
+        "label": "Choose what to keep",
+        "text": "Choose Without media or Include media, then save to an approved destination. Including media adds recent media attachments; it does not prove that all historical media was exported."
+      },
+      {
+        "id": "step-3",
+        "label": "Check the download",
+        "text": "WhatsApp states that the exported text cannot be re-imported as a chat backup. Official export guide. Advanced Chat Privacy can disable export. Privacy limitation."
+      }
+    ],
+    "checks": "Compare the earliest exported message with the expected beginning. Test a multiline message, a voice message, an image, and a date that is ambiguous between month/day and day/month. Explicitly record the exported time span and any truncation. Avoid promising a fixed message limit across app versions and share destinations; inspect the actual result.",
+    "sources": [
+      {
+        "title": "Official export guide",
+        "url": "https://faq.whatsapp.com/1180414079177245/?cms_platform=android&locale=en_US"
+      },
+      {
+        "title": "Privacy limitation",
+        "url": "https://faq.whatsapp.com/715385484388016/?cms_platform=android&locale=en_US"
+      }
+    ]
+  },
+  {
+    "id": "notion",
+    "name": "Notion",
+    "category": "Files and documents",
+    "reviewed": "2026-11-10",
+    "provisional": false,
+    "steps": [
+      {
+        "id": "step-1",
+        "label": "Prepare your export",
+        "text": "For a page, use its ••• → Export control; some menus nest this under More. Choose Markdown & CSV, include subpages, and include files/images where the dialog offers that choice."
+      },
+      {
+        "id": "step-2",
+        "label": "Choose what to keep",
+        "text": "For a workspace, use Settings → Workspace → General → Export all workspace content on desktop/web."
+      },
+      {
+        "id": "step-3",
+        "label": "Check the download",
+        "text": "Download the ZIP and preserve its nested directories. Notion states workspace exports can take up to 30 hours and download links expire after seven days. Only accessible, export-eligible content is included; reuploading the archive does not instantly reconstruct the original workspace. Notion export documentation."
+      }
+    ],
+    "checks": "Compare expected root pages and nested page counts; check a database with the intended view/filter state. Open internal links, local images, and a page whose title contains punctuation. Formulas, rollups, automations, permission models, and live embeds need explicit replacement work. A CSV value is a snapshot, not a functioning formula or relation.",
+    "sources": [
+      {
+        "title": "Notion export documentation",
+        "url": "https://www.notion.com/help/export-your-content"
+      }
+    ]
+  },
+  {
+    "id": "evernote",
+    "name": "Evernote",
+    "category": "Files and documents",
+    "reviewed": "2026-11-10",
+    "provisional": false,
+    "steps": [
+      {
+        "id": "step-1",
+        "label": "Prepare your export",
+        "text": "Use the Evernote desktop application on Mac or Windows; the documented export is unavailable on Evernote Web."
+      },
+      {
+        "id": "step-2",
+        "label": "Choose what to keep",
+        "text": "Select a notebook or notes, right-click, and choose Export."
+      },
+      {
+        "id": "step-3",
+        "label": "Check the download",
+        "text": "Choose ENEX for structured intake and enable relevant attributes, such as tags, author, and creation dates. Optionally export HTML for a directly readable reference. Export notebook by notebook and record the notebook name beside each file. Evernote ENEX/HTML instructions."
+      }
+    ],
+    "checks": "Test a web clipping, a scanned PDF, an audio note, a table, a task list, and an internal note link. Compare note count with the agreed notebook inventory and count attachment resources independently. Retain images even if OCR text is unavailable. Treat reminders, complex task behavior, and unresolved links as unsupported until validated.",
+    "sources": [
+      {
+        "title": "Evernote ENEX/HTML instructions",
+        "url": "https://help.evernote.com/hc/en-us/articles/209005557-Export-Notes-and-Notebooks-as-ENEX-or-HTML"
+      }
+    ]
+  },
+  {
+    "id": "onenote",
+    "name": "OneNote",
+    "category": "Files and documents",
+    "reviewed": "2026-11-10",
+    "provisional": false,
+    "steps": [
+      {
+        "id": "step-1",
+        "label": "Prepare your export",
+        "text": "For a notebook stored in a personal OneDrive account, open OneNote for the web, right-click the notebook in the notebook list, and choose Export notebook."
+      },
+      {
+        "id": "step-2",
+        "label": "Choose what to keep",
+        "text": "Confirm the download and inspect the resulting ZIP. An errors.txt file without notebook content indicates a failed export."
+      },
+      {
+        "id": "step-3",
+        "label": "Check the download",
+        "text": "This web export is not supported for OneDrive work/school or SharePoint notebooks. Use an authorized application-specific alternative for those accounts and scope it explicitly. Microsoft's documentation currently says its notebook import feature is deprecated. OneNote export and restrictions."
+      }
+    ],
+    "checks": "Open the native archive in a compatible OneNote application where available; test sections, subpages, ink, a drawing, a PDF printout, and an actual embedded document. Check whether a PDF derivative contains all pages and whether attachments are real files or merely pictures. Password-protected sections need a separately agreed workflow; record them as excluded if not exported.",
+    "sources": [
+      {
+        "title": "OneNote export and restrictions",
+        "url": "https://support.microsoft.com/en-us/onenote/export-and-import-onenote-notebooks"
+      }
+    ]
+  },
+  {
+    "id": "apple-notes",
+    "name": "Apple Notes",
+    "category": "Files and documents",
+    "reviewed": "2026-11-10",
+    "provisional": false,
+    "steps": [
+      {
+        "id": "step-1",
+        "label": "Prepare your export",
+        "text": "In Notes on a supported Mac, select the note and use File → Export To, then choose Markdown or PDF. Apple's current guide documents both formats; older installed versions may expose a different menu or lack Markdown."
+      },
+      {
+        "id": "step-2",
+        "label": "Choose what to keep",
+        "text": "Save each note with an identifier that avoids duplicate-title collisions. Record its source account and folder separately."
+      },
+      {
+        "id": "step-3",
+        "label": "Check the download",
+        "text": "For selected text, Edit → Copy as Markdown is another documented route. Apple Notes export instructions."
+      }
+    ],
+    "checks": "Inspect a locked note after the authorized user unlocks it, a checklist, a table, a drawing, and a multipage scan. Confirm every scan page and original attachment is present. Apple's iPad PDF guidance warns that a note export can include only the first page of an attached multipage PDF or scan; save the actual attachment separately. iPad export limitation.",
+    "sources": [
+      {
+        "title": "Apple Notes export instructions",
+        "url": "https://support.apple.com/guide/notes/import-export-and-print-notes-not201900c07/mac"
+      }
+    ]
+  },
+  {
+    "id": "google-keep",
+    "name": "Google Keep",
+    "category": "Files and documents",
+    "reviewed": "2026-11-10",
+    "provisional": false,
+    "steps": [
+      {
+        "id": "takeout",
+        "label": "Prepare a Takeout export",
+        "text": "For an account export, open takeout.google.com, deselect unrelated products, select Keep, and inspect the inclusion and format options. Choose a one-time ZIP export with email delivery. Download every part. Generation can take minutes to days; managed accounts can restrict exports. Keep the selected options with your download."
+      },
+      {
+        "id": "step-1",
+        "label": "Prepare your export",
+        "text": "In Takeout, select Keep."
+      },
+      {
+        "id": "step-2",
+        "label": "Choose what to keep",
+        "text": "Preserve all files in the resulting product directory. Inspect the actual archive for note bodies, structured metadata, and media rather than assuming a permanent directory schema."
+      },
+      {
+        "id": "step-3",
+        "label": "Check the download",
+        "text": "Google's documented scope includes note text/list items, drawings/images/voice recordings, color, pinned/archived state, collaborators, and labels. Organization accounts may restrict export. Google Keep export scope."
+      }
+    ],
+    "checks": "Compare a normal note, a mixed checked/unchecked list, an archived note, a drawing, and an audio recording. Check label memberships and non-English text. A collaborator name in export metadata is not a destination sharing grant. Do not assume reminders become functioning notifications; enumerate whatever reminder data the actual export contains and label unsupported behavior.",
+    "sources": [
+      {
+        "title": "Google Keep export scope",
+        "url": "https://support.google.com/keep/answer/10017039?hl=en-AU"
+      },
+      {
+        "title": "Google Takeout instructions",
+        "url": "https://support.google.com/accounts/answer/3024190"
+      }
+    ]
+  },
+  {
+    "id": "google-calendar",
+    "name": "Google Calendar",
+    "category": "Planning and contacts",
+    "reviewed": "2026-11-10",
+    "provisional": false,
+    "steps": [
+      {
+        "id": "step-1",
+        "label": "Prepare your export",
+        "text": "On a computer, open Google Calendar and go to Settings → Import & export → Export."
+      },
+      {
+        "id": "step-2",
+        "label": "Choose what to keep",
+        "text": "Save the ZIP and extract the individual .ics files. You can also export individual calendars from their settings."
+      },
+      {
+        "id": "step-3",
+        "label": "Check the download",
+        "text": "Export requires the appropriate calendar permission; Google documents Make changes and manage sharing, and an organization can restrict exporting. Calendar export instructions."
+      }
+    ],
+    "checks": "Test an all-day event, an overnight event, a recurring meeting, a moved occurrence, a canceled occurrence, and a date across a daylight-saving transition. Compare the next several occurrences in the same time zone as the source. Check descriptions, locations, and attachment references. Conference links are references, not a transferred video-meeting service.",
+    "sources": [
+      {
+        "title": "Calendar export instructions",
+        "url": "https://support.google.com/calendar/answer/37111"
+      }
+    ]
+  },
+  {
+    "id": "google-contacts",
+    "name": "Google Contacts",
+    "category": "Planning and contacts",
+    "reviewed": "2026-11-10",
+    "provisional": false,
+    "steps": [
+      {
+        "id": "step-1",
+        "label": "Prepare your export",
+        "text": "On a computer, open Google Contacts, select the required contacts or all contacts, and use More actions → Export."
+      },
+      {
+        "id": "step-2",
+        "label": "Choose what to keep",
+        "text": "Save Google CSV for backup and, where useful, export a vCard copy for interoperability."
+      },
+      {
+        "id": "step-3",
+        "label": "Check the download",
+        "text": "Work/school directory contacts are not equivalent to the user's personal contacts; Google notes that you cannot select the entire organization Directory for this export. Contacts export instructions."
+      }
+    ],
+    "checks": "Test a person with multiple emails, an international phone number, a business contact, a non-Latin name, and a contact with notes and a birthday. Verify the actual export's photo handling rather than assuming images are embedded. Compare contact counts before deduplication and after any approved merges.",
+    "sources": [
+      {
+        "title": "Google Contacts",
+        "url": "https://contacts.google.com/"
+      },
+      {
+        "title": "Contacts export instructions",
+        "url": "https://support.google.com/contacts/answer/7199294?co=GENIE.Platform&hl=en"
+      }
+    ]
+  },
+  {
+    "id": "trello",
+    "name": "Trello",
+    "category": "Planning and contacts",
+    "reviewed": "2026-11-10",
+    "provisional": false,
+    "steps": [
+      {
+        "id": "step-1",
+        "label": "Prepare your export",
+        "text": "Open a board's menu and choose Print, Export, and Share, then export JSON. Board members can export JSON; CSV requires a board in a Premium Workspace."
+      },
+      {
+        "id": "step-2",
+        "label": "Choose what to keep",
+        "text": "Prefer JSON for structured migration; CSV omits comments."
+      },
+      {
+        "id": "step-3",
+        "label": "Check the download",
+        "text": "The board JSON export contains the 1,000 most recent actions, which can limit comment history. Trello directs users needing all comments to the Workspace Export all boards route. Evaluate that route and its plan eligibility before promising complete history. Trello export documentation."
+      }
+    ],
+    "checks": "Compare active and archived card counts separately. Test a card with completed and incomplete checklist items, an old comment, an attachment, a custom field, and a due date with completion state. Check that list order and card order match. Automation rules and Power-Up behavior need separate reconstruction rather than being inferred from exported card data.",
+    "sources": [
+      {
+        "title": "Trello export documentation",
+        "url": "https://support.atlassian.com/trello/docs/exporting-data-from-trello/"
+      }
+    ]
+  },
+  {
+    "id": "asana",
+    "name": "Asana",
+    "category": "Planning and contacts",
+    "reviewed": "2026-11-10",
+    "provisional": false,
+    "steps": [
+      {
+        "id": "step-1",
+        "label": "Prepare your export",
+        "text": "Open the project and select the dropdown next to its title."
+      },
+      {
+        "id": "step-2",
+        "label": "Choose what to keep",
+        "text": "Choose Export/Print, then JSON or CSV. Capture both when structured intake and a human-readable audit sheet are useful."
+      },
+      {
+        "id": "step-3",
+        "label": "Check the download",
+        "text": "Repeat for each agreed project. Asana also documents exports for Search Views and My Tasks; record the exact view and filters if using those. Asana project export guide."
+      }
+    ],
+    "checks": "Test a task in two projects, a task with subtasks, a completed task, an attachment, and a dependency. Check subtasks recursively rather than assuming a top-level row count captures all work. Determine whether comments and attachment bytes are present in the selected export; do not promise them from the format name alone. Rules, dashboards, portfolios, and workload calculations are separate features.",
+    "sources": [
+      {
+        "title": "Asana project export guide",
+        "url": "https://help.asana.com/s/article/project-importing-and-exporting?language=en_US"
+      }
+    ]
+  },
+  {
+    "id": "todoist",
+    "name": "Todoist",
+    "category": "Planning and contacts",
+    "reviewed": "2026-11-10",
+    "provisional": false,
+    "steps": [
+      {
+        "id": "step-1",
+        "label": "Prepare your export",
+        "text": "On web/desktop, open a project and choose ••• → Import & export → Export to CSV."
+      },
+      {
+        "id": "step-2",
+        "label": "Choose what to keep",
+        "text": "Repeat for each project. Paid accounts also provide backup ZIPs containing project CSV files; these cover active projects rather than a universal activity-history archive. Todoist project CSV guide, backup guide."
+      },
+      {
+        "id": "step-3",
+        "label": "Check the download",
+        "text": "Standard CSV exports omit completed tasks, and a recurring date's start date is not preserved. Record those gaps before conversion. The documented Google Sheets extension can include completed tasks but omits several other attributes; it is a supplementary export, not a complete replacement."
+      }
+    ],
+    "checks": "Inspect nested tasks, sections, comments, a recurring task, a timed task, and a task without a due date. Compare active task counts per project. Distinguish missing completed history from conversion failure. Make no claim that a visible recurring description means reminders or future occurrences are operational in Crux Garden.",
+    "sources": [
+      {
+        "title": "Todoist project CSV guide",
+        "url": "https://www.todoist.com/help/account-and-billing/security/import-or-export-a-project-as-a-csv-file-in-todoist-YC8YvN"
+      },
+      {
+        "title": "backup guide",
+        "url": "https://www.todoist.com/help/account-and-billing/security/download-or-restore-backups-in-todoist-ywaJeQbN"
+      }
+    ]
+  },
+  {
+    "id": "airtable",
+    "name": "Airtable",
+    "category": "Planning and contacts",
+    "reviewed": "2026-11-10",
+    "provisional": false,
+    "steps": [
+      {
+        "id": "step-1",
+        "label": "Prepare your export",
+        "text": "For each table, select or create an authorized grid view with the required fields visible and no filters excluding intended records."
+      },
+      {
+        "id": "step-2",
+        "label": "Choose what to keep",
+        "text": "Open the dropdown beside the view name and choose Download CSV. Repeat for every table; Airtable does not provide a single full-base CSV export."
+      },
+      {
+        "id": "step-3",
+        "label": "Check the download",
+        "text": "Download attachment bytes promptly. Exported attachment URLs expire after a few hours. CSV omits record comments, field descriptions, base-guide content, and extension-only data. Grid export and scope, attachment URL behavior."
+      }
+    ],
+    "checks": "Compare counts with unfiltered table totals, not the number of rows currently visible in a preview. Test an attachment, a linked record, a multi-select, a date, a formula, and a rollup. Verify local attachment bytes after disconnecting. A table that looks correct as text may still have lost relationships, automations, interfaces, forms, or formulas.",
+    "sources": [
+      {
+        "title": "Grid export and scope",
+        "url": "https://support.airtable.com/articles/5189551686-getting-started-with-airtable-views"
+      },
+      {
+        "title": "attachment URL behavior",
+        "url": "https://support.airtable.com/articles/9671148410-airtable-attachment-url-behavior"
+      }
+    ]
+  },
+  {
+    "id": "slack",
+    "name": "Slack",
+    "category": "Messages and social",
+    "reviewed": "2026-11-10",
+    "provisional": false,
+    "steps": [
+      {
+        "id": "step-1",
+        "label": "Prepare your export",
+        "text": "An eligible workspace owner/admin uses Slack's workspace administration export controls, commonly Tools & settings → Workspace settings → Import/Export Data → Export. Select the agreed time range and start the export."
+      },
+      {
+        "id": "step-2",
+        "label": "Choose what to keep",
+        "text": "Scope depends on plan and approval. Public-channel exports are broadly available to eligible roles; private-channel and direct-message exports have additional restrictions. Slack export permissions and routes."
+      },
+      {
+        "id": "step-3",
+        "label": "Check the download",
+        "text": "Download the ZIP and retain channel/user metadata. Standard JSON exports contain messages and file links, not the actual workspace files. Reading Slack exports."
+      }
+    ],
+    "checks": "Check a thread with replies, an edited message, a reaction, a file, a private channel if explicitly included, and the beginning/end of the requested time range. Compare channels and dates with the export manifest. Content already removed under source retention settings cannot be assumed recoverable through export.",
+    "sources": [
+      {
+        "title": "Slack export permissions and routes",
+        "url": "https://slack.com/help/articles/201658943-Export-your-workspace-data"
+      },
+      {
+        "title": "Reading Slack exports",
+        "url": "https://slack.com/help/articles/220556107-How-to-read-Slack-data-exports"
+      }
+    ]
+  },
+  {
+    "id": "discord",
+    "name": "Discord",
+    "category": "Messages and social",
+    "reviewed": "2026-11-10",
+    "provisional": false,
+    "steps": [
+      {
+        "id": "step-1",
+        "label": "Prepare your export",
+        "text": "Open User Settings → Data & Privacy → Request your data → Request Data."
+      },
+      {
+        "id": "step-2",
+        "label": "Choose what to keep",
+        "text": "Select the desired categories and submit Request My Data. The account needs a verified email address."
+      },
+      {
+        "id": "step-3",
+        "label": "Check the download",
+        "text": "Discord says preparation can take up to 30 days; disabling or deleting the account before delivery cancels the request. Download the ZIP from the email link and preserve its structure. Request instructions."
+      }
+    ],
+    "checks": "Find several known sent messages across a DM and a server channel. Test multiline content, emoji, and attachment references. Check whether an attachment exists locally or only as a remote URL. Present thread context as partial when counterpart messages are absent. Deleted messages and inaccessible channel data should remain documented gaps.",
+    "sources": [
+      {
+        "title": "Request instructions",
+        "url": "https://support.discord.com/hc/en-us/articles/360004027692-Requesting-a-Copy-of-your-Data"
+      }
+    ]
+  },
+  {
+    "id": "telegram",
+    "name": "Telegram",
+    "category": "Messages and social",
+    "reviewed": "2026-11-10",
+    "provisional": false,
+    "steps": [
+      {
+        "id": "step-1",
+        "label": "Prepare your export",
+        "text": "Use the Telegram Desktop application, not an assumed equivalent web/mobile menu."
+      },
+      {
+        "id": "step-2",
+        "label": "Choose what to keep",
+        "text": "Open Settings → Advanced → Export Telegram Data. For one conversation, use its ⋮ → Export chat history control."
+      },
+      {
+        "id": "step-3",
+        "label": "Check the download",
+        "text": "Select required chats, date range, media types, and file-size limits. Choose JSON for import and optionally make a separate HTML export for reading. A newly signed-in desktop session may require a waiting period or confirmation from another device. Telegram's export announcement, official export guidance."
+      }
+    ],
+    "checks": "Test an old message, a reply, a forwarded message, a formatted link, a voice recording, and a file larger than the initially chosen media threshold. Compare earliest/latest dates with the export settings. Scope the service to the cloud chats actually exportable in Desktop; device-local secret-chat material is not established as covered by this route.",
+    "sources": [
+      {
+        "title": "Telegram's export announcement",
+        "url": "https://telegram.org/blog/export-and-more"
+      },
+      {
+        "title": "official export guidance",
+        "url": "https://bugs.telegram.org/c/60/2"
+      }
+    ]
+  },
+  {
+    "id": "x",
+    "name": "X",
+    "category": "Messages and social",
+    "reviewed": "2026-11-10",
+    "provisional": false,
+    "steps": [
+      {
+        "id": "step-1",
+        "label": "Prepare your export",
+        "text": "Open More → Settings and privacy → Your account → Download an archive of your data."
+      },
+      {
+        "id": "step-2",
+        "label": "Choose what to keep",
+        "text": "Complete the source service's verification and request the archive."
+      },
+      {
+        "id": "step-3",
+        "label": "Check the download",
+        "text": "Download the result and keep both its data files and Your archive viewer. X documents account, post, direct-message, relationship, and media information among its archive categories. X archive instructions and scope."
+      }
+    ],
+    "checks": "Sample an old post, a reply chain, a quoted post, a long post if present, an image, a video, and a DM attachment. Inspect whether media is actual local content. Relationship lists and liked/bookmarked references should remain distinct from copies of other people's posts. Do not claim that every referenced or deleted post is recoverable.",
+    "sources": [
+      {
+        "title": "X archive instructions and scope",
+        "url": "https://help.x.com/en/managing-your-account/accessing-your-x-data"
+      }
+    ]
+  },
+  {
+    "id": "reddit",
+    "name": "Reddit",
+    "category": "Messages and social",
+    "reviewed": "2026-11-10",
+    "provisional": false,
+    "steps": [
+      {
+        "id": "step-1",
+        "label": "Prepare your export",
+        "text": "Open Reddit's data-request form in a computer browser and sign in to the intended account."
+      },
+      {
+        "id": "step-2",
+        "label": "Choose what to keep",
+        "text": "Choose the requested scope and submit."
+      },
+      {
+        "id": "step-3",
+        "label": "Check the download",
+        "text": "Reddit says preparation can take up to 30 days. The download link arrives through the Reddit inbox or, in some cases, the verified email address. Save the full archive. Reddit data-request instructions."
+      }
+    ],
+    "checks": "Inspect a self-post, an image post, a long comment, a nested reply, and a saved reference. Open local media with the network disconnected. A source URL is not an offline copy of the surrounding thread. Do not infer that the archive contains comments by other users, third-party hosted media, deleted items, or full community histories.",
+    "sources": [
+      {
+        "title": "Reddit's data-request form",
+        "url": "https://www.reddit.com/settings/data-request"
+      },
+      {
+        "title": "Reddit data-request instructions",
+        "url": "https://support.reddithelp.com/hc/en-us/articles/360043048352-How-do-I-request-a-copy-of-my-Reddit-data-and-information"
+      }
+    ]
+  },
+  {
+    "id": "youtube",
+    "name": "YouTube",
+    "category": "Photos and video",
+    "reviewed": "2026-11-10",
+    "provisional": false,
+    "steps": [
+      {
+        "id": "takeout",
+        "label": "Prepare a Takeout export",
+        "text": "For an account export, open takeout.google.com, deselect unrelated products, select YouTube and YouTube Music, and inspect the inclusion and format options. Choose a one-time ZIP export with email delivery. Download every part. Generation can take minutes to days; managed accounts can restrict exports. Keep the selected options with your download."
+      },
+      {
+        "id": "step-1",
+        "label": "Prepare your export",
+        "text": "For broad intake, use Takeout and select YouTube and YouTube Music. Inspect the chosen account/channel and product categories."
+      },
+      {
+        "id": "step-2",
+        "label": "Choose what to keep",
+        "text": "For selected own uploads, open YouTube Studio → Content, find the video, and choose its menu → Download."
+      },
+      {
+        "id": "step-3",
+        "label": "Check the download",
+        "text": "Studio downloads are documented as MP4 at 720p or 360p depending on video size. Google points to Takeout for all uploaded videos. This route does not authorize downloading other users' videos; Premium offline viewing is a different feature. YouTube download instructions."
+      }
+    ],
+    "checks": "Play the beginning, middle, and end of representative long videos; verify audio, resolution, duration, and subtitle synchronization. Check each intended channel and Brand Account rather than assuming one login means one export scope. Compare the expected upload inventory with actual media files, then list unavailable or restricted items.",
+    "sources": [
+      {
+        "title": "YouTube download instructions",
+        "url": "https://support.google.com/youtube/answer/56100"
+      },
+      {
+        "title": "Google Takeout instructions",
+        "url": "https://support.google.com/accounts/answer/3024190"
+      }
+    ]
+  },
+  {
+    "id": "wordpress",
+    "name": "WordPress",
+    "category": "Files and documents",
+    "reviewed": "2026-11-10",
+    "provisional": false,
+    "steps": [
+      {
+        "id": "step-1",
+        "label": "Prepare your export",
+        "text": "In the site's dashboard, use Tools → Export, select all intended content, and download the XML/WXR export."
+      },
+      {
+        "id": "step-2",
+        "label": "Choose what to keep",
+        "text": "Acquire media separately. WordPress.com states that the content XML contains references rather than the media library itself. Content export guide."
+      },
+      {
+        "id": "step-3",
+        "label": "Check the download",
+        "text": "On WordPress.com sites without plugins, Tools → Export Media Files → Download provides a media archive. Plugin-enabled sites use a different route depending on plan; the official guide describes plugin or backup-based downloads. For a self-hosted site, obtain an authorized copy of the uploads directory and any separately scoped full-site backup. WordPress.com media export routes."
+      }
+    ],
+    "checks": "Inspect a published post, draft, scheduled post, nested page, gallery, featured image, and comment thread. Test internal links and local media offline. Do not make a private source site public merely to simplify media retrieval; use authorized downloads. Themes, plugins, user passwords, forms, payments, SEO behavior, and server configuration are not demonstrated by WXR.",
+    "sources": [
+      {
+        "title": "Content export guide",
+        "url": "https://wordpress.com/support/export/?tp=1"
+      },
+      {
+        "title": "WordPress.com media export routes",
+        "url": "https://wordpress.com/support/export-your-media-library/"
+      }
+    ]
+  },
+  {
+    "id": "medium",
+    "name": "Medium",
+    "category": "Files and documents",
+    "reviewed": "2026-11-10",
+    "provisional": false,
+    "steps": [
+      {
+        "id": "step-1",
+        "label": "Prepare your export",
+        "text": "On Medium's website, open the profile menu and Settings → Security and apps."
+      },
+      {
+        "id": "step-2",
+        "label": "Choose what to keep",
+        "text": "Choose Download your information, then Export."
+      },
+      {
+        "id": "step-3",
+        "label": "Check the download",
+        "text": "Download the ZIP from the email notification. Medium documents personal data and stories exported as HTML files. Medium export instructions."
+      }
+    ],
+    "checks": "Compare several long stories, a draft, a code-heavy article, an image caption, and an embedded item. Disable the network and check which media remains usable. A remote image URL or third-party embed is not a preserved asset. Membership, paywall rules, distribution, recommendations, and subscriber relationships do not become functioning Crux Garden features through HTML conversion.",
+    "sources": [
+      {
+        "title": "Medium export instructions",
+        "url": "https://help.medium.com/hc/en-us/articles/115004745787-Export-your-account-data"
+      }
+    ]
+  }
+]

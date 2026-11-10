@@ -1,0 +1,211 @@
+@font-face {
+  font-family: Outfit;
+  src: url("/fonts/Outfit-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+.migration-area {
+  min-height: 100vh;
+  padding: 3rem clamp(1.25rem, 4vw, 5rem);
+  max-width: 1600px;
+  margin: auto;
+  color: var(--text);
+  font-family: var(--font-body);
+}
+.migration-header,
+.migration-section-heading,
+.migration-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+.migration-header {
+  margin-bottom: 3rem;
+}
+.migration-header nav {
+  display: flex;
+  gap: 0.5rem;
+}
+.migration-area h1 {
+  font-size: clamp(3rem, 5vw, 5rem);
+  line-height: 1;
+}
+.migration-area h2 {
+  font-size: clamp(2rem, 3.5vw, 3.5rem);
+  line-height: 1.1;
+  margin-bottom: 1.25rem;
+}
+.migration-area h3 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+}
+.migration-area p {
+  margin-bottom: 1.25rem;
+  line-height: 1.6;
+}
+.migration-eyebrow {
+  color: var(--text-muted);
+  letter-spacing: 0.2em;
+  font-size: 0.8rem;
+}
+.migration-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.8fr) minmax(280px, 1fr);
+  gap: 1.75rem;
+}
+.migration-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+.migration-welcome {
+  min-height: 430px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+.migration-welcome h2 {
+  max-width: 580px;
+  font-size: clamp(3rem, 5vw, 5rem);
+}
+.migration-welcome p {
+  max-width: 480px;
+}
+.migration-footnote {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+.migration-welcome .migration-footnote {
+  margin-top: 2rem;
+  margin-bottom: 0;
+}
+.migration-section-heading {
+  margin-bottom: 1rem;
+}
+.migration-choice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.4rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.migration-choice span {
+  min-width: 0;
+}
+.migration-choice small {
+  display: block;
+  color: var(--text-muted);
+  margin-top: 0.4rem;
+  overflow-wrap: anywhere;
+}
+.migration-choice + p {
+  margin-top: 1rem;
+  overflow-wrap: anywhere;
+}
+.migration-history {
+  display: grid;
+  gap: 0.75rem;
+}
+.migration-area details {
+  margin: 1.25rem 0;
+}
+.migration-area summary {
+  cursor: pointer;
+  margin-bottom: 1rem;
+}
+.migration-area ol {
+  padding-left: 1.5rem;
+  list-style-type: decimal;
+  line-height: 1.7;
+}
+.migration-area a {
+  color: var(--accent);
+  text-decoration: underline;
+}
+.migration-footer {
+  margin-top: 3rem;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+.migration-mood-actions {
+  display: flex;
+  gap: 1.5rem;
+  align-items: end;
+  flex-wrap: wrap;
+}
+.migration-area label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.migration-area input,
+.migration-area select {
+  background: var(--input);
+  color: var(--input-text);
+  border: 1px solid var(--input-border);
+  border-radius: var(--radius-sm);
+  padding: 0.6rem;
+}
+.migration-area input[type="color"] {
+  width: 5rem;
+  height: 2.8rem;
+}
+.migration-token-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+@media (max-width: 760px) {
+  .migration-grid {
+    grid-template-columns: 1fr;
+  }
+  .migration-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .migration-choice {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .migration-welcome {
+    min-height: 320px;
+  }
+  .migration-footer {
+    flex-wrap: wrap;
+  }
+}
+
+.migration-provider-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.6rem;
+  max-height: 260px;
+  overflow-y: auto;
+  margin: 1.25rem 0 2rem;
+  padding: 0.3rem;
+}
+.migration-area .migration-checklist-label {
+  flex-direction: row;
+  align-items: center;
+}
+.migration-guide h4 {
+  margin: 1rem 0 0.5rem;
+}
+.migration-guide-sources {
+  display: grid;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+.migration-guide {
+  overflow-wrap: anywhere;
+}
+@media (max-width: 760px) {
+  .migration-section-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

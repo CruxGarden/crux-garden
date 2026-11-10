@@ -1,0 +1,237 @@
+/* ── Animated Bloom Gradient Background ─────────────────── */
+/* Based on gradients-bg (github.com/baunov/gradients-bg).  */
+/* SVG goo filter + CSS animations for organic morphing.    */
+/* All colors driven by CSS custom properties so they can   */
+/* be changed at runtime and transition smoothly.           */
+
+/* ── @property — register as <color> so browsers can interpolate ── */
+
+@property --bloom-bg1 {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #0a1810;
+}
+
+@property --bloom-bg2 {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #060d08;
+}
+
+@property --bloom-1 {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #1271ff;
+}
+
+@property --bloom-2 {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #dd4aff;
+}
+
+@property --bloom-3 {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #64dcff;
+}
+
+@property --bloom-4 {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #c83232;
+}
+
+@property --bloom-5 {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #b4b432;
+}
+
+@property --bloom-6 {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #32b496;
+}
+
+/* ── Container ─────────────────────────────────────────── */
+
+.bloom-background {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: linear-gradient(40deg, var(--bloom-bg1), var(--bloom-bg2));
+  /* ── motion ── reactive: activity (--signal-activity) drains the colour when
+     the garden has been quiet, by up to reactBackgroundActivity — the whole
+     layer at once, so the blobs keep blending as they do (they already sit
+     in their own stacking context under .bloom-blobs' filter) */
+  filter: saturate(var(--life, 1)) brightness(var(--life-dim, 1));
+}
+
+.bloom-blobs {
+  filter: url(#goo) blur(var(--bloom-blur, 40px));
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Base blob ─────────────────────────────────────────── */
+
+.bloom-blob {
+  position: absolute;
+  mix-blend-mode: screen;
+  width: 100%;
+  height: 100%;
+  top: calc(50% - 100% / 2);
+  left: calc(50% - 100% / 2);
+  /* ── motion ── reactive: typing (--signal-typing, lib/moods/signals.ts) lifts
+     the bloom by up to reactBackgroundTyping; 0 (the default) leaves it still */
+  --bloom-react: calc(
+    1 + var(--signal-typing, 0) * var(--react-background-typing)
+  );
+  opacity: calc(var(--bloom-opacity, 1) * var(--bloom-react));
+}
+
+/* ── Blob 1 — vertical movement ────────────────────────── */
+.bloom-blob-1 {
+  background: radial-gradient(
+      circle at center,
+      color-mix(in srgb, var(--bloom-1) 80%, transparent) 0,
+      transparent 70%
+    )
+    no-repeat;
+  transform-origin: center center;
+  animation: moveVertical calc(224s / var(--bloom-speed, 1)) ease infinite;
+}
+
+/* ── Blob 2 — reverse circle ───────────────────────────── */
+.bloom-blob-2 {
+  background: radial-gradient(
+      circle at center,
+      color-mix(in srgb, var(--bloom-2) 80%, transparent) 0,
+      transparent 70%
+    )
+    no-repeat;
+  transform-origin: calc(50% - 400px);
+  animation: moveInCircle calc(150s / var(--bloom-speed, 1)) reverse infinite;
+}
+
+/* ── Blob 3 — offset circle ────────────────────────────── */
+.bloom-blob-3 {
+  background: radial-gradient(
+      circle at center,
+      color-mix(in srgb, var(--bloom-3) 80%, transparent) 0,
+      transparent 70%
+    )
+    no-repeat;
+  top: calc(50% - 80% / 2 + 200px);
+  left: calc(50% - 80% / 2 - 500px);
+  transform-origin: calc(50% + 400px);
+  animation: moveInCircle calc(300s / var(--bloom-speed, 1)) linear infinite;
+}
+
+/* ── Blob 4 — horizontal movement ──────────────────────── */
+.bloom-blob-4 {
+  background: radial-gradient(
+      circle at center,
+      color-mix(in srgb, var(--bloom-4) 80%, transparent) 0,
+      transparent 70%
+    )
+    no-repeat;
+  transform-origin: calc(50% - 200px);
+  animation: moveHorizontal calc(300s / var(--bloom-speed, 1)) ease infinite;
+  opacity: calc(var(--bloom-opacity, 1) * 0.7 * var(--bloom-react));
+}
+
+/* ── Blob 5 — large circle ─────────────────────────────── */
+.bloom-blob-5 {
+  background: radial-gradient(
+      circle at center,
+      color-mix(in srgb, var(--bloom-5) 80%, transparent) 0,
+      transparent 70%
+    )
+    no-repeat;
+  width: 160%;
+  height: 160%;
+  top: calc(50% - 80%);
+  left: calc(50% - 80%);
+  transform-origin: calc(50% - 800px) calc(50% + 200px);
+  animation: moveInCircle calc(150s / var(--bloom-speed, 1)) ease infinite;
+}
+
+/* ── Blob 6 — right-side circle ───────────────────────── */
+.bloom-blob-6 {
+  background: radial-gradient(
+      circle at center,
+      color-mix(in srgb, var(--bloom-6) 80%, transparent) 0,
+      transparent 70%
+    )
+    no-repeat;
+  width: 100%;
+  height: 100%;
+  top: calc(50% - 50% + 5%);
+  left: calc(50% - 50% + 15%);
+  transform-origin: calc(50% + 300px) calc(50% - 100px);
+  animation: moveInCircle calc(200s / var(--bloom-speed, 1)) reverse infinite;
+}
+
+/* ── Animations ────────────────────────────────────────── */
+
+@keyframes moveInCircle {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes moveVertical {
+  0% {
+    transform: translateY(-50%);
+  }
+  50% {
+    transform: translateY(50%);
+  }
+  100% {
+    transform: translateY(-50%);
+  }
+}
+
+@keyframes moveHorizontal {
+  0% {
+    transform: translateX(-50%) translateY(-10%);
+  }
+  50% {
+    transform: translateX(50%) translateY(10%);
+  }
+  100% {
+    transform: translateX(-50%) translateY(-10%);
+  }
+}
+
+/* ── Palette transitions ───────────────────────────────── */
+/* Scoped under .palette-transition so they only fire when  */
+/* applyPalette() triggers a change. More specific than the */
+/* global `html.palette-transition *` rule so these win.    */
+
+html.palette-transition .bloom-background {
+  transition:
+    --bloom-bg1 0.4s ease,
+    --bloom-bg2 0.4s ease !important;
+}
+
+html.palette-transition .bloom-blob {
+  transition:
+    --bloom-1 0.4s ease,
+    --bloom-2 0.4s ease,
+    --bloom-3 0.4s ease,
+    --bloom-4 0.4s ease,
+    --bloom-5 0.4s ease,
+    --bloom-6 0.4s ease,
+    opacity 0.4s ease !important;
+}

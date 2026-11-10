@@ -1,0 +1,351 @@
+/* ── Liquid glass (ADR 0043) ─────────────────────────────────────────────────
+   A person's switch over any Mood (lib/moods/liquid-glass.ts): with
+   <html data-surface-style="glass"> every surface the Mood paints solid
+   becomes translucent, blurred and saturated glass with a specular top edge,
+   the Mood's accent, text, fonts, shapes and pane colours untouched. Three
+   things move, all on the motion tokens and gated by the person's intensity:
+   light (the orbs in MoodTextureLayers, seen through the glass), a sheen that
+   sweeps each pane, and refraction — liquid-glass-react (components/ui/
+   GlassSurface) bends what sits behind menus and dropdowns, its displacement
+   from --glass-refraction; everything laid out — panes, dialogs, the TopBar,
+   the Mood bar, cards — takes the CSS frost below. The glass tokens:
+     --glass-opacity     how much of the surface colour stays (62% = frosted)
+     --glass-blur        backdrop blur radius
+     --glass-saturation  backdrop saturation (glass makes colour bloom)
+     --glass-highlight   the specular edge and sheen colour
+     --glass-refraction  0 = still; how far the backdrop wavers
+     --glass-light       the colour of the moving light
+   Nothing here applies while data-surface-style is solid. ── */
+
+/* ── The primary glass surfaces ─────────────────────────────────────────────
+   One frame, one frost, one sheen. Everything that reads as glass is listed
+   here once: the panes, the TopBar and Mood bar, panels (modals, the Gateway
+   wizard), dropdowns and garden cards. Buttons take the same frost below.
+   Everything laid *inside* one of these is opaque and flat. */
+
+/* frame: highlight ring, depth, and a stacking context for the sheen */
+html[data-surface-style="glass"]
+  :is(
+    .mosaic.crux-mosaic-theme .mosaic-window,
+    .bg-panel,
+    .bg-dropdown,
+    .bg-model-selector-dropdown,
+    .bg-garden-card
+  ) {
+  position: relative;
+  isolation: isolate;
+  border-color: var(--glass-frame-border);
+  box-shadow: var(--glass-frame-shadow);
+}
+html[data-surface-style="glass"] .mosaic.crux-mosaic-theme .mosaic-window {
+  background: var(--glass-frame-fill);
+  overflow: hidden;
+}
+
+/* frost: the surface's own colour at --glass-opacity over a blurred backdrop */
+html[data-surface-style="glass"]
+  :is(
+    .mosaic.crux-mosaic-theme
+      .mosaic-window
+      :is(.mosaic-window-body, .mosaic-window-toolbar),
+    .bg-toolbar,
+    .bg-mood-bar,
+    .bg-panel,
+    .bg-dropdown,
+    .bg-model-selector-dropdown,
+    .bg-garden-card
+  ) {
+  background-color: color-mix(
+    in srgb,
+    var(--_glass-tint, var(--panel)) var(--glass-opacity),
+    transparent
+  );
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+}
+html[data-surface-style="glass"]
+  .mosaic.crux-mosaic-theme
+  .mosaic-window
+  .mosaic-window-toolbar {
+  box-shadow: inset 0 1px 0 var(--glass-highlight);
+}
+html[data-surface-style="glass"]
+  .mosaic.crux-mosaic-theme
+  .mosaic-window
+  .mosaic-window-toolbar
+  > .pane-toolbar {
+  background: transparent;
+  border-color: transparent;
+}
+html[data-surface-style="glass"] :is(.bg-toolbar, .bg-mood-bar) {
+  border-color: var(--glass-frame-border);
+}
+/* each chrome surface tints the frost with its own Mood token */
+html[data-surface-style="glass"] .bg-toolbar {
+  --_glass-tint: var(--toolbar);
+}
+html[data-surface-style="glass"] .bg-mood-bar {
+  --_glass-tint: var(--mood-bar);
+}
+html[data-surface-style="glass"] .bg-dropdown {
+  --_glass-tint: var(--dropdown);
+}
+html[data-surface-style="glass"] .bg-model-selector-dropdown {
+  --_glass-tint: var(--model-selector-dropdown);
+}
+html[data-surface-style="glass"] .bg-garden-card {
+  --_glass-tint: var(--garden-card);
+}
+
+/* sheen: a specular band that crosses each surface once a minute. It is
+   painted under the frost (::before at z-index -1 inside the frame's stacking
+   context), so content sits over it and only the glass catches the light. */
+html[data-surface-style="glass"]
+  :is(
+    .mosaic.crux-mosaic-theme .mosaic-window,
+    .bg-panel,
+    .bg-garden-card
+  )::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: inherit;
+  background: var(--glass-sheen);
+  background-size: 320% 100%;
+  background-position: 100% 0;
+  mix-blend-mode: screen;
+  animation: glass-sheen var(--glass-sheen-duration) var(--glass-sheen-ease)
+    infinite;
+}
+@keyframes glass-sheen {
+  0% {
+    background-position: 100% 0;
+  }
+  7% {
+    background-position: 0% 0;
+  }
+  100% {
+    background-position: 0% 0;
+  }
+}
+
+/* ── Inside a primary surface: flat, opaque shades instead of outlines ──────
+   Sections separate by tone, not by lines: surfaces and inputs keep their
+   opaque Mood colour, and hairline dividers and outlines are dropped. Inputs
+   regain an accent ring only while focused. */
+html[data-surface-style="glass"]
+  :is(
+    .mosaic-window-body,
+    .bg-panel,
+    .bg-dropdown,
+    .bg-model-selector-dropdown,
+    .bg-garden-card
+  )
+  :is(
+    .border-border,
+    [class*="border-border/"],
+    [class*="bg-surface/"],
+    [class*="bg-surface-solid/"],
+    [class*="bg-bg/"],
+    .border-input-border,
+    .border-surface-border,
+    .border-panel-border,
+    .bg-surface,
+    .bg-surface-solid,
+    .bg-input,
+    .divide-border > :not([hidden]) ~ :not([hidden])
+  ) {
+  border-color: var(--glass-inner-border);
+}
+/* opacity variants (bg-surface/50 …) are the same shade, opaque */
+html[data-surface-style="glass"]
+  :is(
+    .mosaic-window-body,
+    .bg-panel,
+    .bg-dropdown,
+    .bg-model-selector-dropdown,
+    .bg-garden-card
+  )
+  :is([class*="bg-surface/"], [class*="bg-bg/"]) {
+  background-color: var(--surface);
+}
+html[data-surface-style="glass"]
+  :is(
+    .mosaic-window-body,
+    .bg-panel,
+    .bg-dropdown,
+    .bg-model-selector-dropdown,
+    .bg-garden-card
+  )
+  [class*="bg-surface-solid/"] {
+  background-color: var(--surface-solid);
+}
+html[data-surface-style="glass"]
+  :is(.mosaic-window-body, .bg-panel, .bg-dropdown, .bg-garden-card)
+  .bg-input:is(:focus-within, :focus) {
+  border-color: var(--glass-focus-border);
+}
+/* a Panel nested inside a primary surface (Settings sections, wizard steps) is
+   an inner shade, not a second pane: opaque, one step lighter, no frame */
+html[data-surface-style="glass"]
+  :is(.mosaic-window-body, .bg-panel, .bg-dropdown, .bg-garden-card)
+  .bg-panel {
+  background-color: var(--surface);
+  backdrop-filter: none;
+  border-color: transparent;
+  box-shadow: none;
+  isolation: auto;
+}
+html[data-surface-style="glass"]
+  :is(.mosaic-window-body, .bg-panel, .bg-dropdown, .bg-garden-card)
+  .bg-panel::before {
+  content: none;
+}
+html[data-surface-style="glass"] .modal-scrim {
+  backdrop-filter: blur(calc(var(--glass-blur) / 3));
+}
+
+/* ── Overlays stay glass at the edge and opaque where the words are ─────────
+   A menu or a dialog keeps the frame and the specular edge, but its plate is
+   its own tint laid over the Mood's ground (interaction.css): what sits behind
+   never shows through what it says (Daniel, 2026-09-27: "modal and menu
+   opacity, for the most part they should be opaque"). */
+/* Painted as images, which the frost above never sets: the tint over the
+   ground is opaque whatever frosted colour the surface keeps underneath. */
+html[data-surface-style="glass"]
+  :is(
+    .bg-dropdown,
+    .bg-model-selector-dropdown,
+    .bg-tooltip,
+    [data-modal-open] > [data-motion-role="dialog"] > .bg-panel,
+    .overlay-plate
+  ) {
+  background-image:
+    linear-gradient(var(--_overlay-tint), var(--_overlay-tint)),
+    linear-gradient(var(--bg), var(--bg));
+}
+
+/* ── Discrete surfaces inside a glass-surface: the library paints the glass; the
+   child keeps its border and shape but no second fill or blur ── */
+html[data-surface-style="glass"] .glass-surface .bg-panel,
+html[data-surface-style="glass"] .glass-surface .bg-dropdown,
+html[data-surface-style="glass"] .glass-surface .bg-model-selector-dropdown {
+  background-color: transparent;
+  backdrop-filter: none;
+  box-shadow: none;
+}
+html[data-surface-style="glass"] .glass-surface {
+  color: var(--text);
+}
+
+/* ── Light: the orbs behind everything (MoodTextureLayers renders them under glass) ── */
+.liquid-light {
+  overflow: hidden;
+}
+.liquid-orb {
+  position: absolute;
+  width: 55vmax;
+  height: 55vmax;
+  border-radius: 50%;
+  filter: blur(var(--glass-light-blur));
+  mix-blend-mode: screen;
+  opacity: var(--glass-light-opacity);
+  will-change: transform;
+}
+.liquid-orb-1 {
+  left: -10vmax;
+  top: -12vmax;
+  background: radial-gradient(circle, var(--glass-light) 0%, transparent 62%);
+  animation: liquid-drift-1 calc(var(--motion-ms-slow) * 150) ease-in-out
+    infinite alternate;
+}
+.liquid-orb-2 {
+  right: -14vmax;
+  top: 10vmax;
+  background: radial-gradient(
+    circle,
+    var(--pane-collaboration) 0%,
+    transparent 62%
+  );
+  animation: liquid-drift-2 calc(var(--motion-ms-slow) * 190) ease-in-out
+    infinite alternate;
+}
+.liquid-orb-3 {
+  left: 20vmax;
+  bottom: -20vmax;
+  background: radial-gradient(circle, var(--pane-details) 0%, transparent 62%);
+  animation: liquid-drift-3 calc(var(--motion-ms-slow) * 170) ease-in-out
+    infinite alternate;
+}
+@keyframes liquid-drift-1 {
+  to {
+    transform: translate(28vw, 22vh) scale(1.18);
+  }
+}
+@keyframes liquid-drift-2 {
+  to {
+    transform: translate(-30vw, 30vh) scale(0.9);
+  }
+}
+@keyframes liquid-drift-3 {
+  to {
+    transform: translate(26vw, -34vh) scale(1.12);
+  }
+}
+
+/* ── Intensity: off and subtle keep the glass still ── */
+html[data-motion-intensity="off"]
+  :is(
+    .mosaic.crux-mosaic-theme .mosaic-window,
+    .bg-panel,
+    .bg-garden-card
+  )::before,
+html[data-motion-intensity="subtle"]
+  :is(
+    .mosaic.crux-mosaic-theme .mosaic-window,
+    .bg-panel,
+    .bg-garden-card
+  )::before,
+html[data-motion-intensity="off"] .liquid-orb,
+html[data-motion-intensity="subtle"] .liquid-orb {
+  animation: none;
+}
+
+/* ── Glass buttons: keyed off the button token classes every button already
+   wears (the shared Button and the hand-styled ones alike), so the frost is
+   defined once: the panes' frost, the border carrying the shading, colour
+   only on the primary action ── */
+html[data-surface-style="glass"]
+  :is(
+    .bg-action-button,
+    .bg-snapshot-banner-button,
+    .bg-profile-button,
+    .bg-mood-bar-button
+  ) {
+  background: var(--glass-button);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+  border-color: var(--glass-button-border);
+  box-shadow: var(--glass-button-shadow);
+}
+html[data-surface-style="glass"]
+  :is(
+    .bg-action-button,
+    .bg-snapshot-banner-button,
+    .bg-profile-button,
+    .bg-mood-bar-button
+  ):hover:not(:disabled) {
+  background: var(--glass-button-hover);
+  border-color: var(--glass-button-border-hover);
+}
+html[data-surface-style="glass"] :is(.bg-primary-button, .bg-chat-send-button) {
+  color: var(--glass-primary-button-text);
+  background: var(--glass-primary-button);
+  border-color: var(--glass-primary-button-border);
+  box-shadow: var(--glass-primary-button-shadow);
+}
+html[data-surface-style="glass"]
+  :is(.bg-primary-button, .bg-chat-send-button):hover:not(:disabled) {
+  background: var(--glass-primary-button-hover);
+  border-color: var(--glass-primary-button-border-hover);
+}

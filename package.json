@@ -1,0 +1,47 @@
+{
+  "name": "crux-garden-workspace",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "workspaces": [
+    "packages/migration-contracts",
+    "packages/migration-providers",
+    "packages/garden-ui",
+    "packages/migration-ui"
+  ],
+  "engines": {
+    "node": ">=22.19.0 <23"
+  },
+  "scripts": {
+    "setup": "npm ci && npm ci --prefix packages/migration-engine && npm ci --prefix tools",
+    "build": "vite build --config apps/migration/vite.config.ts && node scripts/build-runtime.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test packages/migration-engine/tests/*.test.cjs",
+    "test:desktop": "tools/node_modules/.bin/playwright test --config apps/migration/playwright.config.cjs",
+    "verify": "npm run typecheck && node scripts/check-boundaries.mjs && npm run build && npm test",
+    "start": "npm run build && tools/node_modules/.bin/electron apps/migration",
+    "package:tauri": "npm run build && cd apps/migration/src-tauri && ../../../tools/node_modules/.bin/tauri build",
+    "test:embedding": "tools/node_modules/.bin/playwright test --config tests/embedding/playwright.config.cjs",
+    "check:package": "node scripts/check-packages.mjs"
+  },
+  "devDependencies": {
+    "vite": "6.4.3",
+    "esbuild": "0.25.12",
+    "typescript": "5.9.3",
+    "@tailwindcss/vite": "4.2.1",
+    "tailwindcss": "4.2.1",
+    "@vitejs/plugin-react": "4.7.0",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "@types/node": "25.3.5",
+    "prettier": "3.8.1"
+  },
+  "dependencies": {
+    "react": "19.2.4",
+    "react-dom": "19.2.4"
+  },
+  "overrides": {
+    "react": "$react",
+    "react-dom": "$react-dom"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "@cruxgarden/migration-engine",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Headless migration jobs, preservation and verification",
+  "license": "MIT",
+  "dependencies": {
+    "@cruxgarden/local-api": "file:vendor/cruxgarden-local-api-0.0.0-unification.ra1435e5dc008.h2d03f470.tgz",
+    "better-sqlite3": "13.0.3",
+    "tar-stream": "3.2.2",
+    "yauzl": "3.4.0"
+  },
+  "devDependencies": {
+    "@types/yauzl": "3.4.0"
+  }
+}

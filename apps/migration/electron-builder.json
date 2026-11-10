@@ -1,0 +1,33 @@
+{
+  "appId": "garden.crux.migration.electron-preview",
+  "productName": "Crux Garden Migration Electron Preview",
+  "directories": {
+    "output": "release-electron"
+  },
+  "files": ["electron/*.cjs", "package.json", "!node_modules/**/*"],
+  "extraResources": [
+    {
+      "from": "dist",
+      "to": "home"
+    },
+    {
+      "from": "runtime-dist",
+      "to": "runtime"
+    }
+  ],
+  "mac": {
+    "target": [
+      {
+        "target": "dir",
+        "arch": ["arm64"]
+      }
+    ],
+    "identity": null,
+    "category": "public.app-category.utilities",
+    "icon": "src-tauri/icons/icon.icns"
+  },
+  "electronVersion": "44.4.5",
+  "electronDist": "../../tools/node_modules/electron/dist",
+  "npmRebuild": false,
+  "afterPack": "../../scripts/electron-after-pack.cjs"
+}

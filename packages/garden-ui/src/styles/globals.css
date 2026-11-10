@@ -1,0 +1,1749 @@
+@import "tailwindcss";
+@import "./bloom.css";
+@import "./motion.css";
+@import "./shape.css";
+@import "./glass.css";
+@import "./plasma.css";
+@import "./interaction.css";
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.4s ease-out;
+}
+
+/* Modal scrim — a darkened room, not frosted glass. The vignette keeps the
+   workspace legible at center while the edges fall away; the depth comes from
+   the modal's shadow, not from blurring what's behind it. */
+.modal-scrim {
+  background: var(--scrim);
+  animation: fade-in 0.15s ease-out;
+}
+
+/* ── Fonts ─────────────────────────────────────────────── */
+
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+  }
+}
+
+/* Inter by Rasmus Andersson, SIL OFL 1.1 (variable, via Fontsource); license
+   ships in /fonts. The face Tigrana reads in (Daniel, 2026-09-19). */
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/Inter-Latin.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212,
+    U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/Inter-LatinExt.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range:
+    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304,
+    U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB,
+    U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("/fonts/JetBrainsMono-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("/fonts/JetBrainsMono-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("/fonts/JetBrainsMono-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Wordmark only — a garden serif, not an app font. Variable file; use it at
+   500-600 and display sizes: its hairline strokes drop out small on dark. */
+@font-face {
+  font-family: "Cormorant Garamond";
+  src: url("/fonts/CormorantGaramond-Latin.woff2") format("woff2");
+  font-weight: 300 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ── Theme: Custom Properties ──────────────────────────── */
+
+@theme inline {
+  /* Fallback faces; Mood tokens replace them at runtime. The font utilities
+     below reference these variables so @theme inline cannot freeze a face. */
+  --font-sans: "Inter", sans-serif;
+  --font-display: "Inter", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  --font-wordmark: "Cormorant Garamond", Georgia, serif;
+  /* The Collaboration's reading face (Mood token fontReading) */
+  --font-reading: "Inter", sans-serif;
+
+  /* ── Dimensions driven by Mood tokens ──────────────────
+     Tailwind's spacing unit and default transition follow the Mood, so
+     p-3 / gap-2 / transition-colors everywhere respond to density and motion. */
+  --spacing: calc(0.25rem * var(--density));
+  --default-transition-duration: calc(
+    var(--motion-duration-fast, 150ms) * var(--motion-scale) *
+      var(--motion-intensity-scale, 1)
+  );
+  /* The UI type scale (rem, so the Mood's fontScale reaches it). At a 16px root:
+       3xs/2xs 10 · xxs 11 · xs 12 · sm 13 · base 15 · lg 17
+     Nothing in the chrome sits under 10px; 13px is the working size for
+     body copy, buttons and inputs — compact without being cramped. */
+  --text-3xs: 0.625rem;
+  --text-3xs--line-height: 1.3;
+  --text-2xs: 0.625rem;
+  --text-2xs--line-height: 1.3;
+  --text-xxs: 0.6875rem;
+  --text-xxs--line-height: 1.4;
+  --text-xs: 0.75rem;
+  --text-xs--line-height: 1.45;
+  --text-sm: 0.8125rem;
+  --text-sm--line-height: 1.5;
+  --text-base: 0.9375rem;
+  --text-base--line-height: 1.5;
+  --text-lg: 1.0625rem;
+  --text-lg--line-height: 1.4;
+  --shadow-panel: var(--elevation-panel);
+  --shadow-card: var(--elevation-card);
+  --shadow-card-hover: var(--elevation-card-hover);
+  --shadow-modal: var(--elevation-modal);
+  /* ── motion ── easing tokens as utilities (ease-motion-standard …); durations
+     are used through the role classes in motion.css and --motion-ms-* */
+  --ease-motion-standard: var(--motion-ease-standard);
+  --ease-motion-enter: var(--motion-ease-enter);
+  --ease-motion-exit: var(--motion-ease-exit);
+  --ease-motion-spring: var(--motion-ease-spring);
+
+  /* ── Legacy (kept until all components migrate) ────── */
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-solid: var(--surface-solid);
+  --color-panel: var(--panel);
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-muted: var(--accent-muted);
+  --color-error: var(--error);
+  --color-error-muted: var(--error-muted);
+  --color-preview-bg: var(--preview-bg);
+  --color-brand-ai: var(--brand-ai);
+
+  /* ── V3: Global ───────────────────────────────────── */
+
+  /* ── V3: Typography ───────────────────────────────── */
+  --color-heading: var(--heading);
+  --color-caption: var(--caption);
+
+  /* ── V3: Panel ────────────────────────────────────── */
+  --color-panel-border: var(--panel-border);
+  --color-panel-text: var(--panel-text);
+
+  /* ── V3: Surface ──────────────────────────────────── */
+  --color-surface-hover: var(--surface-hover);
+  --color-surface-border: var(--surface-border);
+  --color-surface-text-muted: var(--surface-text-muted);
+
+  /* ── V3: Overlay ──────────────────────────────────── */
+
+  /* ── V3: Input ────────────────────────────────────── */
+  --color-input: var(--input);
+  --color-input-text: var(--input-text);
+  --color-placeholder: var(--placeholder);
+  --color-subtle: var(--text-subtle);
+  --color-input-outline: var(--input-outline);
+  --color-input-border: var(--input-border);
+  --color-input-border-active: var(--input-border-active);
+  --color-input-border-hover: var(--input-border-hover);
+
+  /* ── V3: ActionButton ─────────────────────────────── */
+  --color-action-button: var(--action-button);
+  --color-action-button-hover: var(--action-button-hover);
+  --color-action-button-text: var(--action-button-text);
+  --color-action-button-text-hover: var(--action-button-text-hover);
+  --color-action-button-border: var(--action-button-border);
+  --color-action-button-border-hover: var(--action-button-border-hover);
+
+  /* ── V3: IconButton ───────────────────────────────── */
+  --color-icon-button-hover: var(--icon-button-hover);
+  --color-icon-button-icon: var(--icon-button-icon);
+  --color-icon-button-icon-hover: var(--icon-button-icon-hover);
+
+  /* ── V3: PrimaryButton ────────────────────────────── */
+  --color-primary-button: var(--primary-button);
+  --color-primary-button-hover: var(--primary-button-hover);
+  --color-primary-button-text: var(--primary-button-text);
+  --color-primary-button-border: var(--primary-button-border);
+  --color-primary-button-border-hover: var(--primary-button-border-hover);
+
+  /* ── V3: DangerButton ─────────────────────────────── */
+  --color-danger-button: var(--danger-button);
+  --color-danger-button-hover: var(--danger-button-hover);
+  --color-danger-button-text: var(--danger-button-text);
+  --color-danger-button-border: var(--danger-button-border);
+
+  /* ── V3: ProfileButton ────────────────────────────── */
+  --color-profile-button: var(--profile-button);
+  --color-profile-button-hover: var(--profile-button-hover);
+  --color-profile-button-icon: var(--profile-button-icon);
+  --color-profile-button-border: var(--profile-button-border);
+
+  /* ── V3: Toolbar ──────────────────────────────────── */
+  --color-focus-ring: var(--focus-ring);
+  --color-meter-track: var(--meter-track);
+  --color-meter-fill: var(--meter-fill);
+  --color-meter-warn: var(--meter-warn);
+  --color-meter-danger: var(--meter-danger);
+  --color-button-disabled: var(--button-disabled);
+  --color-button-disabled-text: var(--button-disabled-text);
+  --color-dropdown: var(--dropdown);
+  --color-dropdown-border: var(--dropdown-border);
+  --color-model-selector-border: var(--model-selector-border);
+  --color-model-selector-dropdown: var(--model-selector-dropdown);
+  --color-file-tree-drop-target: var(--file-tree-drop-target);
+  --color-file-tree-drop-target-border: var(--file-tree-drop-target-border);
+  --color-markdown-text: var(--markdown-text);
+  --color-markdown-heading: var(--markdown-heading);
+  --color-markdown-link: var(--markdown-link);
+  --color-markdown-link-hover: var(--markdown-link-hover);
+  --color-markdown-hr: var(--markdown-hr);
+  --color-markdown-table-border: var(--markdown-table-border);
+  --color-markdown-table-header-bg: var(--markdown-table-header-bg);
+  --color-markdown-blockquote-border: var(--markdown-blockquote-border);
+  --color-markdown-blockquote-bg: var(--markdown-blockquote-bg);
+  --color-snapshot-banner: var(--snapshot-banner);
+  --color-snapshot-banner-border: var(--snapshot-banner-border);
+  --color-snapshot-banner-text: var(--snapshot-banner-text);
+  --color-snapshot-banner-button: var(--snapshot-banner-button);
+  --color-snapshot-banner-button-hover: var(--snapshot-banner-button-hover);
+  --radius-button: var(--button-radius);
+  --radius-input: var(--input-radius);
+  --radius-card: var(--card-radius);
+  --radius-chip: var(--chip-radius);
+  --radius-tooltip: var(--tooltip-radius);
+  --radius-dropdown: var(--dropdown-radius);
+  --radius-bubble: var(--bubble-radius);
+  --radius-meter: var(--meter-radius);
+  --shadow-dropdown: var(--elevation-dropdown);
+  --shadow-tooltip: var(--elevation-tooltip);
+  --color-chat-composer: var(--chat-composer);
+  --color-mood-bar: var(--mood-bar);
+  --color-mood-bar-border: var(--mood-bar-border);
+  --color-mood-bar-text: var(--mood-bar-text);
+  --color-mood-bar-text-muted: var(--mood-bar-text-muted);
+  --color-mood-bar-accent: var(--mood-bar-accent);
+  --color-mood-bar-accent-text: var(--mood-bar-accent-text);
+  --color-mood-bar-button: var(--mood-bar-button);
+  --color-mood-bar-hover: var(--mood-bar-hover);
+  --shadow-mood-bar: var(--mood-bar-shadow);
+  --color-toolbar: var(--toolbar);
+  --color-toolbar-border: var(--toolbar-border);
+  --color-toolbar-text: var(--toolbar-text);
+  --color-toolbar-text-muted: var(--toolbar-text-muted);
+  --color-toolbar-link: var(--toolbar-link);
+  --color-toolbar-divider: var(--toolbar-divider);
+
+  /* ── V3: Chat ─────────────────────────────────────── */
+  --color-chat-text-muted: var(--chat-text-muted);
+  --color-chat-user-bubble: var(--chat-user-bubble);
+  --color-chat-user-bubble-text: var(--chat-user-bubble-text);
+  --color-chat-user-bubble-border: var(--chat-user-bubble-border);
+  --color-chat-ai-bubble: var(--chat-ai-bubble);
+  --color-chat-ai-bubble-text: var(--chat-ai-bubble-text);
+  --color-chat-ai-bubble-border: var(--chat-ai-bubble-border);
+  --color-chat-input: var(--chat-input);
+  --color-chat-input-text: var(--chat-input-text);
+  --color-chat-input-placeholder: var(--chat-input-placeholder);
+  --color-chat-input-border: var(--chat-input-border);
+  --color-chat-input-border-focus: var(--chat-input-border-focus);
+  --color-chat-send-button: var(--chat-send-button);
+  --color-chat-send-button-hover: var(--chat-send-button-hover);
+  --color-chat-send-button-icon: var(--chat-send-button-icon);
+
+  /* ── V3: Code ─────────────────────────────────────── */
+  --color-code-block: var(--code-block);
+  --color-code-block-border: var(--code-block-border);
+  --color-code-block-text: var(--code-block-text);
+  --color-syntax-comment: var(--syntax-comment);
+  --color-syntax-keyword: var(--syntax-keyword);
+  --color-syntax-string: var(--syntax-string);
+  --color-syntax-number: var(--syntax-number);
+  --color-syntax-type: var(--syntax-type);
+  --color-syntax-function: var(--syntax-function);
+  --color-syntax-punctuation: var(--syntax-punctuation);
+
+  /* ── V3: Tooltip ──────────────────────────────────── */
+  --color-tooltip: var(--tooltip);
+  --color-tooltip-text: var(--tooltip-text);
+  --color-tooltip-border: var(--tooltip-border);
+
+  /* ── V3: Badge ────────────────────────────────────── */
+  --color-badge: var(--badge);
+  --color-badge-text: var(--badge-text);
+  --color-badge-border: var(--badge-border);
+
+  /* ── V3: Scrollbar ────────────────────────────────── */
+  --color-scrollbar-track: var(--scrollbar-track);
+  --color-scrollbar-thumb: var(--scrollbar-thumb);
+  --color-scrollbar-thumb-hover: var(--scrollbar-thumb-hover);
+
+  /* ── V3: Selection ────────────────────────────────── */
+  --color-selection-bg: var(--selection-bg);
+  --color-selection-text: var(--selection-text);
+
+  /* ── V3: Drag ─────────────────────────────────────── */
+
+  /* ── V3: Spinner ──────────────────────────────────── */
+
+  /* ── V3: Error/Warning/Success ────────────────────── */
+  --color-on-error: var(--on-error);
+  --color-warning: var(--warning);
+  --color-warning-bg: var(--warning-bg);
+  --color-warning-text: var(--warning-text);
+  --color-warning-border: var(--warning-border);
+  --color-success: var(--success);
+
+  /* ── V3: Overlay badges + toggle (editable in the Mood pane) ── */
+  --color-overlay-badge: var(--overlay-badge);
+  --color-overlay-badge-text: var(--overlay-badge-text);
+  --color-toggle: var(--toggle);
+  --color-toggle-active: var(--toggle-active);
+  --color-toggle-thumb: var(--toggle-thumb);
+  --color-toggle-thumb-active: var(--toggle-thumb-active);
+  --color-toggle-border: var(--toggle-border);
+
+  /* ── V3: Garden Card ──────────────────────────────── */
+  --color-garden-card: var(--garden-card);
+  --color-garden-card-hover: var(--garden-card-hover);
+  --color-garden-card-border: var(--garden-card-border);
+  --color-garden-card-border-hover: var(--garden-card-border-hover);
+  --color-garden-card-title: var(--garden-card-title);
+  --color-garden-card-text: var(--garden-card-text);
+  --color-garden-card-meta: var(--garden-card-meta);
+  --color-garden-card-thumbnail: var(--garden-card-thumbnail);
+
+  /* ── V3: Settings ─────────────────────────────────── */
+  --color-settings-panel: var(--settings-panel);
+  --color-settings-panel-border: var(--settings-panel-border);
+  --color-settings-label: var(--settings-label);
+  --color-settings-value: var(--settings-value);
+  --color-settings-divider: var(--settings-divider);
+
+  /* ── V3: Console ──────────────────────────────────── */
+  --color-console: var(--console);
+  --color-console-border: var(--console-border);
+  --color-console-text: var(--console-text);
+  --color-console-text-muted: var(--console-text-muted);
+  --color-console-sidebar: var(--console-sidebar);
+  --color-console-sidebar-border: var(--console-sidebar-border);
+  --color-console-input: var(--console-input);
+  --color-console-input-border: var(--console-input-border);
+
+  /* ── V3: Command Palette ──────────────────────────── */
+  --color-command-palette: var(--command-palette);
+  --color-command-palette-border: var(--command-palette-border);
+  --color-command-palette-input: var(--command-palette-input);
+  --color-command-palette-input-text: var(--command-palette-input-text);
+  --color-command-palette-item: var(--command-palette-item);
+  --color-command-palette-item-hover: var(--command-palette-item-hover);
+  --color-command-palette-item-text: var(--command-palette-item-text);
+  --color-command-palette-item-icon: var(--command-palette-item-icon);
+
+  /* ── V3: Public Top Bar ───────────────────────────── */
+  --color-public-top-bar: var(--public-top-bar);
+  --color-public-top-bar-border: var(--public-top-bar-border);
+  --color-public-top-bar-text: var(--public-top-bar-text);
+  --color-public-top-bar-text-muted: var(--public-top-bar-text-muted);
+  --color-public-top-bar-link: var(--public-top-bar-link);
+  --color-public-top-bar-link-hover: var(--public-top-bar-link-hover);
+
+  /* ── V3: Overlay ──────────────────────────────────── */
+
+  /* ── V3: Profile Button ───────────────────────────── */
+  --color-profile-button: var(--profile-button);
+  --color-profile-button-hover: var(--profile-button-hover);
+  --color-profile-button-icon: var(--profile-button-icon);
+  --color-profile-button-border: var(--profile-button-border);
+
+  /* ── V3: File Tree ────────────────────────────────── */
+  --color-file-tree-item: var(--file-tree-item);
+  --color-file-tree-item-hover: var(--file-tree-item-hover);
+  --color-file-tree-item-selected: var(--file-tree-item-selected);
+  --color-file-tree-item-text: var(--file-tree-item-text);
+  --color-file-tree-item-text-selected: var(--file-tree-item-text-selected);
+
+  /* ── V3: Growth Timeline ──────────────────────────── */
+  --color-growth-card: var(--growth-card);
+  --color-growth-card-text: var(--growth-card-text);
+  --color-growth-card-text-muted: var(--growth-card-text-muted);
+  --color-growth-card-label: var(--growth-card-label);
+  --color-growth-dot-active: var(--growth-dot-active);
+}
+
+/* ── Initial values — mood system overrides these via JS ── */
+/* These exist so Tailwind's var() references resolve before JS loads */
+
+:root {
+  --bg: #0b0d0c;
+  --surface: #121513;
+  --surface-solid: #131514;
+  --panel: #141816;
+  --text: #e2e4e3;
+  --text-muted: #8b908d;
+  --border: rgba(82, 96, 86, 0.18);
+  --accent: #7db3a3;
+  --accent-muted: #1a2723;
+  --error: #e63946;
+  /* Text on top of --error (danger buttons). Always white: red buttons must read the same in every theme. */
+  --on-error: #ffffff;
+  --error-muted: rgba(230, 57, 70, 0.15);
+  --preview-bg: rgba(0, 0, 0, 0.2);
+  --brand-ai: #d97757;
+  --pane-collaboration: #d47080;
+  --pane-artifacts: #d4944c;
+  --pane-workshop: #c8a84c;
+  --pane-details: #5cb87a;
+  --pane-history: #4cb8b0;
+  --pane-export: #5b9ed4;
+  --pane-sync: #8c7cc8;
+  --pane-publish: #c87ca8;
+  --pane-store: #c0a070;
+  --pane-media: #5fa8a0;
+  --pane-tasks: #8fbf6a;
+  --bloom-bg1: #0a1810;
+  --bloom-bg2: #060d08;
+  --bloom-1: #1a5a99;
+  --bloom-2: #8a4a99;
+  --bloom-3: #4a8a99;
+  --bloom-4: #994a3a;
+  --bloom-5: #7a7a3a;
+  --bloom-6: #3a8a7a;
+  --bloom-opacity: 1;
+  --bloom-blur: 60px;
+  --bloom-speed: 1;
+  --background-type: bloom;
+  --star-color: #e0e0e0;
+  --star-opacity: 0.8;
+  --star-speed: 1;
+  --star-density: 150;
+  --flow-color: #7db3a3;
+  --flow-speed: 1;
+  --drift-color: #d0d0d0;
+  --drift-speed: 1;
+  --drift-density: 400;
+  --drift-glow: #808080;
+  --radius: 0.5rem;
+  --radius-sm: 0.375rem;
+  --radius-lg: 0.75rem;
+  /* Workspace layout — the mosaic chrome reads these */
+  --pane-gap: 4px;
+  --pane-radius: var(--radius);
+  --pane-border-width: 1px;
+  --pane-header-height: 28px;
+  --pane-header-radius: var(--radius-sm);
+  --pane-header-padding: 6px;
+  --pane-body-padding: 8px;
+  --workspace-padding: 4px;
+  --overlay-badge-text: #ffffff;
+  --overlay-badge: rgba(0, 0, 0, 0.55);
+  --editor-background: var(--bg);
+  --pane-header-label-font: var(--font-display);
+  --pane-header-label-size: 11px;
+  --pane-header-label-weight: 400;
+  --pane-header-label-case: uppercase;
+  --pane-header-label-tracking: 0.05em;
+  --pane-header-icon-display: inline-flex;
+  --pane-header-close-display: inline-flex;
+  --pane-header-justify: space-between;
+  --font-scale: 1;
+  --density: 1;
+  --line-height-body: 1.5;
+  --font-weight-body: 400;
+  --font-weight-display: var(--font-weight-body);
+  --letter-spacing-body: 0;
+  --letter-spacing-display: 0;
+  --letter-spacing-mono: 0;
+  --elevation-panel:
+    0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+  --elevation-card: none;
+  --elevation-card-hover:
+    0 10px 15px -3px rgb(0 0 0 / 0.2), 0 4px 6px -4px rgb(0 0 0 / 0.2);
+  --elevation-modal: 0 24px 80px -16px rgb(0 0 0 / 0.65);
+  --scrim: radial-gradient(
+    ellipse 120% 90% at center,
+    rgb(0 0 0 / 0.55) 0%,
+    rgb(0 0 0 / 0.82) 100%
+  );
+  --motion-scale: 1;
+  --editor-font-size: 13px;
+  --bg-image-dim: 0;
+  --bg-image-blur: 0px;
+  --bg-image-fit: cover;
+  --bg-image-position: center;
+  --bg-image-scale: 1;
+  --garden-card-min-width: 220px;
+  --garden-card-aspect: 16 / 10;
+  --garden-grid-gap: 1rem;
+  --growth-card-aspect: 16 / 10;
+  --workspace-texture: none;
+  --workspace-texture-size: cover;
+  --workspace-texture-blend: normal;
+  --workspace-texture-opacity: 1;
+  --grain-opacity: 0;
+  --pane-texture: none;
+  --pane-texture-size: auto;
+  --pane-texture-blend: normal;
+  --syntax-comment: #6a7a6e;
+  --syntax-keyword: #7db3a3;
+  --syntax-string: #a8d4c4;
+  --syntax-number: #c4956a;
+  --syntax-type: #9bc4b6;
+  --syntax-function: #b8d8ca;
+  --syntax-punctuation: #8b908d;
+
+  /* Page-specific token fallbacks */
+  --garden-card: #141816;
+  --garden-card-hover: #1a1d1b;
+  --garden-card-border: rgba(82, 96, 86, 0.18);
+  --garden-card-border-hover: rgba(125, 179, 163, 0.3);
+  --garden-card-title: #e2e4e3;
+  --garden-card-text: #8b908d;
+  --garden-card-meta: #6a6e6b;
+  --garden-card-thumbnail: #0b0d0c;
+  --settings-panel: #141816;
+  --settings-panel-border: rgba(82, 96, 86, 0.18);
+  --settings-label: #7db3a3;
+  --settings-value: #e2e4e3;
+  --settings-divider: rgba(82, 96, 86, 0.18);
+  --console: #141816;
+  --console-border: rgba(82, 96, 86, 0.18);
+  --console-text: #e2e4e3;
+  --console-text-muted: #8b908d;
+  --console-sidebar: #121513;
+  --console-sidebar-border: rgba(82, 96, 86, 0.18);
+  --console-input: #131514;
+  --console-input-border: rgba(82, 96, 86, 0.18);
+  --command-palette: #141816;
+  --command-palette-border: rgba(82, 96, 86, 0.18);
+  --command-palette-input: #131514;
+  --command-palette-input-text: #e2e4e3;
+  --command-palette-item: transparent;
+  --command-palette-item-hover: #1a2723;
+  --command-palette-item-text: #e2e4e3;
+  --command-palette-item-icon: #8b908d;
+  --public-top-bar: #131514;
+  --public-top-bar-border: rgba(82, 96, 86, 0.18);
+  --public-top-bar-text: #e2e4e3;
+  --public-top-bar-text-muted: #8b908d;
+  --public-top-bar-link: #8b908d;
+  --public-top-bar-link-hover: #e2e4e3;
+  --profile-button: transparent;
+  --profile-button-hover: #1a2723;
+  --profile-button-icon: #8b908d;
+  --profile-button-border: rgba(82, 96, 86, 0.18);
+  --file-tree-item: transparent;
+  --file-tree-item-hover: #181b19;
+  --file-tree-item-selected: #1a2723;
+  --file-tree-item-text: #e2e4e3;
+  --file-tree-item-text-selected: #7db3a3;
+  --growth-card: #121513;
+  --growth-card-text: #e2e4e3;
+  --growth-card-text-muted: #8b908d;
+  --growth-card-label: #7db3a3;
+  --growth-dot-active: #7db3a3;
+
+  /* Pane header tokens */
+  /* Pane button tokens */
+  --pane-collaboration-button-hover: rgba(212, 112, 128, 0.1);
+  --pane-collaboration-button-active: rgba(212, 112, 128, 0.15);
+  --pane-collaboration-button-icon: #d47080;
+  --pane-collaboration-button-icon-hover: #d47080;
+  --pane-collaboration-button-icon-active: #d47080;
+  --pane-collaboration-button-border-hover: rgba(212, 112, 128, 0.2);
+  --pane-collaboration-button-border-active: rgba(212, 112, 128, 0.3);
+  --pane-artifacts-button-active: rgba(212, 148, 76, 0.15);
+  --pane-artifacts-button-icon: #d4944c;
+  --pane-artifacts-button-icon-active: #d4944c;
+  --pane-artifacts-button-border-active: rgba(212, 148, 76, 0.3);
+  --pane-workshop-button-active: rgba(200, 168, 76, 0.15);
+  --pane-workshop-button-icon: #c8a84c;
+  --pane-workshop-button-icon-active: #c8a84c;
+  --pane-workshop-button-border-active: rgba(200, 168, 76, 0.3);
+  --pane-details-button-active: rgba(92, 184, 122, 0.15);
+  --pane-details-button-icon: #5cb87a;
+  --pane-details-button-icon-active: #5cb87a;
+  --pane-details-button-border-active: rgba(92, 184, 122, 0.3);
+  --pane-history-button-active: rgba(76, 184, 176, 0.15);
+  --pane-history-button-icon: #4cb8b0;
+  --pane-history-button-icon-active: #4cb8b0;
+  --pane-history-button-border-active: rgba(76, 184, 176, 0.3);
+  --pane-export-button-active: rgba(91, 158, 212, 0.15);
+  --pane-export-button-icon: #5b9ed4;
+  --pane-export-button-icon-active: #5b9ed4;
+  --pane-export-button-border-active: rgba(91, 158, 212, 0.3);
+  --pane-sync-button-active: rgba(140, 124, 200, 0.15);
+  --pane-sync-button-icon: #8c7cc8;
+  --pane-sync-button-icon-active: #8c7cc8;
+  --pane-sync-button-border-active: rgba(140, 124, 200, 0.3);
+  --pane-publish-button-active: rgba(200, 124, 168, 0.15);
+  --pane-publish-button-icon: #c87ca8;
+  --pane-publish-button-icon-active: #c87ca8;
+  --pane-publish-button-border-active: rgba(200, 124, 168, 0.3);
+  --pane-store-button-active: rgba(192, 160, 112, 0.15);
+  --pane-store-button-icon: #c0a070;
+  --pane-store-button-icon-active: #c0a070;
+  --pane-store-button-border-active: rgba(192, 160, 112, 0.3);
+  --pane-media-button-active: rgba(95, 168, 160, 0.15);
+  --pane-media-button-icon: #5fa8a0;
+  --pane-media-button-icon-active: #5fa8a0;
+  --pane-media-button-border-active: rgba(95, 168, 160, 0.3);
+  --pane-tasks-button-active: rgba(143, 191, 106, 0.15);
+  --pane-tasks-button-icon: #8fbf6a;
+  --pane-tasks-button-icon-active: #8fbf6a;
+  --pane-tasks-button-border-active: rgba(143, 191, 106, 0.3);
+
+  /* Pane header tokens */
+  --pane-collaboration-header: rgba(212, 112, 128, 0.15);
+  --pane-collaboration-header-border: rgba(212, 112, 128, 0.2);
+  --pane-collaboration-header-text: #d47080;
+  --pane-collaboration-header-icon: #d47080;
+  --pane-collaboration-header-close: #d47080;
+  --pane-artifacts-header: rgba(212, 148, 76, 0.15);
+  --pane-artifacts-header-border: rgba(212, 148, 76, 0.2);
+  --pane-artifacts-header-text: #d4944c;
+  --pane-artifacts-header-icon: #d4944c;
+  --pane-artifacts-header-close: #d4944c;
+  --pane-workshop-header: rgba(200, 168, 76, 0.15);
+  --pane-workshop-header-border: rgba(200, 168, 76, 0.2);
+  --pane-workshop-header-text: #c8a84c;
+  --pane-workshop-header-icon: #c8a84c;
+  --pane-workshop-header-close: #c8a84c;
+  --pane-details-header: rgba(92, 184, 122, 0.15);
+  --pane-details-header-border: rgba(92, 184, 122, 0.2);
+  --pane-details-header-text: #5cb87a;
+  --pane-details-header-icon: #5cb87a;
+  --pane-details-header-close: #5cb87a;
+  --pane-history-header: rgba(76, 184, 176, 0.15);
+  --pane-history-header-border: rgba(76, 184, 176, 0.2);
+  --pane-history-header-text: #4cb8b0;
+  --pane-history-header-icon: #4cb8b0;
+  --pane-history-header-close: #4cb8b0;
+  --pane-export-header: rgba(91, 158, 212, 0.15);
+  --pane-export-header-border: rgba(91, 158, 212, 0.2);
+  --pane-export-header-text: #5b9ed4;
+  --pane-export-header-icon: #5b9ed4;
+  --pane-export-header-close: #5b9ed4;
+  --pane-sync-header: rgba(140, 124, 200, 0.15);
+  --pane-sync-header-border: rgba(140, 124, 200, 0.2);
+  --pane-sync-header-text: #8c7cc8;
+  --pane-sync-header-icon: #8c7cc8;
+  --pane-sync-header-close: #8c7cc8;
+  --pane-publish-header: rgba(200, 124, 168, 0.15);
+  --pane-publish-header-border: rgba(200, 124, 168, 0.2);
+  --pane-publish-header-text: #c87ca8;
+  --pane-publish-header-icon: #c87ca8;
+  --pane-publish-header-close: #c87ca8;
+  --pane-store-header: rgba(192, 160, 112, 0.15);
+  --pane-store-header-border: rgba(192, 160, 112, 0.2);
+  --pane-store-header-text: #c0a070;
+  --pane-media-header: rgba(95, 168, 160, 0.15);
+  --pane-media-header-border: rgba(95, 168, 160, 0.2);
+  --pane-media-header-text: #5fa8a0;
+  --pane-tasks-header: rgba(143, 191, 106, 0.15);
+  --pane-tasks-header-border: rgba(143, 191, 106, 0.2);
+  --pane-tasks-header-text: #8fbf6a;
+  --pane-tasks-header-icon: #8fbf6a;
+  --pane-tasks-header-close: #8fbf6a;
+  --pane-store-header-icon: #c0a070;
+  --pane-store-header-close: #c0a070;
+  color-scheme: dark;
+}
+
+.light {
+  color-scheme: light;
+}
+
+.light {
+  color-scheme: light;
+}
+
+/* ── Base ──────────────────────────────────────────────── */
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  /* The Mood's type scale: every rem-based size in the app follows */
+  font-size: calc(16px * var(--font-scale));
+}
+
+body {
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-body);
+  letter-spacing: var(--letter-spacing-body);
+  line-height: var(--line-height-body);
+  background-color: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Font utilities must follow runtime Mood values, not @theme inline defaults. */
+.font-display {
+  font-family: var(--font-display);
+}
+.font-body {
+  font-family: var(--font-body);
+}
+.font-wordmark {
+  font-family: var(--font-wordmark);
+}
+
+/* Display and code faces carry their own tracking */
+.font-display,
+.font-wordmark {
+  letter-spacing: var(--letter-spacing-display);
+}
+/* What the collaborator says reads like a page: the Mood's reading face,
+   a size and leading made for prose rather than for controls. */
+.font-reading {
+  font-family: var(--font-reading);
+  letter-spacing: 0;
+}
+/* …and the display face its own weight, in the base layer so a component's
+   font-medium / font-bold utility still wins (today's look is unchanged). */
+@layer base {
+  .font-display {
+    font-weight: var(--font-weight-display);
+  }
+}
+.font-mono {
+  letter-spacing: var(--letter-spacing-mono);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Until the app has resolved the person's Motion setting (ADR 0041), the
+     system preference wins; once <html data-motion-intensity> is set, the
+     setting decides (system → off, an explicit choice overrides). */
+  html:not([data-motion-intensity]) {
+    --motion-scale: 0 !important;
+  }
+}
+
+/* Image background — fit, position, zoom, blur, and a dimming veil */
+.mood-bg-image {
+  background-size: var(--bg-image-fit);
+  background-position: var(--bg-image-position);
+  background-repeat: no-repeat;
+  filter: blur(var(--bg-image-blur)) saturate(var(--life, 1))
+    brightness(var(--life-dim, 1));
+  transform: scale(var(--bg-image-scale));
+}
+.mood-bg-dim {
+  background: rgb(0 0 0 / var(--bg-image-dim));
+}
+
+/* Workspace texture and film grain — fixed layers above the background, below content */
+.mood-texture {
+  background-image: var(--workspace-texture);
+  background-size: var(--workspace-texture-size);
+  background-position: center;
+  mix-blend-mode: var(--workspace-texture-blend);
+  opacity: var(--workspace-texture-opacity);
+}
+.mood-grain {
+  opacity: var(--grain-opacity);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0.6 0'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>");
+  background-size: 160px 160px;
+  mix-blend-mode: overlay;
+}
+
+/* ── Scrollbar ─────────────────────────────────────────── */
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+::-webkit-scrollbar {
+  width: var(--scrollbar-width);
+  height: var(--scrollbar-width);
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: calc(var(--scrollbar-width) / 2);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}
+
+/* ── Interaction states (Mood tokens) ─────────────────── */
+
+/* TopBar pane toggles: per-pane hover tokens travel as custom props on the button */
+.pane-toggle:hover {
+  background-color: var(--pt-hover) !important;
+  color: var(--pt-hover-icon) !important;
+  border-color: var(--pt-hover-border) !important;
+}
+
+/* Base-layer defaults: Tailwind utilities live in @layer utilities, which beats
+   @layer base, so a component can opt out (`outline-none` on an input that
+   draws its own focus ring; `disabled:opacity-100` on <Button>, which recolours
+   through the button-disabled tokens instead of dimming). Unlayered, these
+   rules would override every such utility. */
+@layer base {
+  :focus-visible {
+    outline: var(--focus-ring-width) solid var(--focus-ring);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  button:disabled,
+  input:disabled,
+  select:disabled,
+  textarea:disabled,
+  [aria-disabled="true"] {
+    opacity: var(--disabled-opacity);
+  }
+}
+
+.hover-bright:hover {
+  filter: brightness(var(--hover-brightness));
+}
+.active-dim:active {
+  filter: brightness(var(--active-brightness));
+}
+.hover-lift {
+  transition: transform var(--default-transition-duration, 150ms);
+}
+.hover-lift:hover {
+  transform: translateY(calc(-1 * var(--card-hover-lift)));
+}
+
+/* ── Palette Transition ────────────────────────────────── */
+
+html.palette-transition,
+html.palette-transition *,
+html.palette-transition *::before,
+html.palette-transition *::after {
+  transition:
+    color 0.4s ease,
+    background-color 0.4s ease,
+    border-color 0.4s ease,
+    opacity 0.4s ease,
+    filter 0.4s ease,
+    backdrop-filter 0.4s ease !important;
+}
+
+/* ── Selection ─────────────────────────────────────────── */
+
+::selection {
+  background: var(--selection-bg);
+  color: var(--selection-text);
+}
+
+/* ── highlight.js palette overrides ───────────────────── */
+
+.hljs {
+  color: var(--text);
+  background: var(--bg);
+}
+
+.hljs-comment,
+.hljs-quote,
+.hljs-meta {
+  color: var(--syntax-comment);
+  font-style: italic;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-tag,
+.hljs-selector-id {
+  color: var(--syntax-keyword);
+}
+
+.hljs-string,
+.hljs-attr,
+.hljs-selector-attr,
+.hljs-selector-class {
+  color: var(--syntax-string);
+}
+
+.hljs-number,
+.hljs-literal,
+.hljs-regexp,
+.hljs-link {
+  color: var(--syntax-number);
+}
+
+.hljs-type,
+.hljs-built_in,
+.hljs-title.class_,
+.hljs-params {
+  color: var(--syntax-type);
+}
+
+.hljs-title,
+.hljs-title.function_ {
+  color: var(--syntax-function);
+}
+
+.hljs-punctuation,
+.hljs-operator,
+.hljs-symbol {
+  color: var(--syntax-punctuation);
+}
+
+.hljs-variable,
+.hljs-template-variable,
+.hljs-name,
+.hljs-property,
+.hljs-section {
+  color: var(--text);
+}
+
+.hljs-addition {
+  color: var(--accent);
+  background: var(--accent-muted);
+}
+
+.hljs-deletion {
+  color: var(--error);
+  background: var(--error-muted);
+}
+
+/* ── react-mosaic custom theme ────────────────────────── */
+
+.mosaic.crux-mosaic-theme {
+  background: transparent;
+}
+
+.mosaic.crux-mosaic-theme .mosaic-tile {
+  margin: var(--pane-gap);
+  will-change: width, height;
+}
+
+.mosaic.crux-mosaic-theme .mosaic-root {
+  top: var(--workspace-padding);
+  right: var(--workspace-padding);
+  bottom: var(--workspace-padding);
+  left: var(--workspace-padding);
+}
+
+/* The pane frame. The border is painted as a background ring (padding = border
+   width, window background = border token) rather than a CSS border, so the
+   border token may be a gradient — `linear-gradient(135deg, #00f0ff, #7cff00)`
+   reads as "this pane is busy". The header and body paint --panel over the
+   ring; their inner corners follow the outer radius minus the ring. */
+.mosaic.crux-mosaic-theme .mosaic-window {
+  --pane-inner-radius: max(
+    0px,
+    calc(var(--pane-radius) - var(--pane-border-width))
+  );
+  border: none;
+  padding: var(--pane-border-width);
+  border-radius: var(--pane-radius);
+  box-shadow: var(--elevation-pane);
+  background: var(--border);
+  color: var(--text);
+}
+.mosaic.crux-mosaic-theme .mosaic-preview {
+  /* react-mosaic hands this node to react-dnd as the drag image (setDragImage),
+     so it must stay rendered — `visibility: hidden` blanks the ghost. It sits
+     behind the pane body, and with a translucent body its title leaked through,
+     so park it outside the window (the window clips overflow) on an opaque
+     surface: nothing bleeds, and the ghost still paints. */
+  transform: translateX(-200%);
+  pointer-events: none;
+  border: none;
+  border-radius: var(--pane-radius);
+  box-shadow: none;
+  background: var(--surface-solid);
+  color: var(--text);
+}
+
+/* Per-pane surfaces: inside a pane, the generic tokens resolve to that pane's
+   own surface tokens (which default to the shared ones — see garden-dark.ts).
+   The pane-* tokens are computed on :root, so this is not a cycle. */
+.mosaic.crux-mosaic-theme .mosaic-window.pane-collaboration {
+  --panel: var(--pane-collaboration-body);
+  --pane-header-close-hover: var(--pane-collaboration-header-close-hover);
+  --border: var(--pane-collaboration-border);
+  --radius: var(--pane-collaboration-radius);
+  --text: var(--pane-collaboration-text);
+  --text-muted: var(--pane-collaboration-text-muted);
+  --surface: var(--pane-collaboration-surface);
+  --accent: var(--pane-collaboration-accent);
+  --accent-muted: var(--pane-collaboration-accent-muted);
+  --surface-solid: var(--pane-collaboration-surface-solid);
+  --radius-sm: var(--pane-collaboration-radius-sm);
+  --caption: var(--pane-collaboration-caption);
+  --heading: var(--pane-collaboration-heading);
+  --pane-header-radius: var(--pane-collaboration-header-radius);
+  --pane-header-height: var(--pane-collaboration-header-height);
+  --pane-border-width: var(--pane-collaboration-border-width);
+  --pane-header-label-case: var(--pane-collaboration-header-label-case);
+  --pane-header-justify: var(--pane-collaboration-header-justify);
+  --pane-texture: var(--pane-collaboration-texture);
+  --pane-texture-size: var(--pane-collaboration-texture-size);
+  --pane-texture-blend: var(--pane-collaboration-texture-blend);
+  border-radius: var(--pane-collaboration-radius);
+  animation: pane-pulse 1.4s ease-in-out var(--pane-collaboration-pulse);
+}
+.mosaic.crux-mosaic-theme .mosaic-window.pane-artifacts {
+  --panel: var(--pane-artifacts-body);
+  --pane-header-close-hover: var(--pane-artifacts-header-close-hover);
+  --border: var(--pane-artifacts-border);
+  --radius: var(--pane-artifacts-radius);
+  --text: var(--pane-artifacts-text);
+  --text-muted: var(--pane-artifacts-text-muted);
+  --surface: var(--pane-artifacts-surface);
+  --accent: var(--pane-artifacts-accent);
+  --accent-muted: var(--pane-artifacts-accent-muted);
+  --surface-solid: var(--pane-artifacts-surface-solid);
+  --radius-sm: var(--pane-artifacts-radius-sm);
+  --caption: var(--pane-artifacts-caption);
+  --heading: var(--pane-artifacts-heading);
+  --pane-header-radius: var(--pane-artifacts-header-radius);
+  --pane-header-height: var(--pane-artifacts-header-height);
+  --pane-border-width: var(--pane-artifacts-border-width);
+  --pane-header-label-case: var(--pane-artifacts-header-label-case);
+  --pane-header-justify: var(--pane-artifacts-header-justify);
+  --pane-texture: var(--pane-artifacts-texture);
+  --pane-texture-size: var(--pane-artifacts-texture-size);
+  --pane-texture-blend: var(--pane-artifacts-texture-blend);
+  border-radius: var(--pane-artifacts-radius);
+  animation: pane-pulse 1.4s ease-in-out var(--pane-artifacts-pulse);
+}
+.mosaic.crux-mosaic-theme .mosaic-window.pane-workshop {
+  --panel: var(--pane-workshop-body);
+  --pane-header-close-hover: var(--pane-workshop-header-close-hover);
+  --border: var(--pane-workshop-border);
+  --radius: var(--pane-workshop-radius);
+  --text: var(--pane-workshop-text);
+  --text-muted: var(--pane-workshop-text-muted);
+  --surface: var(--pane-workshop-surface);
+  --accent: var(--pane-workshop-accent);
+  --accent-muted: var(--pane-workshop-accent-muted);
+  --surface-solid: var(--pane-workshop-surface-solid);
+  --radius-sm: var(--pane-workshop-radius-sm);
+  --caption: var(--pane-workshop-caption);
+  --heading: var(--pane-workshop-heading);
+  --pane-header-radius: var(--pane-workshop-header-radius);
+  --pane-header-height: var(--pane-workshop-header-height);
+  --pane-border-width: var(--pane-workshop-border-width);
+  --pane-header-label-case: var(--pane-workshop-header-label-case);
+  --pane-header-justify: var(--pane-workshop-header-justify);
+  --pane-texture: var(--pane-workshop-texture);
+  --pane-texture-size: var(--pane-workshop-texture-size);
+  --pane-texture-blend: var(--pane-workshop-texture-blend);
+  border-radius: var(--pane-workshop-radius);
+  animation: pane-pulse 1.4s ease-in-out var(--pane-workshop-pulse);
+}
+.mosaic.crux-mosaic-theme .mosaic-window.pane-details {
+  --panel: var(--pane-details-body);
+  --pane-header-close-hover: var(--pane-details-header-close-hover);
+  --border: var(--pane-details-border);
+  --radius: var(--pane-details-radius);
+  --text: var(--pane-details-text);
+  --text-muted: var(--pane-details-text-muted);
+  --surface: var(--pane-details-surface);
+  --accent: var(--pane-details-accent);
+  --accent-muted: var(--pane-details-accent-muted);
+  --surface-solid: var(--pane-details-surface-solid);
+  --radius-sm: var(--pane-details-radius-sm);
+  --caption: var(--pane-details-caption);
+  --heading: var(--pane-details-heading);
+  --pane-header-radius: var(--pane-details-header-radius);
+  --pane-header-height: var(--pane-details-header-height);
+  --pane-border-width: var(--pane-details-border-width);
+  --pane-header-label-case: var(--pane-details-header-label-case);
+  --pane-header-justify: var(--pane-details-header-justify);
+  --pane-texture: var(--pane-details-texture);
+  --pane-texture-size: var(--pane-details-texture-size);
+  --pane-texture-blend: var(--pane-details-texture-blend);
+  border-radius: var(--pane-details-radius);
+  animation: pane-pulse 1.4s ease-in-out var(--pane-details-pulse);
+}
+.mosaic.crux-mosaic-theme .mosaic-window.pane-history {
+  --panel: var(--pane-history-body);
+  --pane-header-close-hover: var(--pane-history-header-close-hover);
+  --border: var(--pane-history-border);
+  --radius: var(--pane-history-radius);
+  --text: var(--pane-history-text);
+  --text-muted: var(--pane-history-text-muted);
+  --surface: var(--pane-history-surface);
+  --accent: var(--pane-history-accent);
+  --accent-muted: var(--pane-history-accent-muted);
+  --surface-solid: var(--pane-history-surface-solid);
+  --radius-sm: var(--pane-history-radius-sm);
+  --caption: var(--pane-history-caption);
+  --heading: var(--pane-history-heading);
+  --pane-header-radius: var(--pane-history-header-radius);
+  --pane-header-height: var(--pane-history-header-height);
+  --pane-border-width: var(--pane-history-border-width);
+  --pane-header-label-case: var(--pane-history-header-label-case);
+  --pane-header-justify: var(--pane-history-header-justify);
+  --pane-texture: var(--pane-history-texture);
+  --pane-texture-size: var(--pane-history-texture-size);
+  --pane-texture-blend: var(--pane-history-texture-blend);
+  border-radius: var(--pane-history-radius);
+  animation: pane-pulse 1.4s ease-in-out var(--pane-history-pulse);
+}
+.mosaic.crux-mosaic-theme .mosaic-window.pane-export {
+  --panel: var(--pane-export-body);
+  --pane-header-close-hover: var(--pane-export-header-close-hover);
+  --border: var(--pane-export-border);
+  --radius: var(--pane-export-radius);
+  --text: var(--pane-export-text);
+  --text-muted: var(--pane-export-text-muted);
+  --surface: var(--pane-export-surface);
+  --accent: var(--pane-export-accent);
+  --accent-muted: var(--pane-export-accent-muted);
+  --surface-solid: var(--pane-export-surface-solid);
+  --radius-sm: var(--pane-export-radius-sm);
+  --caption: var(--pane-export-caption);
+  --heading: var(--pane-export-heading);
+  --pane-header-radius: var(--pane-export-header-radius);
+  --pane-header-height: var(--pane-export-header-height);
+  --pane-border-width: var(--pane-export-border-width);
+  --pane-header-label-case: var(--pane-export-header-label-case);
+  --pane-header-justify: var(--pane-export-header-justify);
+  --pane-texture: var(--pane-export-texture);
+  --pane-texture-size: var(--pane-export-texture-size);
+  --pane-texture-blend: var(--pane-export-texture-blend);
+  border-radius: var(--pane-export-radius);
+  animation: pane-pulse 1.4s ease-in-out var(--pane-export-pulse);
+}
+.mosaic.crux-mosaic-theme .mosaic-window.pane-sync {
+  --panel: var(--pane-sync-body);
+  --pane-header-close-hover: var(--pane-sync-header-close-hover);
+  --border: var(--pane-sync-border);
+  --radius: var(--pane-sync-radius);
+  --text: var(--pane-sync-text);
+  --text-muted: var(--pane-sync-text-muted);
+  --surface: var(--pane-sync-surface);
+  --accent: var(--pane-sync-accent);
+  --accent-muted: var(--pane-sync-accent-muted);
+  --surface-solid: var(--pane-sync-surface-solid);
+  --radius-sm: var(--pane-sync-radius-sm);
+  --caption: var(--pane-sync-caption);
+  --heading: var(--pane-sync-heading);
+  --pane-header-radius: var(--pane-sync-header-radius);
+  --pane-header-height: var(--pane-sync-header-height);
+  --pane-border-width: var(--pane-sync-border-width);
+  --pane-header-label-case: var(--pane-sync-header-label-case);
+  --pane-header-justify: var(--pane-sync-header-justify);
+  --pane-texture: var(--pane-sync-texture);
+  --pane-texture-size: var(--pane-sync-texture-size);
+  --pane-texture-blend: var(--pane-sync-texture-blend);
+  border-radius: var(--pane-sync-radius);
+  animation: pane-pulse 1.4s ease-in-out var(--pane-sync-pulse);
+}
+.mosaic.crux-mosaic-theme .mosaic-window.pane-publish {
+  --panel: var(--pane-publish-body);
+  --pane-header-close-hover: var(--pane-publish-header-close-hover);
+  --border: var(--pane-publish-border);
+  --radius: var(--pane-publish-radius);
+  --text: var(--pane-publish-text);
+  --text-muted: var(--pane-publish-text-muted);
+  --surface: var(--pane-publish-surface);
+  --accent: var(--pane-publish-accent);
+  --accent-muted: var(--pane-publish-accent-muted);
+  --surface-solid: var(--pane-publish-surface-solid);
+  --radius-sm: var(--pane-publish-radius-sm);
+  --caption: var(--pane-publish-caption);
+  --heading: var(--pane-publish-heading);
+  --pane-header-radius: var(--pane-publish-header-radius);
+  --pane-header-height: var(--pane-publish-header-height);
+  --pane-border-width: var(--pane-publish-border-width);
+  --pane-header-label-case: var(--pane-publish-header-label-case);
+  --pane-header-justify: var(--pane-publish-header-justify);
+  --pane-texture: var(--pane-publish-texture);
+  --pane-texture-size: var(--pane-publish-texture-size);
+  --pane-texture-blend: var(--pane-publish-texture-blend);
+  border-radius: var(--pane-publish-radius);
+  animation: pane-pulse 1.4s ease-in-out var(--pane-publish-pulse);
+}
+.mosaic.crux-mosaic-theme .mosaic-window.pane-store {
+  --panel: var(--pane-store-body);
+  --pane-header-close-hover: var(--pane-store-header-close-hover);
+  --border: var(--pane-store-border);
+  --radius: var(--pane-store-radius);
+  --text: var(--pane-store-text);
+  --text-muted: var(--pane-store-text-muted);
+  --surface: var(--pane-store-surface);
+  --accent: var(--pane-store-accent);
+  --accent-muted: var(--pane-store-accent-muted);
+  --surface-solid: var(--pane-store-surface-solid);
+  --radius-sm: var(--pane-store-radius-sm);
+  --caption: var(--pane-store-caption);
+  --heading: var(--pane-store-heading);
+  --pane-header-radius: var(--pane-store-header-radius);
+  --pane-header-height: var(--pane-store-header-height);
+  --pane-border-width: var(--pane-store-border-width);
+  --pane-header-label-case: var(--pane-store-header-label-case);
+  --pane-header-justify: var(--pane-store-header-justify);
+  --pane-texture: var(--pane-store-texture);
+  --pane-texture-size: var(--pane-store-texture-size);
+  --pane-texture-blend: var(--pane-store-texture-blend);
+  border-radius: var(--pane-store-radius);
+  animation: pane-pulse 1.4s ease-in-out var(--pane-store-pulse);
+}
+.mosaic.crux-mosaic-theme .mosaic-window.pane-tasks {
+  --panel: var(--pane-tasks-body);
+  --pane-header-close-hover: var(--pane-tasks-header-close-hover);
+  --border: var(--pane-tasks-border);
+  --radius: var(--pane-tasks-radius);
+  --text: var(--pane-tasks-text);
+  --text-muted: var(--pane-tasks-text-muted);
+  --surface: var(--pane-tasks-surface);
+  --accent: var(--pane-tasks-accent);
+  --accent-muted: var(--pane-tasks-accent-muted);
+  --surface-solid: var(--pane-tasks-surface-solid);
+  --radius-sm: var(--pane-tasks-radius-sm);
+  --caption: var(--pane-tasks-caption);
+  --heading: var(--pane-tasks-heading);
+  --pane-header-radius: var(--pane-tasks-header-radius);
+  --pane-header-height: var(--pane-tasks-header-height);
+  --pane-border-width: var(--pane-tasks-border-width);
+  --pane-header-label-case: var(--pane-tasks-header-label-case);
+  --pane-header-justify: var(--pane-tasks-header-justify);
+  --pane-texture: var(--pane-tasks-texture);
+  --pane-texture-size: var(--pane-tasks-texture-size);
+  --pane-texture-blend: var(--pane-tasks-texture-blend);
+  border-radius: var(--pane-tasks-radius);
+  animation: pane-pulse 1.4s ease-in-out var(--pane-tasks-pulse);
+}
+.mosaic.crux-mosaic-theme .mosaic-window.pane-mood {
+  --panel: var(--pane-mood-body);
+  --pane-header-close-hover: var(--pane-mood-header-close-hover);
+  --border: var(--pane-mood-border);
+  --radius: var(--pane-mood-radius);
+  --text: var(--pane-mood-text);
+  --text-muted: var(--pane-mood-text-muted);
+  --surface: var(--pane-mood-surface);
+  --accent: var(--pane-mood-accent);
+  --accent-muted: var(--pane-mood-accent-muted);
+  --surface-solid: var(--pane-mood-surface-solid);
+  --radius-sm: var(--pane-mood-radius-sm);
+  --caption: var(--pane-mood-caption);
+  --heading: var(--pane-mood-heading);
+  --pane-header-radius: var(--pane-mood-header-radius);
+  --pane-header-height: var(--pane-mood-header-height);
+  --pane-border-width: var(--pane-mood-border-width);
+  --pane-header-label-case: var(--pane-mood-header-label-case);
+  --pane-header-justify: var(--pane-mood-header-justify);
+  --pane-texture: var(--pane-mood-texture);
+  --pane-texture-size: var(--pane-mood-texture-size);
+  --pane-texture-blend: var(--pane-mood-texture-blend);
+  border-radius: var(--pane-mood-radius);
+  animation: pane-pulse 1.4s ease-in-out var(--pane-mood-pulse);
+}
+.mosaic.crux-mosaic-theme .mosaic-window.pane-synth {
+  --panel: var(--pane-synth-body);
+  --pane-header-close-hover: var(--pane-synth-header-close-hover);
+  --border: var(--pane-synth-border);
+  --radius: var(--pane-synth-radius);
+  --text: var(--pane-synth-text);
+  --text-muted: var(--pane-synth-text-muted);
+  --surface: var(--pane-synth-surface);
+  --accent: var(--pane-synth-accent);
+  --accent-muted: var(--pane-synth-accent-muted);
+  --surface-solid: var(--pane-synth-surface-solid);
+  --radius-sm: var(--pane-synth-radius-sm);
+  --caption: var(--pane-synth-caption);
+  --heading: var(--pane-synth-heading);
+  --pane-header-radius: var(--pane-synth-header-radius);
+  --pane-header-height: var(--pane-synth-header-height);
+  --pane-border-width: var(--pane-synth-border-width);
+  --pane-header-label-case: var(--pane-synth-header-label-case);
+  --pane-header-justify: var(--pane-synth-header-justify);
+  --pane-texture: var(--pane-synth-texture);
+  --pane-texture-size: var(--pane-synth-texture-size);
+  --pane-texture-blend: var(--pane-synth-texture-blend);
+  border-radius: var(--pane-synth-radius);
+  animation: pane-pulse 1.4s ease-in-out var(--pane-synth-pulse);
+}
+.mosaic.crux-mosaic-theme .mosaic-window.pane-browser {
+  --panel: var(--pane-browser-body);
+  --pane-header-close-hover: var(--pane-browser-header-close-hover);
+  --border: var(--pane-browser-border);
+  --radius: var(--pane-browser-radius);
+  --text: var(--pane-browser-text);
+  --text-muted: var(--pane-browser-text-muted);
+  --surface: var(--pane-browser-surface);
+  --accent: var(--pane-browser-accent);
+  --accent-muted: var(--pane-browser-accent-muted);
+  --surface-solid: var(--pane-browser-surface-solid);
+  --radius-sm: var(--pane-browser-radius-sm);
+  --caption: var(--pane-browser-caption);
+  --heading: var(--pane-browser-heading);
+  --pane-header-radius: var(--pane-browser-header-radius);
+  --pane-header-height: var(--pane-browser-header-height);
+  --pane-border-width: var(--pane-browser-border-width);
+  --pane-header-label-case: var(--pane-browser-header-label-case);
+  --pane-header-justify: var(--pane-browser-header-justify);
+  --pane-texture: var(--pane-browser-texture);
+  --pane-texture-size: var(--pane-browser-texture-size);
+  --pane-texture-blend: var(--pane-browser-texture-blend);
+  border-radius: var(--pane-browser-radius);
+  animation: pane-pulse 1.4s ease-in-out var(--pane-browser-pulse);
+}
+.mosaic.crux-mosaic-theme .mosaic-window.pane-settings {
+  --panel: var(--pane-settings-body);
+  --pane-header-close-hover: var(--pane-settings-header-close-hover);
+  --border: var(--pane-settings-border);
+  --radius: var(--pane-settings-radius);
+  --text: var(--pane-settings-text);
+  --text-muted: var(--pane-settings-text-muted);
+  --surface: var(--pane-settings-surface);
+  --accent: var(--pane-settings-accent);
+  --accent-muted: var(--pane-settings-accent-muted);
+  --surface-solid: var(--pane-settings-surface-solid);
+  --radius-sm: var(--pane-settings-radius-sm);
+  --caption: var(--pane-settings-caption);
+  --heading: var(--pane-settings-heading);
+  --pane-header-radius: var(--pane-settings-header-radius);
+  --pane-header-height: var(--pane-settings-header-height);
+  --pane-border-width: var(--pane-settings-border-width);
+  --pane-header-label-case: var(--pane-settings-header-label-case);
+  --pane-header-justify: var(--pane-settings-header-justify);
+  --pane-texture: var(--pane-settings-texture);
+  --pane-texture-size: var(--pane-settings-texture-size);
+  --pane-texture-blend: var(--pane-settings-texture-blend);
+  border-radius: var(--pane-settings-radius);
+  animation: pane-pulse 1.4s ease-in-out var(--pane-settings-pulse);
+}
+.mosaic.crux-mosaic-theme .mosaic-window.pane-explore {
+  --panel: var(--pane-explore-body);
+  --pane-header-close-hover: var(--pane-explore-header-close-hover);
+  --border: var(--pane-explore-border);
+  --radius: var(--pane-explore-radius);
+  --text: var(--pane-explore-text);
+  --text-muted: var(--pane-explore-text-muted);
+  --surface: var(--pane-explore-surface);
+  --accent: var(--pane-explore-accent);
+  --accent-muted: var(--pane-explore-accent-muted);
+  --surface-solid: var(--pane-explore-surface-solid);
+  --radius-sm: var(--pane-explore-radius-sm);
+  --caption: var(--pane-explore-caption);
+  --heading: var(--pane-explore-heading);
+  --pane-header-radius: var(--pane-explore-header-radius);
+  --pane-header-height: var(--pane-explore-header-height);
+  --pane-border-width: var(--pane-explore-border-width);
+  --pane-header-label-case: var(--pane-explore-header-label-case);
+  --pane-header-justify: var(--pane-explore-header-justify);
+  --pane-texture: var(--pane-explore-texture);
+  --pane-texture-size: var(--pane-explore-texture-size);
+  --pane-texture-blend: var(--pane-explore-texture-blend);
+  border-radius: var(--pane-explore-radius);
+  animation: pane-pulse 1.4s ease-in-out var(--pane-explore-pulse);
+}
+
+/* Clip overflow on body (not window) so drop target overlays remain visible */
+.mosaic.crux-mosaic-theme .mosaic-window .mosaic-window-body {
+  overflow: hidden;
+  contain: layout style;
+  /* Breathing room between the frame and the contents (Daniel: "the crux
+     workspace panels need more padding"); a Mood token, so Plasma opens
+     it up further than a dense Mood would. */
+  padding: var(--pane-body-padding);
+  /* texture image (asset) blended over the body color */
+  background:
+    var(--pane-texture) center / var(--pane-texture-size) repeat,
+    var(--panel);
+  background-blend-mode: var(--pane-texture-blend), normal;
+  border-radius: 0 0 var(--pane-inner-radius) var(--pane-inner-radius);
+}
+/* The Tasks pane is a pane like any other (Daniel, 2026-09-19): a list when
+   it stands tall, a row when it is dragged into a strip across the top —
+   the shape decides, not the pane. */
+.task-pane {
+  container-type: size;
+}
+@container (min-aspect-ratio: 4 / 1) {
+  .task-pane {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .task-pane-list {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .task-pane-list a {
+    gap: 0.5rem;
+  }
+}
+
+.mosaic.crux-mosaic-theme .mosaic-window .mosaic-window-toolbar {
+  height: auto;
+  padding: var(--pane-header-padding);
+  padding-top: 12px;
+  background: var(--panel);
+  border-radius: var(--pane-inner-radius) var(--pane-inner-radius) 0 0;
+  border-bottom: none;
+  box-shadow: none;
+  cursor: grab;
+}
+.mosaic.crux-mosaic-theme .mosaic-window .mosaic-window-toolbar:active {
+  cursor: grabbing;
+}
+.mosaic.crux-mosaic-theme .mosaic-window .pane-toolbar {
+  container-type: inline-size;
+  container-name: pane-header;
+  display: flex;
+  align-items: center;
+  justify-content: var(--pane-header-justify);
+  width: 100%;
+  min-height: max(28px, var(--pane-header-height));
+  padding: 0 12px;
+  border-radius: max(var(--pane-header-radius), var(--pane-inner-radius));
+  border: none;
+  transition:
+    background-color 150ms,
+    filter 150ms;
+}
+/* The header is the handle: under the pointer it lights as a panel of its
+   own and the cursor says it can be moved (Daniel, 2026-09-19). */
+.mosaic.crux-mosaic-theme .mosaic-window .pane-toolbar:hover {
+  filter: brightness(var(--pane-header-hover-brightness));
+  cursor: grab;
+}
+.mosaic.crux-mosaic-theme .mosaic-window .pane-toolbar:active {
+  cursor: grabbing;
+}
+.mosaic.crux-mosaic-theme .mosaic-window .mosaic-window-title {
+  display: none;
+}
+.mosaic.crux-mosaic-theme .mosaic-window .mosaic-window-controls {
+  display: none;
+}
+
+/* Header anatomy — every part a token */
+.mosaic.crux-mosaic-theme .pane-toolbar-label {
+  font-family: var(--pane-header-label-font);
+  font-size: var(--pane-header-label-size);
+  font-weight: var(--pane-header-label-weight);
+  text-transform: var(--pane-header-label-case);
+  letter-spacing: var(--pane-header-label-tracking);
+}
+.mosaic.crux-mosaic-theme .pane-toolbar-icon {
+  display: var(--pane-header-icon-display);
+}
+.mosaic.crux-mosaic-theme .pane-toolbar-close {
+  display: var(--pane-header-close-display);
+}
+.mosaic.crux-mosaic-theme .pane-toolbar-close:hover {
+  color: var(--pane-header-close-hover);
+}
+
+/* Preserve both actions when the title shares a narrow header. Appearance
+   still comes from the Mood; the compact form only changes its layout. */
+.pane-focus-icon {
+  display: none;
+}
+@container pane-header (max-width: 200px) {
+  .pane-toolbar-focus {
+    width: 24px;
+    min-height: 24px;
+    padding-inline: 0;
+  }
+  .pane-focus-label {
+    display: none;
+  }
+  .pane-focus-icon {
+    display: flex;
+    justify-content: center;
+  }
+}
+
+/* Frame pulse — a pane's --pane-<name>-pulse token is the iteration count:
+   0 stays still, "infinite" breathes (the AI sets it while it works). */
+@keyframes pane-pulse {
+  0%,
+  100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.45) saturate(1.2);
+  }
+}
+
+/* Resize handles */
+.mosaic.crux-mosaic-theme .mosaic-split:hover {
+  background: none;
+}
+
+.mosaic.crux-mosaic-theme .mosaic-split.-row {
+  width: 3px;
+  margin-left: -1.5px;
+}
+
+.mosaic.crux-mosaic-theme .mosaic-split.-column {
+  height: 3px;
+  margin-top: -1.5px;
+}
+
+.mosaic.crux-mosaic-theme .mosaic-split .mosaic-split-line {
+  background: transparent;
+  transition: background-color 150ms;
+}
+
+.mosaic.crux-mosaic-theme .mosaic-split:hover .mosaic-split-line {
+  background: color-mix(in srgb, var(--accent) 30%, transparent);
+  box-shadow: none;
+}
+
+.mosaic.crux-mosaic-theme .mosaic-split:active .mosaic-split-line {
+  background: color-mix(in srgb, var(--accent) 50%, transparent);
+}
+
+/* Pane content wrapper — fills parent, frozen to pixel size during resize by Split.js patch */
+.pane-freeze-wrapper {
+  width: 100%;
+  height: 100%;
+}
+
+/* During resize: suppress pointer-events on tiles */
+.mosaic-root.mosaic-resizing .mosaic-tile {
+  pointer-events: none;
+}
+
+/* Drop targets for drag rearrangement */
+.mosaic.crux-mosaic-theme
+  .mosaic-drop-target
+  .drop-target-container
+  .drop-target {
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  border: 2px solid var(--accent);
+  border-radius: var(--radius-sm);
+  opacity: 0;
+  transition: opacity 100ms;
+}
+
+.mosaic.crux-mosaic-theme
+  .mosaic-drop-target
+  .drop-target-container
+  .drop-target.drop-target-hover {
+  opacity: 1;
+}
+
+/* Zero state (no panes visible) */
+.mosaic.crux-mosaic-theme .mosaic-zero-state {
+  background: transparent;
+  box-shadow: none;
+}
+
+/* ── Gateway stage: the entrance fades in over 2 s (quick start, soft landing); every fade out takes 2 s; after the entrance, a stir brings it back at once ── */
+.gateway-stage .gateway-piece {
+  opacity: 0;
+  transform: translateY(10px);
+  filter: blur(3px);
+  transition:
+    opacity 2000ms ease-in-out,
+    transform 2000ms ease-in-out,
+    filter 2000ms ease-in-out;
+}
+.gateway-stage[data-visible="true"] .gateway-piece {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+  transition-duration: 0ms;
+}
+.gateway-stage[data-visible="true"][data-entrance] .gateway-piece {
+  transition-duration: 2000ms;
+  transition-timing-function: cubic-bezier(0.16, 0.84, 0.3, 1);
+}
+/* a dragged piece is positioned by its own transform: fade it by opacity and blur only */
+.gateway-stage .gateway-piece[data-placed] {
+  transition-property: opacity, filter;
+}
+@media (prefers-reduced-motion: reduce) {
+  .gateway-stage .gateway-piece {
+    transform: none;
+    filter: none;
+    transition-duration: 400ms;
+  }
+}
+
+/* ── Mood Bar level bars: a subtle sway while the track plays ── */
+@keyframes mood-bar-dance {
+  0% {
+    transform: scaleY(0.72);
+  }
+  40% {
+    transform: scaleY(1);
+  }
+  65% {
+    transform: scaleY(0.82);
+  }
+  100% {
+    transform: scaleY(0.72);
+  }
+}
+.mood-bar-dance {
+  animation-name: mood-bar-dance;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .mood-bar-dance {
+    animation: none;
+  }
+}
+
+/* ── The plasma button (ui/PlasmaButton) ──────────────────────────
+   A button that looks like a pane: the landing page's mossy frost for a
+   plate, an iridescent hairline for a rim, and on hover the iridescence
+   fills it — a blurred swirl — and it glows. Its own paint everywhere: a
+   shape drawn by the ground inside a pane's shape fuses into it and is
+   never seen, and the ground cannot reach into a dialog. */
+@property --plasma-swirl {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+.plasma-button {
+  --plasma-button-rim: conic-gradient(
+    from 210deg,
+    rgb(159 243 228 / 0.7),
+    rgb(176 75 214 / 0.7),
+    rgb(255 210 122 / 0.6),
+    rgb(95 210 165 / 0.7),
+    rgb(110 168 255 / 0.7),
+    rgb(159 243 228 / 0.7)
+  );
+  color: var(--text);
+  background: var(
+    --plasma-chrome-plate,
+    color-mix(in srgb, var(--panel) 78%, transparent)
+  );
+  border: 1px solid transparent;
+  backdrop-filter: blur(24px) saturate(105%);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.08),
+    0 1px 2px rgb(0 0 0 / 0.25);
+  transition:
+    box-shadow var(--motion-ms-fast, 160ms) ease-out,
+    color var(--motion-ms-fast, 160ms) ease-out;
+}
+/* The rim: the iridescent gradient masked down to a one-pixel ring. */
+.plasma-button::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: var(--plasma-button-rim);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0.55;
+  pointer-events: none;
+  transition: opacity var(--motion-ms-fast, 160ms) ease-out;
+}
+.plasma-button-swirl {
+  position: absolute;
+  inset: -45%;
+  pointer-events: none;
+  background: conic-gradient(
+    from var(--plasma-swirl),
+    #9ff3e4,
+    #b04bd6,
+    #ffd27a,
+    #5fd2a5,
+    #6ea8ff,
+    #9ff3e4
+  );
+  filter: blur(16px) saturate(140%);
+  mix-blend-mode: screen;
+  opacity: 0;
+  transition: opacity 380ms ease-out;
+  animation: plasma-swirl 5s linear infinite;
+  animation-play-state: paused;
+}
+@keyframes plasma-swirl {
+  to {
+    --plasma-swirl: 360deg;
+  }
+}
+.plasma-button:hover:not(:disabled),
+.plasma-button:focus-visible {
+  color: #ffffff;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.16),
+    0 0 28px color-mix(in srgb, var(--accent) 50%, transparent),
+    0 4px 18px rgb(0 0 0 / 0.3);
+}
+.plasma-button:hover:not(:disabled)::after,
+.plasma-button:focus-visible::after {
+  opacity: 1;
+}
+.plasma-button:hover:not(:disabled) .plasma-button-swirl,
+.plasma-button:focus-visible .plasma-button-swirl {
+  opacity: 0.55;
+  animation-play-state: running;
+}
+.plasma-button:active:not(:disabled) .plasma-button-swirl {
+  opacity: 0.8;
+}
+@media (prefers-reduced-motion: reduce) {
+  .plasma-button-swirl {
+    animation: none;
+  }
+}

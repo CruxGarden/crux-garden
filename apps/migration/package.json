@@ -1,0 +1,7 @@
+{
+  "name": "crux-garden-migration",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "main": "electron/main.cjs"
+}
