@@ -26,6 +26,18 @@ State limitations at the narrowest evidenced level: provider, method, response, 
 
 For Dropbox account migration, evaluate the authenticated API with revision-aware downloads and provider content-hash verification next. Retain shared-file downloads and local export import where useful. The existing shared-link slice validates infrastructure; it does not establish the preferred account-migration method. Dropbox documents HTTP range support for content-download endpoints, including the file and shared-link API routes; actual recovery behavior still needs qualification. [Dropbox request/response formats](https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/request-response-formats).
 
+### Reuse across services
+
+Daniel's direction (2026-11-10): design components around the small set of migration methods, so a new service supplies an adapter rather than a duplicate workflow. Initial method families are authenticated account/file APIs, shared-file links, provider-prepared export archives, and local folders/files. Treat this as a working taxonomy; add a family only when a real service requires materially different behavior.
+
+- Shared infrastructure owns job lifecycle, scheduling/concurrency, progress, cancellation, persistence, retry policy execution, checkpoint storage, streaming, space checks, safe publication and verification orchestration.
+- Method-level workflows own reusable account connection/selection, file listing/pagination, download preparation, export request/wait/download where supported, and archive/local-source intake. Implement these as real connectors require them, not speculative plugin machinery.
+- Service adapters own authorization scopes/flows, endpoint and redirect policy, provider pagination cursors, rate-limit/error interpretation, remote revision identity, checksum algorithms and metadata mapping. Credentials remain behind a host-owned credential interface; the UI never owns tokens.
+- Provider/method capabilities drive reusable selection, progress, recovery and review components. Express resume requirements explicitly: range transport support and stable version identity are separate capabilities. Strong HTTP ETags and provider revisions may satisfy identity through different adapters; neither should be imposed universally.
+- Persist provider, method and source/version provenance with checkpoints. Share the job machinery without treating checkpoints or credentials as interchangeable between methods/services. Adapter-specific checks supplement shared lifecycle and integrity tests.
+
+Extract shared behavior as the second real use case demonstrates it. Keep the current Dropbox transport isolated, then use the next connector to validate reusable contracts. Avoid a giant provider switch, per-service copies of the transfer engine, or a lowest-common-denominator interface that loses provider data.
+
 ## Extension points
 
 Add a provider's guidance in the catalog without adding UI conditionals. Direct connectors will require a provider contract covering export/download capabilities, source identity, pagination, credentials, retry/rate-limit behavior and durable checkpoints. Define that contract with the first actual connector, rather than pretending every provider exports alike. Keep download jobs separate from archive interpretation and copy verification.
