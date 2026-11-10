@@ -117,6 +117,12 @@ async fn migration_request(
         "pause",
         "inspect",
         "checklist",
+        "downloads",
+        "downloadCreate",
+        "downloadStart",
+        "downloadPause",
+        "downloadRestart",
+        "downloadImport",
     ]
     .contains(&command.as_str())
     {
@@ -131,7 +137,11 @@ async fn migration_pick(
     id: String,
     kind: String,
 ) -> Result<(), String> {
-    if kind != "source" && kind != "destination" && kind != "archive" {
+    if kind != "source"
+        && kind != "destination"
+        && kind != "archive"
+        && kind != "downloadDestination"
+    {
         return Err("Invalid folder choice".into());
     }
     let archive = kind == "archive";

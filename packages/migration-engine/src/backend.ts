@@ -40,6 +40,10 @@ if (require.main === module) {
     try {
       runtime = await createMigrationRuntime(profile);
       api = await startLocalApi(runtime);
+      for (const signal of ["SIGTERM", "SIGINT"] as const)
+        process.once(signal, () => {
+          void close().then(() => process.exit(0));
+        });
       await fs.writeFile(
         descriptor,
         JSON.stringify({
@@ -51,10 +55,6 @@ if (require.main === module) {
         { mode: 0o600 },
       );
       await fs.chmod(descriptor, 0o600);
-      for (const signal of ["SIGTERM", "SIGINT"] as const)
-        process.once(signal, () => {
-          void close().then(() => process.exit(0));
-        });
       if (headless) {
         console.error(
           "Migration service ready; connection details are in the selected profile’s local-api.json.",

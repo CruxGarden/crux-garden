@@ -1,7 +1,10 @@
 import * as fs from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
-import type { MigrationJob } from "@cruxgarden/migration-contracts";
+import type {
+  MigrationJob,
+  DownloadJob,
+} from "@cruxgarden/migration-contracts";
 
 /** The service owns jobs; the host may supply its existing database owner. */
 export interface MigrationStore {
@@ -10,6 +13,8 @@ export interface MigrationStore {
   getMood(): Promise<Record<string, string>>;
   setMood(tokens: Record<string, string>): Promise<void>;
   cruxCount(): Promise<number>;
+  loadDownloads?(): Promise<DownloadJob[]>;
+  saveDownload?(job: DownloadJob): Promise<void>;
   close(): Promise<void>;
 }
 export async function openMigrationStore(
@@ -23,6 +28,14 @@ export async function openMigrationStore(
     ? LocalGraphRuntime.open(file)
     : LocalGraphRuntime.create(file));
   return {
+    async loadDownloads() {
+      return (await api.listSettings())
+        .filter((s) => s.key.startsWith("migration:download:"))
+        .map((s) => JSON.parse(s.value));
+    },
+    async saveDownload(job) {
+      await api.putSetting("migration:download:" + job.id, JSON.stringify(job));
+    },
     async loadJobs() {
       return (await api.listSettings())
         .filter((s) => s.key.startsWith("migration:job:"))

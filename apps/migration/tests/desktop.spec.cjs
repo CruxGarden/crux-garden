@@ -457,3 +457,61 @@ test("closing the window keeps the API and worker alive; explicit quit pauses an
     await fs.rm(dir, { recursive: true, force: true });
   }
 });
+
+test("Downloads prepares a Dropbox link through the native folder picker without persisting its secret", async () => {
+  const dir = await fs.realpath(
+    await fs.mkdtemp(path.join(os.tmpdir(), "migrate-native-download-")),
+  );
+  const app = await electron.launch({
+    executablePath: require("../../../tools/node_modules/electron"),
+    args: [path.resolve(__dirname, "..")],
+    env: {
+      ...process.env,
+      CRUX_MIGRATION_TEST_PROFILE: path.join(dir, "profile"),
+    },
+  });
+  try {
+    const page = await app.firstWindow();
+    await page.getByRole("button", { name: "Downloads", exact: true }).click();
+    await app.evaluate(({ dialog }, folder) => {
+      dialog.showOpenDialog = async () => ({
+        canceled: false,
+        filePaths: [folder],
+      });
+    }, dir);
+    await page
+      .getByLabel("Dropbox file link")
+      .fill("https://www.dropbox.com/s/id/example.bin?rlkey=private-test-link");
+    await page
+      .getByRole("button", { name: "Prepare download", exact: true })
+      .click();
+    await expect(
+      page.getByRole("button", { name: "Start download", exact: true }),
+    ).toBeEnabled();
+    const jobs = await page.evaluate(() =>
+      window.migrationAPI.request("downloads"),
+    );
+    expect(jobs).toHaveLength(1);
+    expect(jobs[0].folder).toContain(dir);
+    expect(JSON.stringify(jobs)).not.toContain("private-test-link");
+    expect(
+      await page.evaluate(() =>
+        window.migrationAPI
+          .request("downloadDestination", { id: "x", path: "/" })
+          .then(
+            () => false,
+            () => true,
+          ),
+      ),
+    ).toBe(true);
+    await page.setViewportSize({ width: 560, height: 800 });
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
+  } finally {
+    await app.close();
+    await fs.rm(dir, { recursive: true, force: true });
+  }
+});

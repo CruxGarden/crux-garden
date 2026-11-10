@@ -28,3 +28,5 @@ apps/migration/runtime-dist/node apps/migration/runtime-dist/backend.cjs --serve
 ```
 
 Stop with Ctrl-C. Do not point another service at a profile already owned by a running desktop app. No cloud connection or files are copied until explicit job commands are submitted.
+
+The first network connector adds authenticated download endpoints; see [Dropbox downloads](dropbox-downloads.md#local-api-and-embedding). The renderer never gains direct filesystem or unauthenticated HTTP access.

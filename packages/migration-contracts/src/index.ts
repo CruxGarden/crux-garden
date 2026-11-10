@@ -31,6 +31,7 @@ export interface MigrationJob {
 }
 export interface MigrationInfo {
   product: "migration";
+  capabilities?: { sharedFileDownloads: boolean };
   cruxCount: number;
   runtime: string;
   mood: Record<string, string>;
@@ -44,12 +45,39 @@ export type MigrationCommand =
   | "pause"
   | "inspect"
   | "checklist"
-  | "help";
+  | "help"
+  | "downloads"
+  | "downloadCreate"
+  | "downloadStart"
+  | "downloadRestart"
+  | "downloadPause"
+  | "downloadImport";
 export interface MigrationClient {
   request<T>(
     command: MigrationCommand,
     args?: Record<string, unknown>,
   ): Promise<T>;
-  pick(id: string, kind: "source" | "archive" | "destination"): Promise<void>;
+  pick(
+    id: string,
+    kind: "source" | "archive" | "destination" | "downloadDestination",
+  ): Promise<void>;
   reveal(id: string): Promise<void>;
+}
+
+export interface DownloadJob {
+  id: string;
+  provider: "Dropbox";
+  filename: string;
+  linkHash: string;
+  created: string;
+  state: "ready" | "downloading" | "paused" | "failed" | "downloaded";
+  folder?: string;
+  bytes: number;
+  total?: number;
+  etag?: string;
+  partialHash: string;
+  partialIdentity?: { device: string; inode: string };
+  bodyComplete?: boolean;
+  sha256?: string;
+  error?: string;
 }

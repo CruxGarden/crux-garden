@@ -27,6 +27,10 @@ npm start
 - `packages/migration-engine`: headless jobs, workers, local HTTP adapter, SQLite storage adapter, folder/archive verification. Production dependencies are installed separately to keep the native runtime free of UI/build dependencies.
 - `packages/garden-ui`: extracted shared UI primitives, Mood tokens, Plasma integration, fonts and licenses. Provenance is recorded in `docs/source-provenance.json`; this does not yet switch Builder to consume this package.
 
+## Direct downloads
+
+The first connector accepts an existing Dropbox shared-file link. Downloads have saved checkpoints and pause/resume, then feed the usual review-and-preserve flow. Link contents stay in memory; after restarting, paste the same link to resume. Full-account sign-in and folder downloading are future work. See [Dropbox downloads](docs/dropbox-downloads.md) for supported links, integrity boundaries and validation limits.
+
 ## Background operation
 
 Closing the desktop window hides it while preservation work and the local API continue. Use the Migrate menu-bar/tray icon → **Open Migrate** to return, or **Pause work and quit** to stop gracefully. On macOS the Dock also reopens the window. Quit does not leave a detached service running; unfinished work is paused and can be resumed after reopening. This does not prevent computer sleep or start at login.

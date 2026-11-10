@@ -1,6 +1,6 @@
 module.exports = {
   testDir: __dirname,
-  testMatch: "embedding.spec.cjs",
+  testMatch: "*.spec.cjs",
   outputDir: "../../test-results/embedding",
   timeout: 30000,
   use: { channel: process.env.CI ? undefined : "chrome" },

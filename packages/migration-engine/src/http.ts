@@ -68,7 +68,29 @@ export async function startLocalApi(service: MigrationService) {
         result = await service.request("list");
       else if (request.method === "POST" && url.pathname === "/v1/jobs")
         result = await service.request("create", await body(request));
-      else {
+      else if (url.pathname === "/v1/downloads" && request.method === "GET")
+        result = await service.request("downloads");
+      else if (url.pathname === "/v1/downloads" && request.method === "POST")
+        result = await service.request("downloadCreate", await body(request));
+      else if (
+        /^\/v1\/downloads\/[a-zA-Z0-9-]+\/(destination|start|restart|pause|import)$/.test(
+          url.pathname,
+        ) &&
+        request.method === "POST"
+      ) {
+        const [, , , id, action] = url.pathname.split("/");
+        const command = {
+          destination: "downloadDestination",
+          start: "downloadStart",
+          restart: "downloadRestart",
+          pause: "downloadPause",
+          import: "downloadImport",
+        }[action!];
+        result = await service.request(command!, {
+          ...(await body(request)),
+          id,
+        });
+      } else {
         const match =
           /^\/v1\/jobs\/([a-zA-Z0-9-]+)\/(source|destination|inspect|start|pause|checklist)$/.exec(
             url.pathname,

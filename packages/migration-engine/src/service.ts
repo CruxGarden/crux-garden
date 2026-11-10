@@ -4,14 +4,25 @@ import { randomUUID } from "node:crypto";
 import { Worker } from "node:worker_threads";
 import type { MigrationJob } from "@cruxgarden/migration-contracts";
 import { findGuide } from "@cruxgarden/migration-providers";
+import { createDownloads, type DownloadOpen } from "./download";
 import { checkedPath, inside } from "./files";
 import { openMigrationStore, type MigrationStore } from "./store";
 
 export async function createMigrationRuntime(
   profile: string,
-  options: { store?: MigrationStore } = {},
+  options: { store?: MigrationStore; downloadOpen?: DownloadOpen } = {},
 ) {
   const store = options.store ?? (await openMigrationStore(profile));
+  const downloads =
+    store.loadDownloads && store.saveDownload
+      ? await createDownloads(
+          {
+            loadDownloads: () => store.loadDownloads!(),
+            saveDownload: (job) => store.saveDownload!(job),
+          },
+          options.downloadOpen,
+        )
+      : undefined;
   const jobs = new Map<string, MigrationJob>();
   for (const job of await store.loadJobs()) {
     if (job.state === "running" || job.state === "inspecting")
@@ -38,12 +49,50 @@ export async function createMigrationRuntime(
       throw new Error("Pause this import before changing it.");
   };
   async function request(command: string, args: Record<string, unknown> = {}) {
+    if (command.startsWith("download")) {
+      if (!downloads)
+        throw new Error("This host does not provide download storage.");
+      if (command === "downloads") return downloads.list();
+      if (command === "downloadCreate") return downloads.create(args.link);
+      if (command === "downloadDestination")
+        return downloads.destination(args.id, args.path);
+      if (command === "downloadStart")
+        return downloads.start(args.id, args.link);
+      if (command === "downloadRestart")
+        return downloads.start(args.id, args.link, true);
+      if (command === "downloadPause") return downloads.pause(args.id);
+      if (command === "downloadImport") {
+        const download = downloads.get(args.id);
+        if (download.state !== "downloaded" || !download.folder)
+          throw new Error("Finish the download first.");
+        if (
+          (await fs.readdir(download.folder)).some(
+            (name) => name !== download.filename,
+          )
+        )
+          throw new Error(
+            "The download folder contains other files. Select the intended source manually.",
+          );
+        const job = (await request("create", {
+          provider: download.provider,
+        })) as MigrationJob;
+        const file = join(download.folder, download.filename);
+        // Archives enter interpretation; ordinary files enter as a one-file folder.
+        await request("source", {
+          id: job.id,
+          path: /\.(zip|tar|tgz|tar\.gz)$/i.test(file) ? file : download.folder,
+        });
+        return job;
+      }
+      throw new Error("Unknown download operation.");
+    }
     if (command === "info")
       return {
         product: "migration",
         runtime: process.version,
         cruxCount: await store.cruxCount(),
         mood: await store.getMood(),
+        capabilities: { sharedFileDownloads: !!downloads },
       };
     if (command === "mood") {
       if (
@@ -225,6 +274,7 @@ export async function createMigrationRuntime(
     throw new Error("This operation is not available in Migration.");
   }
   async function close() {
+    await downloads?.close();
     if (worker) {
       const w = worker;
       w.postMessage("pause");

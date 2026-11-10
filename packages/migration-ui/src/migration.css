@@ -209,3 +209,27 @@
     flex-direction: column;
   }
 }
+
+.migration-field {
+  margin-bottom: 1.25rem;
+}
+.migration-area progress {
+  appearance: none;
+  width: 100%;
+  height: 0.65rem;
+  margin-bottom: 1.25rem;
+  border: 0;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--input);
+  color: var(--accent);
+}
+.migration-area progress::-webkit-progress-bar {
+  background: var(--input);
+}
+.migration-area progress::-webkit-progress-value {
+  background: var(--accent);
+}
+.migration-area progress::-moz-progress-bar {
+  background: var(--accent);
+}

@@ -37,5 +37,5 @@ const client = {
   },
 };
 createRoot(document.getElementById("root")).render(
-  <MigrationApp client={client} />,
+  <MigrationApp client={window.migrationHarnessClient || client} />,
 );

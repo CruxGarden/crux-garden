@@ -12,6 +12,7 @@ import type {
 } from "@cruxgarden/migration-contracts";
 import { MIGRATION_GUIDES, findGuide } from "@cruxgarden/migration-providers";
 import MigrationGuide from "./MigrationGuide";
+import Downloads from "./Downloads";
 import "./migration.css";
 
 const size = (n: number) =>
@@ -30,14 +31,15 @@ export default function MigrationApp({
   hostNotice?: string;
   appearance?: "standalone" | "embedded";
 }) {
-  const [page, setPage] = useState<"together" | "migration" | "mood">(
-    "together",
-  );
+  const [page, setPage] = useState<
+    "together" | "migration" | "mood" | "downloads"
+  >("together");
   const [jobs, setJobs] = useState<MigrationJob[]>([]);
   const [selected, setSelected] = useState<string>();
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [ready, setReady] = useState(false);
+  const [hasDownloads, setHasDownloads] = useState(false);
   const [mood, setMood] = useState<Record<string, string>>({});
   const [tokenFilter, setTokenFilter] = useState("");
   const [provider, setProvider] = useState("Dropbox");
@@ -71,6 +73,7 @@ export default function MigrationApp({
         const info = await client.request<MigrationInfo>("info");
         if (disposed) return;
         setMood(info.mood);
+        setHasDownloads(!!info.capabilities?.sharedFileDownloads);
         if (appearance === "standalone") applyMigrationMood(info.mood);
         await refresh();
         setReady(true);
@@ -117,6 +120,14 @@ export default function MigrationApp({
           <h1>Migrate</h1>
         </div>
         <nav aria-label="Migrate">
+          {hasDownloads && (
+            <Button
+              variant={page === "downloads" ? "primary" : "ghost"}
+              onClick={() => setPage("downloads")}
+            >
+              Downloads
+            </Button>
+          )}
           <Button
             variant={page === "together" ? "primary" : "ghost"}
             onClick={() => setPage("together")}
@@ -138,6 +149,16 @@ export default function MigrationApp({
         </nav>
       </header>
       <main>
+        {page === "downloads" && (
+          <Downloads
+            client={client}
+            onImport={(job) => {
+              setSelected(job.id);
+              setPage("migration");
+              void refresh();
+            }}
+          />
+        )}
         {error && (
           <Panel className="mb-6" role="alert">
             <strong>Something needs attention</strong>

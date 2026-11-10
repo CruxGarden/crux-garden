@@ -30,3 +30,13 @@ The final Tauri UI was also exercised through actual native folder pickers, revi
 ## Product name — Crux Garden Migrate
 
 Daniel selected **Crux Garden Migrate** for the standalone application, keeping the monorepo `CruxGarden/crux-garden`. Window titles, navigation, native bundle/display names, tray labels, product references in export guidance and the standalone notice now use Migrate. API/package identifiers and storage paths are intentionally stable. The renamed Tauri bundle opened the two previously verified synthetic imports from the same profile, confirming history was retained. The renamed renderer passed all four native journeys (23.9 seconds), the embedding journey, and the 31-test verify gate.
+
+## Dropbox shared-file downloads — 2026-11-10
+
+The verify gate passes 45 engine/API/process tests. Five native desktop journeys cover existing preservation/background behavior plus Downloads preparation and native path authority. Two browser journeys include a streamed network fixture through the real engine/SQLite, pause/reload/resume, handoff to review and final preservation with exact byte comparison. The injected opener is only a programmatic test seam, never a production HTTP/IPC configuration.
+
+A real user-supplied `dos.pdf` downloaded successfully (400,436 bytes) and entered the full review/preserve workflow. PDF header, downloaded-file SHA-256 and preserved bytes agree. The shared link is neither in source nor saved job records. The live server omitted a strong ETag: byte-range resume is tested with controlled responses, and unsupported live responses offer an explicit restart instead. See [download details](dropbox-downloads.md).
+
+A process-test cancellation exposed a startup race: the connection descriptor was written before termination handlers were installed. Handlers now precede advertised readiness. The process test also avoids waiting for an already-signaled child and requires clean exit status.
+
+The final packaged Tauri app also completed the live PDF journey through Downloads, native folder pickers, review and preservation. The UI reported verified; an independent disk check matched both 400,436-byte copies to SHA-256 `17b74e5930324e61dea29d56c8cdb1b4ee63b893599e364b4bd642b75223e797`. Graceful Quit removed service ownership/connection files. The final package check passed bundled Node/native SQLite, zero Cruxes, folder/ZIP/TAR.GZ preservation and restart.

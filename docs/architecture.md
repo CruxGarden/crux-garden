@@ -20,11 +20,11 @@ Use a small synthetic Dropbox folder or ZIP first, then a user-selected real exp
 
 Add a provider's guidance in the catalog without adding UI conditionals. Direct connectors will require a provider contract covering export/download capabilities, source identity, pagination, credentials, retry/rate-limit behavior and durable checkpoints. Define that contract with the first actual connector, rather than pretending every provider exports alike. Keep download jobs separate from archive interpretation and copy verification.
 
-A future download worker must stream to partial files, persist resumable checkpoints, validate remote identities before resuming, and clearly restart when a provider cannot resume. Both native hosts now keep their service alive when the window closes, with a tray/menu-bar action to reopen it. Explicit Quit gracefully pauses and stops the service. Headless mode also runs without a UI. This is not an OS-installed background service; see [background lifecycle](background-lifecycle.md).
+The first shared-file transfer streams into partial files, persists checkpoints and validates file identity before range-resuming. It offers an explicit restart when a provider cannot support a safe resume. Both native hosts now keep their service alive when the window closes, with a tray/menu-bar action to reopen it. Explicit Quit gracefully pauses and stops the service. Headless mode also runs without a UI. This is not an OS-installed background service; see [background lifecycle](background-lifecycle.md).
 
 ## Deliberate limits
 
-- No direct cloud downloads, OAuth, scheduling, connector credential storage, album/mail/message interpretation or account completeness reconciliation yet.
+- The Dropbox shared-file connector is implemented and covered by network fixtures; one live PDF download/preservation has passed; broader Dropbox response qualification remains. No full-account OAuth, scheduling, credential storage, album/mail/message interpretation or completeness reconciliation yet.
 - No public plugin loader or arbitrary execution endpoints.
 - Local HTTP token grants full migration operations for its profile; scoped per-client tokens and consent UI remain future work. Tokens are rotated on service restart, never embedded in renderer assets.
 - A process ownership file prevents two service entrypoints opening the same profile. After an unclean kill, verify that the PID in `service.lock` is gone before removing that stale lock. Automatic stale-lock recovery remains open.
@@ -34,4 +34,8 @@ A future download worker must stream to partial files, persist resumable checkpo
 
 ## Next slice
 
-After the small Dropbox infrastructure proof, exercise a modest Drive export. Then implement one real download connector end to end, including interruption/recovery, using an explicit provider choice and a small selected test dataset. Broader personal photo libraries follow once those behaviors are proven.
+Qualify more Dropbox responses and implement account authorization plus selected-file browsing for a full connector. A modest Google Drive export and selected photo services follow. Keep the shared-file download route and preservation workflow independently reusable. Broader personal libraries remain outside the currently verified workload.
+
+## First direct-download connector
+
+See [Dropbox downloads](dropbox-downloads.md). Download jobs have separate records and states from preservation jobs. The provider module owns URL and network policy; the manager owns checkpoint persistence, prefix/readback hashing and exclusive file publication. Both use the same canonical SQLite owner and serialized service commands. Download I/O is asynchronous outside React; it does not require a renderer or a separate database.

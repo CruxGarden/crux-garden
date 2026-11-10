@@ -12,7 +12,7 @@ test("headless service owns its profile, rotates credentials, and shuts down wit
   const children = [];
   t.after(async () => {
     for (const p of children)
-      if (p.exitCode === null) {
+      if (p.exitCode === null && p.signalCode === null) {
         const done = once(p, "exit");
         p.kill("SIGTERM");
         await done;
@@ -59,7 +59,7 @@ test("headless service owns its profile, rotates credentials, and shuts down wit
   assert.equal(code, 1);
   const done = once(first, "exit");
   first.kill("SIGTERM");
-  await done;
+  assert.deepEqual(await done, [0, null]);
   await assert.rejects(fs.stat(path.join(profile, "local-api.json")), {
     code: "ENOENT",
   });
@@ -71,5 +71,5 @@ test("headless service owns its profile, rotates credentials, and shuts down wit
   assert.notEqual(next.token, connection.token);
   const finish = once(second, "exit");
   second.kill("SIGTERM");
-  await finish;
+  assert.deepEqual(await finish, [0, null]);
 });

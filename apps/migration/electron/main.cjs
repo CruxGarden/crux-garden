@@ -172,6 +172,12 @@ if (!app.requestSingleInstanceLock()) {
           "pause",
           "inspect",
           "checklist",
+          "downloads",
+          "downloadCreate",
+          "downloadStart",
+          "downloadPause",
+          "downloadRestart",
+          "downloadImport",
         ].includes(command)
       )
         throw new Error("Operation unavailable in Migrate.");
@@ -179,7 +185,11 @@ if (!app.requestSingleInstanceLock()) {
     });
     ipcMain.handle("migration:pick", async (event, id, kind) => {
       trusted(event);
-      if (!["source", "archive", "destination"].includes(kind))
+      if (
+        !["source", "archive", "destination", "downloadDestination"].includes(
+          kind,
+        )
+      )
         throw new Error("Invalid folder choice.");
       const chosen = await dialog.showOpenDialog(window, {
         title:
