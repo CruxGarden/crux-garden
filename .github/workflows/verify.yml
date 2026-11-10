@@ -16,3 +16,5 @@ jobs:
       - run: npm run setup
       - run: npm run verify
       - run: npm run test:desktop
+      - run: tools/node_modules/.bin/playwright install chromium
+      - run: npm run test:embedding

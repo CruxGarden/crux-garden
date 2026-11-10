@@ -7,5 +7,9 @@ window.addEventListener("dragover", (e) => e.preventDefault());
 window.addEventListener("drop", (e) => e.preventDefault());
 const client = desktopClient();
 createRoot(document.getElementById("root")!).render(
-  <MigrationApp client={client} appearance="standalone" />,
+  <MigrationApp
+    client={client}
+    appearance="standalone"
+    hostNotice="Closing the window keeps work running. Use the Migration menu-bar or tray icon to reopen or quit."
+  />,
 );

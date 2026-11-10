@@ -24,8 +24,10 @@ const size = (n: number) =>
 export default function MigrationApp({
   client,
   appearance = "embedded",
+  hostNotice = "Local preview · no account required",
 }: {
   client: MigrationClient;
+  hostNotice?: string;
   appearance?: "standalone" | "embedded";
 }) {
   const [page, setPage] = useState<"together" | "migration" | "mood">(
@@ -158,7 +160,9 @@ export default function MigrationApp({
               >
                 Bring files home <span aria-hidden>↗</span>
               </Button>
-              <p className="migration-footnote">On your computer. Yours to keep.</p>
+              <p className="migration-footnote">
+                On your computer. Yours to keep.
+              </p>
             </Panel>
             <div className="migration-stack">
               <Panel padding="lg">
@@ -585,7 +589,7 @@ export default function MigrationApp({
       </main>
       <footer className="migration-footer">
         <span>Crux Garden Migration</span>
-        <span>Local preview · no account required</span>
+        <span>{hostNotice}</span>
       </footer>
     </div>
   );

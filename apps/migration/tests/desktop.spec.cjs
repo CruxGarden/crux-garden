@@ -321,3 +321,138 @@ test("offline catalog filters providers, saves a provider-specific checklist and
     await fs.rm(dir, { recursive: true, force: true });
   }
 });
+
+test("closing the window keeps the API and worker alive; explicit quit pauses and restart resumes", async () => {
+  const dir = await fs.realpath(
+    await fs.mkdtemp(path.join(os.tmpdir(), "migration-background-")),
+  );
+  const profile = path.join(dir, "profile");
+  const source = path.join(dir, "export");
+  const destination = path.join(dir, "copies");
+  await fs.mkdir(source);
+  await fs.mkdir(destination);
+  // Enough small files to observe interruption without timing hooks in production.
+  const contents = Buffer.alloc(64 * 1024, 42);
+  for (let batch = 0; batch < 16; batch++) {
+    await Promise.all(
+      Array.from({ length: 32 }, (_, i) =>
+        fs.writeFile(path.join(source, `file-${batch * 32 + i}.bin`), contents),
+      ),
+    );
+  }
+  const launch = () =>
+    electron.launch({
+      executablePath: require("../../../tools/node_modules/electron"),
+      args: [path.resolve(__dirname, "..")],
+      env: { ...process.env, CRUX_MIGRATION_TEST_PROFILE: profile },
+    });
+  let app = await launch();
+  let connection;
+  async function api(route, body) {
+    const response = await fetch(connection.url + "/v1/" + route, {
+      method: body === undefined ? "GET" : "POST",
+      headers: {
+        authorization: "Bearer " + connection.token,
+        "content-type": "application/json",
+      },
+      ...(body === undefined ? {} : { body: JSON.stringify(body) }),
+    });
+    const value = await response.json();
+    expect(response.status, value.error).toBe(200);
+    return value.result;
+  }
+  async function ready() {
+    const page = await app.firstWindow();
+    await expect(
+      page.getByRole("button", { name: "Bring files home" }),
+    ).toBeEnabled({ timeout: 30000 });
+    connection = JSON.parse(
+      await fs.readFile(path.join(profile, "local-api.json"), "utf8"),
+    );
+    return page;
+  }
+  async function preparedJob() {
+    const job = await api("jobs", { provider: "Dropbox" });
+    await api(`jobs/${job.id}/source`, { path: source });
+    await api(`jobs/${job.id}/destination`, { path: destination });
+    await api(`jobs/${job.id}/inspect`, {});
+    await expect
+      .poll(
+        async () =>
+          (await api("jobs")).find((j) => j.id === job.id).inspection?.files,
+        { timeout: 30000 },
+      )
+      .toBe(512);
+    return job;
+  }
+  try {
+    let page = await ready();
+    await expect(
+      page.getByText(/Closing the window keeps work running/),
+    ).toBeVisible();
+    const job = await preparedJob();
+    const firstConnection = { ...connection };
+    await app.evaluate(({ BrowserWindow }) =>
+      BrowserWindow.getAllWindows()[0].close(),
+    );
+    expect(
+      await app.evaluate(({ BrowserWindow }) =>
+        BrowserWindow.getAllWindows()[0].isVisible(),
+      ),
+    ).toBe(false);
+    // Start real work AFTER hiding: completion cannot be a copy that finished first.
+    await api(`jobs/${job.id}/start`, {});
+    await expect
+      .poll(
+        async () => (await api("jobs")).find((j) => j.id === job.id).state,
+        { timeout: 30000 },
+      )
+      .toBe("verified");
+    expect(
+      JSON.parse(
+        await fs.readFile(path.join(profile, "local-api.json"), "utf8"),
+      ),
+    ).toEqual(firstConnection);
+    await app.evaluate(({ app }) => app.emit("activate"));
+    expect(
+      await app.evaluate(({ BrowserWindow }) =>
+        BrowserWindow.getAllWindows()[0].isVisible(),
+      ),
+    ).toBe(true);
+    await page.getByRole("button", { name: "Migration", exact: true }).click();
+    await expect(
+      page.getByRole("button", { name: /Dropbox · verified/ }),
+    ).toBeVisible();
+    const next = await preparedJob();
+    await api(`jobs/${next.id}/start`, {});
+    await app.close();
+    await expect(
+      fs.stat(path.join(profile, "local-api.json")),
+    ).rejects.toMatchObject({ code: "ENOENT" });
+    await expect(
+      fs.stat(path.join(profile, "service.lock")),
+    ).rejects.toMatchObject({ code: "ENOENT" });
+    app = await launch();
+    page = await ready();
+    expect(connection.token).not.toBe(firstConnection.token);
+    const paused = (await api("jobs")).find((j) => j.id === next.id);
+    expect(paused.state).toBe("paused");
+    await api(`jobs/${next.id}/start`, {});
+    await expect
+      .poll(
+        async () => (await api("jobs")).find((j) => j.id === next.id).state,
+        { timeout: 30000 },
+      )
+      .toBe("verified");
+    const verified = (await api("jobs")).find((j) => j.id === next.id);
+    expect(await fs.readdir(path.join(verified.output, "files"))).toHaveLength(
+      512,
+    );
+    expect(
+      await fs.readFile(path.join(verified.output, "files/file-511.bin")),
+    ).toEqual(contents);
+  } finally {
+    await app.close();
+    await fs.rm(dir, { recursive: true, force: true });
+  }
+});

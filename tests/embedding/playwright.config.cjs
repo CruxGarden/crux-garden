@@ -3,7 +3,7 @@ module.exports = {
   testMatch: "embedding.spec.cjs",
   outputDir: "../../test-results/embedding",
   timeout: 30000,
-  use: { channel: "chrome" },
+  use: { channel: process.env.CI ? undefined : "chrome" },
   webServer: {
     command:
       "node node_modules/vite/bin/vite.js --config tests/embedding/vite.config.ts",

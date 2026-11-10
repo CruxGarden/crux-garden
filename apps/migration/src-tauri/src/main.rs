@@ -10,7 +10,11 @@ use std::{
     },
     time::{Duration, Instant},
 };
-use tauri::Manager;
+use tauri::{
+    menu::{Menu, MenuItem},
+    tray::TrayIconBuilder,
+    Manager,
+};
 use tauri_plugin_dialog::DialogExt;
 use tauri_plugin_opener::OpenerExt;
 
@@ -53,9 +57,7 @@ impl Service {
         }
         Ok(value["result"].clone())
     }
-}
-impl Drop for Service {
-    fn drop(&mut self) {
+    fn shutdown(&mut self) {
         self.input.take(); // EOF asks the API to pause its worker and close SQLite.
         let start = Instant::now();
         while start.elapsed() < Duration::from_secs(5) {
@@ -68,7 +70,19 @@ impl Drop for Service {
         let _ = self.child.wait();
     }
 }
+impl Drop for Service {
+    fn drop(&mut self) {
+        self.shutdown();
+    }
+}
 type Shared = Arc<Mutex<Service>>;
+fn show_migration(app: &tauri::AppHandle) {
+    if let Some(window) = app.get_webview_window("main") {
+        let _ = window.unminimize();
+        let _ = window.show();
+        let _ = window.set_focus();
+    }
+}
 async fn call(service: Shared, command: String, args: Value) -> Result<Value, String> {
     tauri::async_runtime::spawn_blocking(move || {
         service
@@ -214,13 +228,51 @@ fn main() {
                 sequence: 0,
                 _profile_lock: profile_lock,
             })));
+            let show = MenuItem::with_id(app, "show", "Open Migration", true, None::<&str>)?;
+            let quit = MenuItem::with_id(app, "quit", "Pause work and quit", true, None::<&str>)?;
+            let menu = Menu::with_items(app, &[&show, &quit])?;
+            TrayIconBuilder::with_id("migration")
+                .icon(
+                    app.default_window_icon()
+                        .ok_or("Missing Migration icon")?
+                        .clone(),
+                )
+                .tooltip("Crux Garden Migration — running in the background")
+                .menu(&menu)
+                .on_menu_event(|app, event| match event.id.as_ref() {
+                    "show" => show_migration(app),
+                    "quit" => app.exit(0),
+                    _ => {}
+                })
+                .build(app)?;
             Ok(())
+        })
+        .on_window_event(|window, event| {
+            if let tauri::WindowEvent::CloseRequested { api, .. } = event {
+                // Only hide once the tray is available: there must be a way back.
+                if window.app_handle().tray_by_id("migration").is_some() && window.hide().is_ok() {
+                    api.prevent_close();
+                }
+            }
         })
         .invoke_handler(tauri::generate_handler![
             migration_request,
             migration_pick,
             migration_reveal
         ])
-        .run(tauri::generate_context!())
-        .expect("Could not start Crux Garden Migration");
+        .build(tauri::generate_context!())
+        .expect("Could not start Crux Garden Migration")
+        .run(|app, event| match event {
+            tauri::RunEvent::Exit => {
+                // Explicit quit must flush the worker and SQLite before process exit.
+                if let Some(service) = app.try_state::<Shared>() {
+                    if let Ok(mut service) = service.lock() {
+                        service.shutdown();
+                    }
+                }
+            }
+            #[cfg(target_os = "macos")]
+            tauri::RunEvent::Reopen { .. } => show_migration(app),
+            _ => {}
+        });
 }

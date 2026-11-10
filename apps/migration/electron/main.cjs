@@ -6,6 +6,9 @@ const {
   protocol,
   net,
   shell,
+  Tray,
+  Menu,
+  nativeImage,
 } = require("electron");
 const { spawn } = require("node:child_process");
 const { createInterface } = require("node:readline");
@@ -35,6 +38,7 @@ if (!app.requestSingleInstanceLock()) {
     },
   ]);
   let window,
+    tray,
     child,
     ending = false;
   const pending = new Map();
@@ -87,6 +91,14 @@ if (!app.requestSingleInstanceLock()) {
     )
       throw new Error("This operation belongs to the Migration window.");
   };
+  function showMigration() {
+    if (!window || window.isDestroyed()) return;
+    if (window.isMinimized()) window.restore();
+    window.show();
+    window.focus();
+  }
+  app.on("activate", showMigration);
+  app.on("second-instance", showMigration);
   app.whenReady().then(async () => {
     protocol.handle("crux-migration", (req) => {
       const url = new URL(req.url);
@@ -215,6 +227,25 @@ if (!app.requestSingleInstanceLock()) {
     window.webContents.on("will-navigate", (event, url) => {
       if (!isMigrationUrl(url)) event.preventDefault();
     });
+    const icon = nativeImage.createFromPath(
+      join(__dirname, "../src-tauri/icons/32x32.png"),
+    );
+    if (icon.isEmpty()) throw new Error("Missing Migration tray icon.");
+    tray = new Tray(icon.resize({ width: 18, height: 18 }));
+    tray.setToolTip("Crux Garden Migration — running in the background");
+    tray.setContextMenu(
+      Menu.buildFromTemplate([
+        { label: "Open Migration", click: showMigration },
+        { label: "Pause work and quit", click: () => app.quit() },
+      ]),
+    );
+    tray.on("double-click", showMigration);
+    window.on("close", (event) => {
+      if (!ending && tray && !tray.isDestroyed()) {
+        event.preventDefault();
+        window.hide();
+      }
+    });
     await window.loadURL("crux-migration://app/index.html");
   });
   app.on("before-quit", (event) => {
@@ -234,5 +265,8 @@ if (!app.requestSingleInstanceLock()) {
     });
     child.stdin.end();
   });
-  app.on("window-all-closed", () => app.quit());
+  // Closing hides the window; explicit Quit still closes the service and pauses work.
+  app.on("window-all-closed", () => {
+    if (!tray) app.quit();
+  });
 }

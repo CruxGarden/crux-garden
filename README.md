@@ -27,4 +27,10 @@ npm start
 - `packages/migration-engine`: headless jobs, workers, local HTTP adapter, SQLite storage adapter, folder/archive verification. Production dependencies are installed separately to keep the native runtime free of UI/build dependencies.
 - `packages/garden-ui`: extracted shared UI primitives, Mood tokens, Plasma integration, fonts and licenses. Provenance is recorded in `docs/source-provenance.json`; this does not yet switch Builder to consume this package.
 
+## Background operation
+
+Closing the desktop window hides it while preservation work and the local API continue. Use the Migration menu-bar/tray icon → **Open Migration** to return, or **Pause work and quit** to stop gracefully. On macOS the Dock also reopens the window. Quit does not leave a detached service running; unfinished work is paused and can be resumed after reopening. This does not prevent computer sleep or start at login.
+
+See [background lifecycle](docs/background-lifecycle.md) for the boundaries and verification.
+
 Personal account inventories and real exports do not belong in this source repository.

@@ -4,7 +4,12 @@
   "directories": {
     "output": "release-electron"
   },
-  "files": ["electron/*.cjs", "package.json", "!node_modules/**/*"],
+  "files": [
+    "electron/*.cjs",
+    "src-tauri/icons/32x32.png",
+    "package.json",
+    "!node_modules/**/*"
+  ],
   "extraResources": [
     {
       "from": "dist",

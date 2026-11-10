@@ -20,7 +20,7 @@ Use a small synthetic Dropbox folder or ZIP first, then a user-selected real exp
 
 Add a provider's guidance in the catalog without adding UI conditionals. Direct connectors will require a provider contract covering export/download capabilities, source identity, pagination, credentials, retry/rate-limit behavior and durable checkpoints. Define that contract with the first actual connector, rather than pretending every provider exports alike. Keep download jobs separate from archive interpretation and copy verification.
 
-A future download worker must stream to partial files, persist resumable checkpoints, validate remote identities before resuming, and clearly restart when a provider cannot resume. The service should eventually outlive window closure through a tray/background lifecycle. The current native hosts gracefully pause and stop their service when quitting; headless mode already runs without a UI. This is not yet an OS-installed background service.
+A future download worker must stream to partial files, persist resumable checkpoints, validate remote identities before resuming, and clearly restart when a provider cannot resume. Both native hosts now keep their service alive when the window closes, with a tray/menu-bar action to reopen it. Explicit Quit gracefully pauses and stops the service. Headless mode also runs without a UI. This is not an OS-installed background service; see [background lifecycle](background-lifecycle.md).
 
 ## Deliberate limits
 

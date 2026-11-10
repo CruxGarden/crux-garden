@@ -1,6 +1,6 @@
 # First-slice verification — 2026-11-10
 
-The initial monorepo source derives from the verified Home preview at `CruxGarden/app` commit `b5d52d144`. Builder's source and its previous Home preview were not modified. There is no monorepo remote or release deployment yet.
+The initial monorepo source derives from the verified Home preview at `CruxGarden/app` commit `b5d52d144`. Builder's source and its previous Home preview were not modified. The monorepo now has a remote at `CruxGarden/crux-garden`; there is no release deployment.
 
 Verified locally on macOS Apple Silicon:
 
@@ -14,8 +14,15 @@ The API test exposed a worker lifecycle race: review reported ready before the w
 
 The first Electron run hit its five-second inspection assertion during concurrent build/load. The journey waits for review readiness with a 30-second bound. Checklist assertions wait for the asynchronously persisted state before reloading. Runtime staging and final native tests are run against completed builds.
 
-These are synthetic fixtures, not a claim that a user's Dropbox/Google/Apple account was migrated. Direct downloads, automatic stale-lock recovery, tray lifetime, broader platform/filesystem/accessibility/performance qualification, signing/notarization and update distribution are not certified by these checks. GitHub CI is configured but has not run remotely.
+These are synthetic fixtures, not a claim that a user's Dropbox/Google/Apple account was migrated. Direct downloads, automatic stale-lock recovery, broader platform/filesystem/accessibility/performance qualification, signing/notarization and update distribution are not certified by these checks. GitHub CI is configured but has not run remotely.
 
 A later ZIP journey completed all file/receipt assertions but stalled in Electron application shutdown. The comparison host now exits explicitly after its service closes, instead of re-entering the native quit sequence. The focused ZIP journey then passed in five seconds; the complete desktop suite was rechecked. This change does not alter the Tauri host.
 
 The final Tauri UI was also exercised through actual native folder pickers, review and preservation. Its 68-byte synthetic Dropbox file matched the original and receipt SHA-256; the verified job was visible after quitting and reopening. Service connection/ownership files were removed on graceful shutdown.
+
+## Background lifecycle increment — 2026-11-10
+
+- `npm run verify`: all 31 engine/API/process checks pass with the updated UI and runtime.
+- `npm run test:desktop`: all four journeys pass (24.2 seconds). The new journey closes the real Electron window, starts a 512-file copy through its unchanged local API, observes verified completion while hidden, reopens via native activation, quits during another active copy, checks ownership/connection-file cleanup, and restarts/resumes to 512 verified files with matching content. Its fixtures are synthetic and isolated.
+- `npm run test:embedding`: host appearance and injected-client boundaries still pass. The lifecycle notice is supplied by the standalone entry, not imposed on embedded hosts.
+- Tauri `cargo check` passes with tray support enabled. Native packaged acceptance is recorded in [background lifecycle](background-lifecycle.md).
