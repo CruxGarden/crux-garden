@@ -19,7 +19,7 @@
       {
         "id": "unpacked",
         "label": "Prepare your local export",
-        "text": "Keep the downloaded ZIP, or unpack it and check a few files. Home accepts either a ZIP or a complete local folder. If using a synced folder, make every file available offline and pause syncing before this import. Home does not fetch online-only placeholders."
+        "text": "Keep the downloaded ZIP, or unpack it and check a few files. Migrate accepts either a ZIP or a complete local folder. If using a synced folder, make every file available offline and pause syncing before this import. Migrate does not fetch online-only placeholders."
       },
       {
         "id": "reviewed",
@@ -146,7 +146,7 @@
         "text": "Inspect an original photo, a video and an edited caption. Original EXIF remains in media; details added after uploading can be in separate JSON. Album and Camera Roll bulk downloads have different limits and exclude videos; use the full-data export for account preservation."
       }
     ],
-    "checks": "Keep the JSON alongside the media. Home preserves these files but does not yet rebuild Flickr albums, captions or permissions. Import each numbered ZIP separately and confirm that you have all parts.",
+    "checks": "Keep the JSON alongside the media. Migrate preserves these files but does not yet rebuild Flickr albums, captions or permissions. Import each numbered ZIP separately and confirm that you have all parts.",
     "sources": [
       {
         "title": "Flickr download instructions",
@@ -244,7 +244,7 @@
       {
         "id": "prepare",
         "label": "Choose a bucket and prefix",
-        "text": "Use an AWS account authorized to read the intended objects. Create an empty local folder for this snapshot. Home does not sign in to AWS or hold AWS credentials."
+        "text": "Use an AWS account authorized to read the intended objects. Create an empty local folder for this snapshot. Migrate does not sign in to AWS or hold AWS credentials."
       },
       {
         "id": "download",
@@ -254,10 +254,10 @@
       {
         "id": "review",
         "label": "Review the local snapshot",
-        "text": "Check representative files and compare the intended object inventory with the download. Import the completed s3-export folder into Home. This route captures current downloadable object content; it does not preserve all versions, ACLs, object tags or bucket configuration. Archived objects may need restoration before they can be downloaded."
+        "text": "Check representative files and compare the intended object inventory with the download. Import the completed s3-export folder into Migrate. This route captures current downloadable object content; it does not preserve all versions, ACLs, object tags or bucket configuration. Archived objects may need restoration before they can be downloaded."
       }
     ],
-    "checks": "S3 object keys are not always portable local paths. Review key collisions, skipped objects and errors in the download. Keep a separate source inventory if versions or object metadata matter. Home can verify the local files it receives, not prove remote bucket completeness.",
+    "checks": "S3 object keys are not always portable local paths. Review key collisions, skipped objects and errors in the download. Keep a separate source inventory if versions or object metadata matter. Migrate can verify the local files it receives, not prove remote bucket completeness.",
     "sources": [
       {
         "title": "AWS CLI S3 sync reference",

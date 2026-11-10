@@ -7,7 +7,7 @@ const fs = require("node:fs/promises");
 const path = require("node:path");
 const os = require("node:os");
 const zipFixture = require("./zip-fixture.cjs");
-test("Migration opens empty, preserves a folder, changes Mood and retains history", async () => {
+test("Migrate opens empty, preserves a folder, changes Mood and retains history", async () => {
   const dir = await fs.realpath(
     await fs.mkdtemp(path.join(os.tmpdir(), "crux-migration-desktop-")),
   );
@@ -28,6 +28,7 @@ test("Migration opens empty, preserves a folder, changes Mood and retains histor
   let app = await launch();
   try {
     let page = await app.firstWindow();
+    await expect(page).toHaveTitle("Crux Garden Migrate");
     await expect(
       page.getByRole("button", { name: "Bring files home" }),
     ).toBeEnabled({
@@ -117,7 +118,7 @@ test("Migration opens empty, preserves a folder, changes Mood and retains histor
       "data-surface-style",
       "glass",
     );
-    await page.getByRole("button", { name: "Migration", exact: true }).click();
+    await page.getByRole("button", { name: "Migrate", exact: true }).click();
     await expect(
       page.getByRole("button", { name: /Dropbox · verified/ }),
     ).toBeVisible();
@@ -144,7 +145,7 @@ test("Migration opens empty, preserves a folder, changes Mood and retains histor
   }
 });
 
-test("Migration selects a ZIP, reviews it and preserves its original and extracted files", async () => {
+test("Migrate selects a ZIP, reviews it and preserves its original and extracted files", async () => {
   const dir = await fs.realpath(
     await fs.mkdtemp(path.join(os.tmpdir(), "home-zip-desktop-")),
   );
@@ -290,7 +291,7 @@ test("offline catalog filters providers, saves a provider-specific checklist and
     ).toBeEnabled({
       timeout: 30000,
     });
-    await page.getByRole("button", { name: "Migration", exact: true }).click();
+    await page.getByRole("button", { name: "Migrate", exact: true }).click();
     await page.getByRole("button", { name: /Flickr · ready/ }).click();
     await page
       .getByText("How to prepare your Flickr export", { exact: true })
@@ -419,7 +420,7 @@ test("closing the window keeps the API and worker alive; explicit quit pauses an
         BrowserWindow.getAllWindows()[0].isVisible(),
       ),
     ).toBe(true);
-    await page.getByRole("button", { name: "Migration", exact: true }).click();
+    await page.getByRole("button", { name: "Migrate", exact: true }).click();
     await expect(
       page.getByRole("button", { name: /Dropbox · verified/ }),
     ).toBeVisible();

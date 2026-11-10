@@ -51,8 +51,8 @@ export default function MigrationGuide({
       <h4>What to check in your export</h4>
       <p>{guide.checks}</p>
       <p className="migration-footnote">
-        Migration preserves the files you provide. Checks for missing records,
-        attachments and service features are yours to make; Migration does not
+        Migrate preserves the files you provide. Checks for missing records,
+        attachments and service features are yours to make; Migrate does not
         yet interpret this service’s data.
       </p>
       <ul className="migration-guide-sources">

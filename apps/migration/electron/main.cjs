@@ -18,14 +18,22 @@ const { mkdirSync, realpathSync } = require("node:fs");
 
 app.setName(
   app.isPackaged
-    ? "Crux Garden Migration Electron Preview"
-    : "Crux Garden Migration Development",
+    ? "Crux Garden Migrate Electron Preview"
+    : "Crux Garden Migrate Development",
 );
-// Test overrides are restricted to development; installed Migration has its own profile.
+// Test overrides are restricted to development; installed Migrate has its own profile.
 const testProfile = !app.isPackaged && process.env.CRUX_MIGRATION_TEST_PROFILE;
 if (testProfile && !isAbsolute(testProfile))
   throw new Error("The test profile must be absolute.");
-const profile = testProfile || join(app.getPath("appData"), app.getName());
+// Display-name changes must not create a new profile or strand saved jobs.
+const profile =
+  testProfile ||
+  join(
+    app.getPath("appData"),
+    app.isPackaged
+      ? "Crux Garden Migration Electron Preview"
+      : "Crux Garden Migration Development",
+  );
 mkdirSync(profile, { recursive: true });
 app.setPath("userData", realpathSync(profile));
 if (!app.requestSingleInstanceLock()) {
@@ -54,7 +62,7 @@ if (!app.requestSingleInstanceLock()) {
       const id = ++sequence;
       const timer = setTimeout(() => {
         pending.delete(id);
-        reject(new Error("Migration’s local service did not respond."));
+        reject(new Error("Migrate’s local service did not respond."));
       }, 30000);
       pending.set(id, {
         resolve: (value) => {
@@ -89,7 +97,7 @@ if (!app.requestSingleInstanceLock()) {
       event.senderFrame !== window.webContents.mainFrame ||
       !isMigrationUrl(event.senderFrame.url)
     )
-      throw new Error("This operation belongs to the Migration window.");
+      throw new Error("This operation belongs to the Migrate window.");
   };
   function showMigration() {
     if (!window || window.isDestroyed()) return;
@@ -137,9 +145,7 @@ if (!app.requestSingleInstanceLock()) {
           : p.resolve(reply.result);
       } catch {
         for (const p of pending.values())
-          p.reject(
-            new Error("Invalid response from Migration’s local service."),
-          );
+          p.reject(new Error("Invalid response from Migrate’s local service."));
         pending.clear();
       }
     });
@@ -149,7 +155,7 @@ if (!app.requestSingleInstanceLock()) {
     });
     child.on("exit", () => {
       for (const p of pending.values())
-        p.reject(new Error("Migration’s local service stopped."));
+        p.reject(new Error("Migrate’s local service stopped."));
       pending.clear();
     });
     ipcMain.handle("migration:request", async (event, command, args) => {
@@ -168,7 +174,7 @@ if (!app.requestSingleInstanceLock()) {
           "checklist",
         ].includes(command)
       )
-        throw new Error("Operation unavailable in Migration.");
+        throw new Error("Operation unavailable in Migrate.");
       return request(command, args);
     });
     ipcMain.handle("migration:pick", async (event, id, kind) => {
@@ -215,7 +221,7 @@ if (!app.requestSingleInstanceLock()) {
       height: 900,
       minWidth: 480,
       minHeight: 600,
-      title: "Crux Garden Migration",
+      title: "Crux Garden Migrate",
       webPreferences: {
         preload: join(__dirname, "preload.cjs"),
         contextIsolation: true,
@@ -230,12 +236,12 @@ if (!app.requestSingleInstanceLock()) {
     const icon = nativeImage.createFromPath(
       join(__dirname, "../src-tauri/icons/32x32.png"),
     );
-    if (icon.isEmpty()) throw new Error("Missing Migration tray icon.");
+    if (icon.isEmpty()) throw new Error("Missing Migrate tray icon.");
     tray = new Tray(icon.resize({ width: 18, height: 18 }));
-    tray.setToolTip("Crux Garden Migration — running in the background");
+    tray.setToolTip("Crux Garden Migrate — running in the background");
     tray.setContextMenu(
       Menu.buildFromTemplate([
-        { label: "Open Migration", click: showMigration },
+        { label: "Open Migrate", click: showMigration },
         { label: "Pause work and quit", click: () => app.quit() },
       ]),
     );

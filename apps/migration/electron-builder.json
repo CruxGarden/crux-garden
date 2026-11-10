@@ -1,6 +1,6 @@
 {
   "appId": "garden.crux.migration.electron-preview",
-  "productName": "Crux Garden Migration Electron Preview",
+  "productName": "Crux Garden Migrate Electron Preview",
   "directories": {
     "output": "release-electron"
   },

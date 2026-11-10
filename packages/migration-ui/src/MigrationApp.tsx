@@ -114,9 +114,9 @@ export default function MigrationApp({
       <header className="migration-header">
         <div>
           <p className="migration-eyebrow">crux garden</p>
-          <h1>Migration</h1>
+          <h1>Migrate</h1>
         </div>
-        <nav aria-label="Migration">
+        <nav aria-label="Migrate">
           <Button
             variant={page === "together" ? "primary" : "ghost"}
             onClick={() => setPage("together")}
@@ -127,7 +127,7 @@ export default function MigrationApp({
             variant={page === "migration" ? "primary" : "ghost"}
             onClick={() => setPage("migration")}
           >
-            Migration
+            Migrate
           </Button>
           <Button
             variant={page === "mood" ? "primary" : "ghost"}
@@ -167,7 +167,7 @@ export default function MigrationApp({
             <div className="migration-stack">
               <Panel padding="lg">
                 <p className="migration-eyebrow">preserve and verify</p>
-                <h2>Migration</h2>
+                <h2>Migrate</h2>
                 <p>
                   Follow an export guide, preserve your files, and check every
                   copy.
@@ -176,7 +176,7 @@ export default function MigrationApp({
                   variant="secondary"
                   onClick={() => setPage("migration")}
                 >
-                  Open Migration
+                  Open Migrate
                 </Button>
               </Panel>
               <Panel padding="lg">
@@ -195,7 +195,7 @@ export default function MigrationApp({
             <div className="migration-section-heading">
               <div>
                 <p className="migration-eyebrow">bring it home</p>
-                <h2>Migration</h2>
+                <h2>Migrate</h2>
               </div>
               <Button disabled={!ready || busy} onClick={chooseProvider}>
                 New import
@@ -210,8 +210,8 @@ export default function MigrationApp({
                     </p>
                     <h3>Where are your files today?</h3>
                     <p>
-                      Choose a service for its export instructions. Migration
-                      can preserve a downloaded folder, ZIP, TAR or TAR.GZ and
+                      Choose a service for its export instructions. Migrate can
+                      preserve a downloaded folder, ZIP, TAR or TAR.GZ and
                       verify the local copy.
                     </p>
                     <label>
@@ -227,7 +227,7 @@ export default function MigrationApp({
                     </label>
                     <div
                       className="migration-provider-list"
-                      aria-label="Migration services"
+                      aria-label="Services to migrate"
                     >
                       {filteredGuides.map((g) => (
                         <Button
@@ -498,7 +498,7 @@ export default function MigrationApp({
         {page === "mood" && (
           <Panel padding="lg">
             <p className="migration-eyebrow">make it yours</p>
-            <h2>Your Migration Mood</h2>
+            <h2>Your Migrate Mood</h2>
             <p>
               These are Crux Garden’s shared Mood tokens. Your choices are saved
               on this computer.
@@ -569,7 +569,7 @@ export default function MigrationApp({
                           const value = e.target.value;
                           if (/url\s*\(|asset:|@import/i.test(value)) {
                             setError(
-                              "This Migration preview supports theme values, without external assets.",
+                              "This Migrate preview supports theme values, without external assets.",
                             );
                             return;
                           }
@@ -588,7 +588,7 @@ export default function MigrationApp({
         )}
       </main>
       <footer className="migration-footer">
-        <span>Crux Garden Migration</span>
+        <span>Crux Garden Migrate</span>
         <span>{hostNotice}</span>
       </footer>
     </div>

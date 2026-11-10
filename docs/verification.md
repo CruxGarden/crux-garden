@@ -26,3 +26,7 @@ The final Tauri UI was also exercised through actual native folder pickers, revi
 - `npm run test:desktop`: all four journeys pass (24.2 seconds). The new journey closes the real Electron window, starts a 512-file copy through its unchanged local API, observes verified completion while hidden, reopens via native activation, quits during another active copy, checks ownership/connection-file cleanup, and restarts/resumes to 512 verified files with matching content. Its fixtures are synthetic and isolated.
 - `npm run test:embedding`: host appearance and injected-client boundaries still pass. The lifecycle notice is supplied by the standalone entry, not imposed on embedded hosts.
 - Tauri `cargo check` passes with tray support enabled. Native packaged acceptance is recorded in [background lifecycle](background-lifecycle.md).
+
+## Product name — Crux Garden Migrate
+
+Daniel selected **Crux Garden Migrate** for the standalone application, keeping the monorepo `CruxGarden/crux-garden`. Window titles, navigation, native bundle/display names, tray labels, product references in export guidance and the standalone notice now use Migrate. API/package identifiers and storage paths are intentionally stable. The renamed Tauri bundle opened the two previously verified synthetic imports from the same profile, confirming history was retained. The renamed renderer passed all four native journeys (23.9 seconds), the embedding journey, and the 31-test verify gate.

@@ -42,13 +42,13 @@ impl Service {
             .recv_timeout(Duration::from_secs(30))
             .map_err(|_| {
                 let _ = self.child.kill();
-                "Migration’s local service did not respond".to_string()
+                "Migrate’s local service did not respond".to_string()
             })?;
         if reply.len() > 2_000_000 {
             return Err("Local service reply exceeded its limit".into());
         }
         let value: Value = serde_json::from_str(&reply)
-            .map_err(|_| "Migration’s local service stopped or returned an invalid response")?;
+            .map_err(|_| "Migrate’s local service stopped or returned an invalid response")?;
         if value["id"] != id {
             return Err("Unexpected local service reply".into());
         }
@@ -120,7 +120,7 @@ async fn migration_request(
     ]
     .contains(&command.as_str())
     {
-        return Err("Operation unavailable in Migration".into());
+        return Err("Operation unavailable in Migrate".into());
     }
     call(service.inner().clone(), command, args).await
 }
@@ -197,7 +197,7 @@ fn main() {
                 .open(profile.join("migration.lock"))?;
             profile_lock
                 .try_lock_exclusive()
-                .map_err(|_| "Migration is already open with this profile")?;
+                .map_err(|_| "Migrate is already open with this profile")?;
             let mut child =
                 Command::new(runtime.join(if cfg!(windows) { "node.exe" } else { "node" }))
                     .arg(runtime.join("backend.cjs"))
@@ -228,16 +228,16 @@ fn main() {
                 sequence: 0,
                 _profile_lock: profile_lock,
             })));
-            let show = MenuItem::with_id(app, "show", "Open Migration", true, None::<&str>)?;
+            let show = MenuItem::with_id(app, "show", "Open Migrate", true, None::<&str>)?;
             let quit = MenuItem::with_id(app, "quit", "Pause work and quit", true, None::<&str>)?;
             let menu = Menu::with_items(app, &[&show, &quit])?;
             TrayIconBuilder::with_id("migration")
                 .icon(
                     app.default_window_icon()
-                        .ok_or("Missing Migration icon")?
+                        .ok_or("Missing Migrate icon")?
                         .clone(),
                 )
-                .tooltip("Crux Garden Migration — running in the background")
+                .tooltip("Crux Garden Migrate — running in the background")
                 .menu(&menu)
                 .on_menu_event(|app, event| match event.id.as_ref() {
                     "show" => show_migration(app),
@@ -261,7 +261,7 @@ fn main() {
             migration_reveal
         ])
         .build(tauri::generate_context!())
-        .expect("Could not start Crux Garden Migration")
+        .expect("Could not start Crux Garden Migrate")
         .run(|app, event| match event {
             tauri::RunEvent::Exit => {
                 // Explicit quit must flush the worker and SQLite before process exit.

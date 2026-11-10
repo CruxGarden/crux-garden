@@ -23,6 +23,6 @@ export function desktopClient(): MigrationClient {
       reveal: (id) => tauri.core.invoke("migration_reveal", { id }),
     };
   throw new Error(
-    "Open Migration in its desktop application to select and preserve files.",
+    "Open Migrate in its desktop application to select and preserve files.",
   );
 }

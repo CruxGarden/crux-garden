@@ -13,7 +13,7 @@ import { fileURLToPath } from "node:url";
 
 const home = fileURLToPath(new URL("..", import.meta.url));
 for (const app of [
-  "apps/migration/src-tauri/target/release/bundle/macos/Crux Garden Migration Tauri Preview.app",
+  "apps/migration/src-tauri/target/release/bundle/macos/Crux Garden Migrate Tauri Preview.app",
 ]) {
   const runtime = path.join(home, app, "Contents/Resources/runtime");
   const fixture = await mkdtemp(path.join(tmpdir(), "home-package-check-"));

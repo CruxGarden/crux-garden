@@ -1,6 +1,6 @@
 # Migration architecture and first slice
 
-Migration is the product being developed. Home, Lab and Builder are future hosts, not prerequisites for releasing it. One repository contains app and shared packages; existing Crux Garden repositories remain intact during the staged monorepo transition.
+Crux Garden Migrate is the product being developed (formerly displayed as Migration). Home, Lab and Builder are future hosts, not prerequisites for releasing it. One repository contains app and shared packages; existing Crux Garden repositories remain intact during the staged monorepo transition.
 
 ## Dependencies
 

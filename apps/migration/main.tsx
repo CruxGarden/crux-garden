@@ -10,6 +10,6 @@ createRoot(document.getElementById("root")!).render(
   <MigrationApp
     client={client}
     appearance="standalone"
-    hostNotice="Closing the window keeps work running. Use the Migration menu-bar or tray icon to reopen or quit."
+    hostNotice="Closing the window keeps work running. Use the Migrate menu-bar or tray icon to reopen or quit."
   />,
 );
