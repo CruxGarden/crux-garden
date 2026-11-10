@@ -16,11 +16,21 @@ Use a small synthetic Dropbox folder or ZIP first, then a user-selected real exp
 
 31 existing guides and ZIP/TAR support are retained from the working preview. They do not expand the first acceptance target to 31 cloud integrations.
 
+## Choosing migration methods
+
+Daniel's direction (2026-11-10): build each service's tools around the best available method for the intended migration, not whichever method made the first prototype easiest. Compare official authenticated APIs, provider export archives, shared-file links and supported local sources before choosing the default. Evaluate data/metadata completeness, original quality, stable file revisions, integrity verification, reliable background resume, scale/rate limits and user effort. An API is not automatically best if an export preserves more of the requested data.
+
+When multiple methods have useful strengths, offer them as explicit alternatives with plain-language tradeoffs and a recommended default. Keep provider identity separate from method capabilities; record which method produced a job and its provenance. Reuse transfer, persistence and preservation machinery without forcing every method to use the same remote identity mechanism. Switching methods must not silently reuse partial bytes or broaden access.
+
+State limitations at the narrowest evidenced level: provider, method, response, or current implementation. Missing strong ETag in one shared-link response does not prove absent byte-range support, nor a provider-wide inability to resume. Record documented support separately from fixture-tested and live-tested behavior.
+
+For Dropbox account migration, evaluate the authenticated API with revision-aware downloads and provider content-hash verification next. Retain shared-file downloads and local export import where useful. The existing shared-link slice validates infrastructure; it does not establish the preferred account-migration method. Dropbox documents HTTP range support for content-download endpoints, including the file and shared-link API routes; actual recovery behavior still needs qualification. [Dropbox request/response formats](https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/request-response-formats).
+
 ## Extension points
 
 Add a provider's guidance in the catalog without adding UI conditionals. Direct connectors will require a provider contract covering export/download capabilities, source identity, pagination, credentials, retry/rate-limit behavior and durable checkpoints. Define that contract with the first actual connector, rather than pretending every provider exports alike. Keep download jobs separate from archive interpretation and copy verification.
 
-The first shared-file transfer streams into partial files, persists checkpoints and validates file identity before range-resuming. It offers an explicit restart when a provider cannot support a safe resume. Both native hosts now keep their service alive when the window closes, with a tray/menu-bar action to reopen it. Explicit Quit gracefully pauses and stops the service. Headless mode also runs without a UI. This is not an OS-installed background service; see [background lifecycle](background-lifecycle.md).
+The first shared-file transfer streams into partial files, persists checkpoints and validates file identity before range-resuming. It offers an explicit restart when the current method/response does not meet its safe-resume requirements. Both native hosts now keep their service alive when the window closes, with a tray/menu-bar action to reopen it. Explicit Quit gracefully pauses and stops the service. Headless mode also runs without a UI. This is not an OS-installed background service; see [background lifecycle](background-lifecycle.md).
 
 ## Deliberate limits
 
