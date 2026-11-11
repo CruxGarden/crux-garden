@@ -6,7 +6,7 @@ The first vertical slice is a small Dropbox export: guide → select an existing
 
 ## Run
 
-Use Node 22.19.x. From this repository:
+Use Node 22.19.x. On macOS, install Apple Command Line Tools with Swift and the Photos SDK; the build compiles the internal helper with a macOS 13 deployment target. From this repository:
 
 ```sh
 npm run setup
@@ -58,4 +58,4 @@ Flickr full-data exports now support a separate photo/album metadata review afte
 
 Google Photos Takeout now shares the bounded metadata review. It handles observed sidecar names and selected split parts while exposing uncertain album/duplicate relationships. See [Takeout scope and evidence](docs/google-photos-takeout.md).
 
-**Choose files** preserves an explicit selection of downloaded files using the same background verification and history as folder imports. Useful for selected iCloud documents or exported photo components; include sidecars/video companions yourself. See [iCloud methods and automation scope](docs/icloud-methods.md). Native PhotoKit automation is researched, not implemented.
+**Choose files** preserves an explicit selection of downloaded files using the same background verification and history as folder imports. Useful for selected iCloud documents or exported photo components; include sidecars/video companions yourself. See [iCloud methods and automation scope](docs/icloud-methods.md). An internal [PhotoKit bridge foundation](docs/photokit-bridge.md) is compiled and fixture-tested; app connection, durable transfers and real-library qualification remain pending.

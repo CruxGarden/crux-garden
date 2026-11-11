@@ -22,7 +22,7 @@ Copy the intended selection to a dedicated staging directory outside cloud sync,
 
 The user's 70.4 GB document estimate suggests staged folder batches. Packages, links, permissions, extended attributes and app databases are outside the ordinary-file preservation promise. Check representative documents in their originating app; a successful SHA-256 check proves byte equality, not document usability or account completeness.
 
-## Automation candidate: native PhotoKit bridge
+## Native PhotoKit bridge foundation (not enabled)
 
 Apple documents a supported route worth implementing next, rather than treating the absence of a general web connector as proof that automation is impossible:
 
@@ -32,7 +32,7 @@ Apple documents a supported route worth implementing next, rather than treating 
 
 Proposed next vertical slice: qualify a small native macOS helper with a bounded protocol for authorization status, paginated asset/album discovery and explicit selected resource export. The native host owns system permission presentation and resource requests. The Node API continues to own durable jobs, SQLite, fingerprints, manifests and final validation; React uses an injected capability. Reads must be implemented without Photos change requests. Platform authorization terminology may expose read/write access even though Migrate performs only reads; explain that accurately before requesting permission. Denial, limited access, cancelled requests, partial output, changed assets, duplicate original filenames and restart behavior need tests before the capability is exposed as usable.
 
-Use local fixture protocol responses until actual permission/account acceptance is available. Do not inspect the user's photo library just to test readiness. Do not embed Apple credentials, scrape sign-in, read private Photos databases or advertise library-wide completeness from a partial selection. A separate native helper needs a recorded architecture decision and packaging evidence before it ships. This assessment does not implement or qualify that bridge.
+Use local fixture protocol responses until actual permission/account acceptance is available. Do not inspect the user's photo library just to test readiness. Do not embed Apple credentials, scrape sign-in, read private Photos databases or advertise library-wide completeness from a partial selection. A separate native helper needs a recorded architecture decision and packaging evidence before it ships. The internal bridge is now compiled and fixture-tested; its [protocol, bounds and remaining integration](photokit-bridge.md) are documented separately. It is not exposed through the app or local API, and has not accessed a real library.
 
 Other alternatives remain user-managed iCloud.com downloads and provider data-export requests. Neither is automatically requested or polled by the current app. A service-specific login scraper is not a prerequisite for the supported-native investigation.
 

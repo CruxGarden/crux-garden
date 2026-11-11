@@ -16,6 +16,17 @@ for (const app of [
   "apps/migration/src-tauri/target/release/bundle/macos/Crux Garden Migrate Tauri Preview.app",
 ]) {
   const runtime = path.join(home, app, "Contents/Resources/runtime");
+  // Hello is pure protocol negotiation: never query status or access a real library here.
+  const { PhotosBridge } = require(path.join(runtime, "photos-bridge.cjs"));
+  const photos = new PhotosBridge(path.join(runtime, "photos-helper"));
+  try {
+    const hello = await photos.request("hello");
+    assert.equal(hello.protocol, 1);
+    assert.equal(hello.fixture, false);
+    assert.equal(hello.authorizationRequests, false);
+  } finally {
+    await photos.close();
+  }
   const fixture = await mkdtemp(path.join(tmpdir(), "home-package-check-"));
   let child;
   let exit;
