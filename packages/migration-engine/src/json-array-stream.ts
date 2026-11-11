@@ -1,7 +1,7 @@
 // Bounded framing only. JSON.parse validates each complete entry; this never
 // interprets JavaScript. Callbacks are provisional until finish AND file hash pass.
 export function jsonArrayStream(
-  prefix: string,
+  prefix: string | null,
   entry: (value: unknown, index: number) => void,
   maxEntries = 100000,
 ) {
@@ -30,12 +30,18 @@ export function jsonArrayStream(
             // Explicit literal assignment supplied by provider, flexible whitespace
             // around = only. BOM accepted solely at the start of the document.
             const trimmed = head.replace(/^\xef\xbb\xbf/, "").trim();
-            if (trimmed.replace(/\s*=\s*$/, " =") !== prefix)
+            if (prefix !== null && trimmed.replace(/\s*=\s*$/, " =") !== prefix)
               throw new Error(
                 "Unsupported archive wrapper or filename/part mismatch. No code was executed.",
               );
             state = "first";
           } else {
+            // Bare JSON admits only RFC JSON whitespace before the array. A
+            // script envelope is opt-in and must be supplied by its adapter.
+            if (prefix === null && !whitespace(b))
+              throw new Error(
+                "Expected a plain JSON array without an archive wrapper.",
+              );
             if (
               head.length >= 256 ||
               (b > 127 && !(head.length < 3 && [239, 187, 191].includes(b)))
@@ -47,7 +53,7 @@ export function jsonArrayStream(
         }
         if (state === "tail" || state === "end") {
           if (whitespace(b)) continue;
-          if (state === "tail" && b === 59) {
+          if (prefix !== null && state === "tail" && b === 59) {
             state = "end";
             continue;
           }

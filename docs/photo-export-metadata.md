@@ -35,4 +35,4 @@ Google Photos now uses the same bounded workflow through a separate adapter. See
 
 Instagram now reuses this worker for bounded numbered-post media references. See [Meta export methods and exact limits](meta-export-methods.md). The observed older Facebook numbered-post layout also uses the same resolver; newer layouts remain uninterpreted.
 
-X archive data now uses the same review through a bounded streaming array decoder. Results remain provisional until the complete script syntax and receipt fingerprint pass; one failed script contributes no partial links. See [X archive methods and limits](x-archive-methods.md). Other adapters continue using ordinary JSON decoding.
+X archive data now uses the same review through a bounded streaming array decoder. Results remain provisional until the complete script syntax and receipt fingerprint pass; one failed script contributes no partial links. See [X archive methods and limits](x-archive-methods.md). Instagram and the observed older Facebook array formats now reuse strict plain-JSON streaming. Flickr/Takeout retain ordinary bounded JSON decoding.

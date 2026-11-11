@@ -1,4 +1,5 @@
 import type { PhotoRecord, PreservedFile } from "./photo-metadata";
+import { jsonArrayStream } from "./json-array-stream";
 import { exportReferences } from "./export-references";
 const object = (v: unknown): v is Record<string, unknown> =>
   !!v && typeof v === "object" && !Array.isArray(v);
@@ -15,11 +16,24 @@ export function facebookMetadata(files: PreservedFile[], sourceKind: unknown) {
     return !modern.test(logical) && numbered.test(logical);
   };
   const mediaFiles: PreservedFile[] = [];
-  return {
-    version: "facebook-numbered-post-media-v1",
+  const adapter = {
+    version: "facebook-numbered-post-media-v2",
     accepts,
     mediaFiles,
-    parse(file: PreservedFile, value: unknown): PhotoRecord[] {
+    stream(file: PreservedFile, emit: (records: PhotoRecord[]) => void) {
+      // Counts all visited attachments, including ignored non-media entries,
+      // across the complete file rather than resetting for each streamed post.
+      const budget = { visited: 0 };
+      return jsonArrayStream(null, (value, index) =>
+        emit(adapter.parse(file, [value], index, budget)),
+      );
+    },
+    parse(
+      file: PreservedFile,
+      value: unknown,
+      offset = 0,
+      budget = { visited: 0 },
+    ): PhotoRecord[] {
       const base = {
         path: file.path,
         sha256: file.sha256,
@@ -39,16 +53,17 @@ export function facebookMetadata(files: PreservedFile[], sourceKind: unknown) {
         ];
       const root = numbered.exec(refs.logical(file.path))![1]!;
       const records: PhotoRecord[] = [];
-      let visited = 0;
       for (const [postIndex, post] of value.entries()) {
         if (!object(post)) {
-          records.push(invalid(`Post ${postIndex + 1}: invalid entry.`));
+          records.push(
+            invalid(`Post ${postIndex + offset + 1}: invalid entry.`),
+          );
           continue;
         }
         if ("label_values" in post) {
           records.push(
             invalid(
-              `Post ${postIndex + 1}: label_values layout is not supported; original retained.`,
+              `Post ${postIndex + offset + 1}: label_values layout is not supported; original retained.`,
             ),
           );
           continue;
@@ -57,7 +72,9 @@ export function facebookMetadata(files: PreservedFile[], sourceKind: unknown) {
         if (post.attachments === undefined) continue;
         if (!Array.isArray(post.attachments)) {
           records.push(
-            invalid(`Post ${postIndex + 1}: unrecognized attachments.`),
+            invalid(
+              `Post ${postIndex + offset + 1}: unrecognized attachments.`,
+            ),
           );
           continue;
         }
@@ -65,20 +82,24 @@ export function facebookMetadata(files: PreservedFile[], sourceKind: unknown) {
           attachmentIndex,
           attachment,
         ] of post.attachments.entries()) {
-          if (++visited > 30000)
+          if (++budget.visited > 30000)
             throw new Error("Too many attachment entries for one review.");
           if (!object(attachment) || !Array.isArray(attachment.data)) {
             records.push(
-              invalid(`Post ${postIndex + 1}: unrecognized attachment data.`),
+              invalid(
+                `Post ${postIndex + offset + 1}: unrecognized attachment data.`,
+              ),
             );
             continue;
           }
           for (const [dataIndex, item] of attachment.data.entries()) {
-            if (++visited > 30000)
+            if (++budget.visited > 30000)
               throw new Error("Too many attachment entries for one review.");
             if (!object(item)) {
               records.push(
-                invalid(`Post ${postIndex + 1}: invalid attachment entry.`),
+                invalid(
+                  `Post ${postIndex + offset + 1}: invalid attachment entry.`,
+                ),
               );
               continue;
             }
@@ -86,7 +107,9 @@ export function facebookMetadata(files: PreservedFile[], sourceKind: unknown) {
             if (item.media === undefined) continue;
             if (!object(item.media)) {
               records.push(
-                invalid(`Post ${postIndex + 1}: unrecognized media object.`),
+                invalid(
+                  `Post ${postIndex + offset + 1}: unrecognized media object.`,
+                ),
               );
               continue;
             }
@@ -96,11 +119,11 @@ export function facebookMetadata(files: PreservedFile[], sourceKind: unknown) {
             records.push({
               ...base,
               kind: "media-reference",
-              id: `${file.path}#${postIndex}/${attachmentIndex}/${dataIndex}`,
+              id: `${file.path}#${postIndex + offset}/${attachmentIndex}/${dataIndex}`,
               title:
                 text(media.title) ||
                 text(post.title) ||
-                `Post ${postIndex + 1}, media ${dataIndex + 1}`,
+                `Post ${postIndex + offset + 1}, media ${dataIndex + 1}`,
               description: text(media.description),
               reference: text(media.uri),
               exportedTime:
@@ -133,4 +156,5 @@ export function facebookMetadata(files: PreservedFile[], sourceKind: unknown) {
       "Newer your_activity_across_facebook layouts, label_values, unnumbered status_updates, albums, messages and other exports remain uninterpreted. This does not establish post, album, account or export completeness.",
     ],
   };
+  return adapter;
 }

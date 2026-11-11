@@ -77,7 +77,7 @@ test("Facebook malformed and oversized lists stay visible; changed sidecars cann
       null,
       { label_values: [] },
     ]),
-    "posts/your_posts_2.json": JSON.stringify(Array(10001).fill(null)),
+    "posts/your_posts_2.json": JSON.stringify(Array(100001).fill(null)),
     "posts/your_posts_3.json": "{broken",
   });
   let done = await f.review();
@@ -154,9 +154,7 @@ test("Facebook attachment fanout is bounded before allocating derived records", 
   const f = await fixture(t, {
     [metadataPath]: JSON.stringify([
       {
-        attachments: [
-          { data: Array(30001).fill({ media: { uri: "media/video" } }) },
-        ],
+        attachments: [{ data: Array(30001).fill({}) }],
       },
     ]),
     "media/video": "keep",

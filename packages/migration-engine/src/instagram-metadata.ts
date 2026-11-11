@@ -1,4 +1,5 @@
 import type { PhotoRecord, PreservedFile } from "./photo-metadata";
+import { jsonArrayStream } from "./json-array-stream";
 import { exportReferences } from "./export-references";
 const object = (v: unknown): v is Record<string, unknown> =>
   !!v && typeof v === "object" && !Array.isArray(v);
@@ -12,11 +13,16 @@ export function instagramMetadata(files: PreservedFile[], sourceKind: unknown) {
   const accepts = (path: string) => numbered.test(refs.logical(path));
   // Extensionless videos are valid: recognition comes from a reference, not a suffix.
   const mediaFiles: PreservedFile[] = [];
-  return {
-    version: "instagram-numbered-post-media-v1",
+  const adapter = {
+    version: "instagram-numbered-post-media-v2",
     accepts,
     mediaFiles,
-    parse(file: PreservedFile, value: unknown): PhotoRecord[] {
+    stream(file: PreservedFile, emit: (records: PhotoRecord[]) => void) {
+      return jsonArrayStream(null, (value, index) =>
+        emit(adapter.parse(file, [value], index)),
+      );
+    },
+    parse(file: PreservedFile, value: unknown, offset = 0): PhotoRecord[] {
       const base = {
         path: file.path,
         sha256: file.sha256,
@@ -38,7 +44,7 @@ export function instagramMetadata(files: PreservedFile[], sourceKind: unknown) {
         if (!object(post) || !Array.isArray(post.media) || !post.media.length) {
           records.push(
             invalid(
-              `Post ${postIndex + 1}: unrecognized or empty media list; original retained.`,
+              `Post ${postIndex + offset + 1}: unrecognized or empty media list; original retained.`,
             ),
           );
           continue;
@@ -55,7 +61,7 @@ export function instagramMetadata(files: PreservedFile[], sourceKind: unknown) {
           records.push({
             ...base,
             kind: "media-reference",
-            id: `${file.path}#${postIndex}/${mediaIndex}`,
+            id: `${file.path}#${postIndex + offset}/${mediaIndex}`,
             title: text(media.title) || text(post.title),
             reference: text(media.uri),
             exportedTime:
@@ -77,7 +83,7 @@ export function instagramMetadata(files: PreservedFile[], sourceKind: unknown) {
       return records;
     },
     finalize(records: PhotoRecord[]) {
-      const referenced = new Set(records.flatMap(r => r.candidates));
+      const referenced = new Set(records.flatMap((r) => r.candidates));
       mediaFiles.push(...files.filter((f) => referenced.has(f.path)));
     },
     limitations: [
@@ -87,4 +93,5 @@ export function instagramMetadata(files: PreservedFile[], sourceKind: unknown) {
       "Newer posts.json label_values, reels, stories, messages, Facebook and other layouts remain uninterpreted. Multiple references to one file are not content duplicates; no media is merged or rewritten.",
     ],
   };
+  return adapter;
 }

@@ -1311,7 +1311,7 @@ test("Instagram export references run through native picker authority and preser
     const report = JSON.parse(
       await fs.readFile(path.join(job.output, job.photoReview.report), "utf8"),
     );
-    expect(report.adapter).toBe("instagram-numbered-post-media-v1");
+    expect(report.adapter).toBe("instagram-numbered-post-media-v2");
     for (const [name, bytes] of Object.entries(entries))
       expect(
         await fs.readFile(path.join(job.output, "files", name), "utf8"),
@@ -1393,7 +1393,7 @@ test("Facebook export references run through native picker authority and preserv
     const report = JSON.parse(
       await fs.readFile(path.join(job.output, job.photoReview.report), "utf8"),
     );
-    expect(report.adapter).toBe("facebook-numbered-post-media-v1");
+    expect(report.adapter).toBe("facebook-numbered-post-media-v2");
     for (const [name, bytes] of Object.entries(entries))
       expect(
         await fs.readFile(path.join(job.output, "files", name), "utf8"),

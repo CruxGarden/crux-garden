@@ -28,10 +28,10 @@ after(async () => {
   await fs.rm(root, { recursive: true, force: true });
 });
 const prefix = "window.YTD.tweets.part0 =";
-function parse(bytes, chunk = 1, max) {
+function parse(bytes, chunk = 1, max, envelope = prefix) {
   const entries = [];
   const p = jsonArrayStream(
-    prefix,
+    envelope,
     (value, index) => {
       assert.equal(index, entries.length);
       entries.push(value);
@@ -204,4 +204,54 @@ test("shared streaming reader rejects replacement, mutation, truncation, growth 
       /changed|fingerprint|ended|paused/,
     );
   }
+});
+
+test("plain JSON array mode has a strict envelope distinct from script assignments", () => {
+  const values = [
+    { title: '🌿 ] } " \\', media: [{ uri: "media/video" }] },
+    null,
+  ];
+  const bytes = Buffer.from(" \r\n\t" + JSON.stringify(values) + "\n ");
+  for (const n of [1, 2, 7, 65536])
+    assert.deepEqual(parse(bytes, n, undefined, null), values);
+  for (const input of [
+    "[];",
+    "\uFEFF[]",
+    "window.YTD.tweets.part0 = []",
+    "[] /*comment*/",
+    "() => []",
+    "[{},]",
+    "\v[]",
+    "\f[]",
+    "[\uFEFFnull]",
+    "{}",
+  ])
+    assert.throws(
+      () => parse(Buffer.from(input), 1, undefined, null),
+      undefined,
+      input,
+    );
+});
+
+test("streaming framer processes over 64MiB and 100000 entries in a separate 32MiB heap process", () => {
+  const { spawnSync } = require("node:child_process");
+  const code = `const assert=require('node:assert/strict');
+    const {jsonArrayStream}=require(${JSON.stringify(path.join(root, "json-array-stream.cjs"))});
+    let count=0,bytes=0;
+    const p=jsonArrayStream(null,(v,index)=>{assert.equal(index,count++);assert.equal(v.text.length,768)});
+    const item=JSON.stringify({text:'x'.repeat(768)}),block=Buffer.from(Array(1000).fill(item).join(',')+',');
+    const push=b=>{bytes+=b.length;p.push(b)};
+    push(Buffer.from('['));for(let i=0;i<99;i++)push(block);
+    push(Buffer.from(Array(1000).fill(item).join(',')+']'));
+    assert.equal(p.finish(),100000);assert.equal(count,100000);assert.ok(bytes>64*1024**2);
+    process.stdout.write(JSON.stringify({bytes,count,rss:process.resourceUsage().maxRSS}));`;
+  const child = spawnSync(
+    process.execPath,
+    ["--max-old-space-size=32", "-e", code],
+    { encoding: "utf8", timeout: 30000, maxBuffer: 4096 },
+  );
+  assert.equal(child.status, 0, child.stderr || String(child.error));
+  const evidence = JSON.parse(child.stdout);
+  assert.equal(evidence.count, 100000);
+  assert.ok(evidence.bytes > 64 * 1024 ** 2);
 });

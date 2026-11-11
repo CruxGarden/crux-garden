@@ -74,7 +74,7 @@ test("Instagram malformed and oversized lists stay visible; changed sidecars can
   const f = await fixture(t, {
     [metadataPath]: JSON.stringify([{ media: [] }, null]),
     "your_instagram_activity/media/posts_2.json": JSON.stringify(
-      Array(10001).fill(null),
+      Array(100001).fill(null),
     ),
     "your_instagram_activity/media/posts_3.json": "{broken",
   });
