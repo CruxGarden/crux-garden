@@ -142,6 +142,7 @@ export default function CloudServices({
               <option>Bluesky</option>
               <option>Amazon S3</option>
               <option>Google Drive</option>
+              <option>Gmail</option>
               <option>Dropbox</option>
               {client.connectPhotos && <option>iCloud Photos</option>}
             </select>
@@ -170,14 +171,14 @@ export default function CloudServices({
             </p>
           </>
         )}
-        {provider === "Google Drive" && (
+        {(provider === "Google Drive" || provider === "Gmail") && (
           <>
             <details>
               <summary>One-time Google connection setup</summary>
               <ol>
                 <li>
                   In Google Cloud Console, create or choose a project and enable
-                  the Google Drive API.
+                  the {provider === "Gmail" ? "Gmail" : "Google Drive"} API.
                 </li>
                 <li>
                   Configure Google Auth Platform: app name, audience and your
@@ -189,9 +190,9 @@ export default function CloudServices({
                   secret into the fields below.
                 </li>
                 <li>
-                  Choose Connect Google Drive and approve read-only Drive access
-                  in your normal browser. Return here and browse the connected
-                  account.
+                  Choose Connect {provider} and approve read-only{" "}
+                  {provider === "Gmail" ? "Gmail" : "Drive"} access in your
+                  normal browser. Return here and browse the connected account.
                 </li>
               </ol>
               <p>
@@ -203,6 +204,16 @@ export default function CloudServices({
             {field("clientId", "Google desktop client ID")}
             {field("clientSecret", "Google desktop client secret", true, true)}
           </>
+        )}
+        {provider === "Gmail" && (
+          <p>
+            Choose messages or whole labels after connecting. The All messages
+            group includes Spam and Trash; selected labels also include matching
+            messages in those locations. Each message is saved as an EML file,
+            with Gmail details in a separate manifest. Full Takeout remains
+            available for broader account preservation. This connection needs
+            Gmail read-only access; Drive access alone is insufficient.
+          </p>
         )}
         {provider === "Dropbox" && (
           <>
@@ -276,7 +287,9 @@ export default function CloudServices({
                       networkAllowed: photosNetwork,
                     })
                   : await client.request<CloudConnection>(
-                      provider === "Google Drive" || provider === "Dropbox"
+                      provider === "Google Drive" ||
+                        provider === "Gmail" ||
+                        provider === "Dropbox"
                         ? "cloudAuthorize"
                         : "cloudConnect",
                       { ...fields, provider },
@@ -377,7 +390,9 @@ export default function CloudServices({
                     checked={selected.has(listing.folder.id)}
                     onChange={() => toggle(listing.folder!)}
                   />
-                  Select this entire folder: {listing.folder.name}
+                  Select this entire{" "}
+                  {current?.provider === "Gmail" ? "group" : "folder"}:{" "}
+                  {listing.folder.name}
                 </label>
               )}
               <ul className="cloud-entries" aria-label="Files and folders">
@@ -434,7 +449,9 @@ export default function CloudServices({
                 {selected.size} selection{selected.size === 1 ? "" : "s"}.{" "}
                 {current?.provider === "iCloud Photos"
                   ? "Each selected item is one resource. Companion videos and edited versions must be selected separately."
-                  : "Selected folders include all their descendants, including files not currently shown."}
+                  : current?.provider === "Gmail"
+                    ? "Selected groups include all matching messages, including those not currently shown. Labels are independent: choosing one does not select similarly named labels."
+                    : "Selected folders include all their descendants, including files not currently shown."}
               </p>
               {selected.size > 0 && (
                 <details open>
@@ -593,9 +610,9 @@ export default function CloudServices({
             </p>
           )}
           <p>
-            Verified local matches are reused to avoid repeat downloads. Each
-            export remains a separate complete copy; existing files are never
-            deleted.
+            {job.provider === "Gmail"
+              ? "Completed messages are checked on retry. New jobs download again because Gmail supplies no content checksum. Each export is a separate copy; existing files are never deleted."
+              : "Verified local matches are reused to avoid repeat downloads. Each export remains a separate complete copy; existing files are never deleted."}
           </p>
           <details>
             <summary>Scope and recovery</summary>

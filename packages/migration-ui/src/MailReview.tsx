@@ -15,7 +15,8 @@ export default function MailReview({
     <section className="migration-photo-review" aria-label="Mail inventory">
       <h3>Mail inventory</h3>
       <p>
-        Check the preserved MBOX files you selected. Messages and attachments
+        Review Takeout mailbox files (MBOX). This inventory does not interpret
+        individual EML files from account downloads. Messages and attachments
         stay together in the original mailbox; message bodies are not displayed.
       </p>
       <Button

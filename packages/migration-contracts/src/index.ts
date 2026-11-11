@@ -191,6 +191,7 @@ export type CloudProvider =
   | "Bluesky"
   | "Amazon S3"
   | "Google Drive"
+  | "Gmail"
   | "Dropbox"
   | "iCloud Photos";
 export interface CloudEntry {

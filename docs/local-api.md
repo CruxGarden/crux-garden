@@ -60,3 +60,8 @@ Native renderers use injected commands but cannot call destination or scanDirect
 ## Mail inventory
 
 `POST /v1/jobs/:id/mailReview` with `{}` starts the same bounded background review exposed by the native `mailReview` command. It requires a verified Gmail preservation job and uses only receipt-selected `.mbox` paths. `info.capabilities.mailInventory` advertises support; `job.mailReview` holds progress, provisional counts and a separate report filename. Existing pause and list operations apply. Authentication and native picker authority are unchanged. See [methods, bounds and limitations](gmail-methods.md); this is local review, not a Gmail API connector.
+
+
+## Gmail account collections
+
+`POST /v1/cloud/authorize` also accepts `provider: Gmail`, `clientId`, and optional desktop `clientSecret`. The constructed Google URL requests only Gmail read-only scope; native hosts open it through the existing trusted browser action. Generic connect does not bypass authorization. Browse returns label groups, an explicit All messages including Spam and Trash group, and individual message entries. Existing create/destination/scan/start/pause/disconnect routes apply. IDs must have been listed by that connection; client-supplied tokens, scopes or adapters are not accepted. See [selection semantics, limits and setup](gmail-methods.md). The existing Drive adapter now shares Google's bounded token exchange/session helper; Drive keeps its own scope and endpoints.

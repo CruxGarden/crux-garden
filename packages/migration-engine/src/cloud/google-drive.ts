@@ -1,12 +1,13 @@
 import { createHash } from "node:crypto";
+import type { OAuthTokens, TokenExchange } from "./oauth";
 import {
-  beginLoopbackOAuth,
-  type OAuthTokens,
-  type TokenExchange,
-} from "./oauth";
+  beginGoogleAccount,
+  googleSession,
+  googleTokenExchange,
+} from "./google-auth";
 import type { CloudAdapter } from "./common";
 import type { CloudItem } from "@cruxgarden/migration-contracts";
-import { apiUrl, CloudError, contentSize, network, textField } from "./common";
+import { apiUrl, CloudError, contentSize, network } from "./common";
 import type { DownloadOpen } from "../network";
 const SCOPE = "https://www.googleapis.com/auth/drive.readonly";
 const fields =
@@ -39,71 +40,25 @@ function segment(name: string, id: string) {
       .slice(0, 80) || "file";
   return `${title} [${createHash("sha256").update(id).digest("hex").slice(0, 12)}]`;
 }
-export const tokenExchange: TokenExchange = async (values) => {
-  const response = await fetch("https://oauth2.googleapis.com/token", {
-    method: "POST",
-    redirect: "error",
-    signal: AbortSignal.timeout(30000),
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: new URLSearchParams(values),
-  });
-  if (!response.ok)
-    throw new CloudError(
-      "Google authorization expired or was rejected. Connect again.",
-    );
-  const value = (await response.json()) as OAuthTokens;
-  if (
-    typeof value.access_token !== "string" ||
-    value.access_token.length > 8192
-  )
-    throw new CloudError("Google returned an invalid authorization response.");
-  return value;
-};
-/** Only the host opens this constructed Google URL. Callback and tokens stay in the engine. */
+export const tokenExchange = googleTokenExchange();
 export async function beginGoogle(
   input: Record<string, unknown>,
-  onConnected: (adapter: CloudAdapter) => void,
-  onFailed: (error: unknown) => void,
+  connected: (adapter: CloudAdapter) => void,
+  failed: (error: unknown) => void,
   open?: DownloadOpen,
-  exchange: TokenExchange = tokenExchange,
+  exchange: TokenExchange = googleTokenExchange(open),
 ) {
-  const clientId = textField(
-    input.clientId,
-    "your Google desktop client ID",
-    512,
+  return beginGoogleAccount(
+    input,
+    "Google Drive",
+    SCOPE,
+    (tokens, id, secret, exchange) =>
+      googleDrive(tokens, id, secret, open, exchange),
+    connected,
+    failed,
+    open,
+    exchange,
   );
-  const clientSecret = input.clientSecret
-    ? textField(input.clientSecret, "your desktop client secret", 512)
-    : "";
-  if (!/^[a-zA-Z0-9._-]+\.apps\.googleusercontent\.com$/.test(clientId))
-    throw new CloudError("Enter a Google Desktop app client ID.");
-  return beginLoopbackOAuth({
-    label: "Google Drive",
-    endpoint: "https://accounts.google.com/o/oauth2/v2/auth",
-    port: 0,
-    path: "/callback",
-    parameters: {
-      client_id: clientId,
-      scope: SCOPE,
-      access_type: "offline",
-      prompt: "consent",
-    },
-    async connect(code, verifier, redirect) {
-      const tokens = await exchange({
-        client_id: clientId,
-        client_secret: clientSecret,
-        code,
-        code_verifier: verifier,
-        grant_type: "authorization_code",
-        redirect_uri: redirect,
-      });
-      if (tokens.scope && !tokens.scope.split(" ").includes(SCOPE))
-        throw new CloudError("Google did not grant read access to Drive.");
-      return googleDrive(tokens, clientId, clientSecret, open, exchange);
-    },
-    connected: onConnected,
-    failed: onFailed,
-  });
 }
 
 export async function googleDrive(
@@ -114,33 +69,14 @@ export async function googleDrive(
   exchange: TokenExchange = tokenExchange,
 ): Promise<CloudAdapter> {
   const net = network(open);
-  let tokens = initial;
-  let expires = Date.now() + (tokens.expires_in ?? 3600) * 1000;
-  let refreshing: Promise<void> | undefined;
-  async function headers() {
-    if (Date.now() > expires - 60_000) {
-      if (!tokens.refresh_token)
-        throw new CloudError("Google authorization expired. Connect again.");
-      refreshing ??= exchange({
-        client_id: clientId,
-        client_secret: clientSecret,
-        refresh_token: tokens.refresh_token,
-        grant_type: "refresh_token",
-      })
-        .then((next) => {
-          tokens = {
-            ...next,
-            refresh_token: next.refresh_token ?? tokens.refresh_token,
-          };
-          expires = Date.now() + (next.expires_in ?? 3600) * 1000;
-        })
-        .finally(() => {
-          refreshing = undefined;
-        });
-      await refreshing;
-    }
-    return { Authorization: `Bearer ${tokens.access_token}` };
-  }
+  const session = googleSession(
+    initial,
+    clientId,
+    clientSecret,
+    SCOPE,
+    exchange,
+  );
+  const headers = () => session.headers();
   const base = "https://www.googleapis.com/drive/v3";
   const json = async (
     path: string,
@@ -285,7 +221,7 @@ export async function googleDrive(
         );
     },
     close() {
-      tokens = { access_token: "" };
+      session.close();
     },
   };
 }

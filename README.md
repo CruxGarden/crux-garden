@@ -62,4 +62,4 @@ Google Photos Takeout now shares the bounded metadata review. It handles observe
 
 The optional Photos host action and resource-selection UI are fixture-tested but not installed in production clients. [Native permission evidence and remaining qualification](docs/photos-host-qualification.md) explain the gate, source namespaces and explicit network choice.
 
-Gmail exports now support a bounded background MBOX inventory after preservation: raw label/header previews, provisional counts, fingerprint validation and separate reports. [Method choice, setup and limitations](docs/gmail-methods.md). Takeout requests/downloads remain manual; Gmail account automation is not yet implemented.
+Gmail exports now support a bounded background MBOX inventory after preservation: raw label/header previews, provisional counts, fingerprint validation and separate reports. [Method choice, setup and limitations](docs/gmail-methods.md). Takeout requests/downloads remain manual. A selected Gmail account connector now uses read-only Google authorization, paginated messages/labels and shared verified downloads; real-account registration/acceptance remains pending.

@@ -1,3 +1,4 @@
+import { beginGmail } from "./gmail";
 import {
   existingCopy,
   fingerprint,
@@ -454,7 +455,7 @@ export async function createCloudJobs(
       const provider = input.provider;
       if (
         !(provider === "iCloud Photos" && options.photosFactory && photos) &&
-        !["Bluesky", "Amazon S3", "Google Drive", "Dropbox"].includes(
+        !["Bluesky", "Amazon S3", "Google Drive", "Gmail", "Dropbox"].includes(
           String(provider),
         )
       )
@@ -492,7 +493,9 @@ export async function createCloudJobs(
           return structuredClone(c.view);
         }
         if (
-          (provider === "Google Drive" || provider === "Dropbox") &&
+          (provider === "Google Drive" ||
+            provider === "Gmail" ||
+            provider === "Dropbox") &&
           !options.adapterFactory
         ) {
           if (!authorize)
@@ -500,7 +503,11 @@ export async function createCloudJobs(
               `Use Connect ${provider} to authorize in your browser.`,
             );
           const auth = await (
-            provider === "Dropbox" ? beginDropbox : beginGoogle
+            provider === "Dropbox"
+              ? beginDropbox
+              : provider === "Gmail"
+                ? beginGmail
+                : beginGoogle
           )(
             input,
             connected,

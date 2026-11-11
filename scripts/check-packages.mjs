@@ -91,6 +91,14 @@ for (const app of [
     launch();
     assert.equal((await request("info")).cruxCount, 0);
     await assert.rejects(
+      request("cloudConnect", { provider: "Gmail" }),
+      /authorize/,
+    );
+    await assert.rejects(
+      request("cloudAuthorize", { provider: "Gmail" }),
+      /desktop client ID/,
+    );
+    await assert.rejects(
       request("cloudConnect", {
         provider: "iCloud Photos",
         photosFactory: true,

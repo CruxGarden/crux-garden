@@ -1134,3 +1134,108 @@ test("Gmail mail inventory runs through native picker authority and preserves ra
     await fs.rm(dir, { recursive: true, force: true });
   }
 });
+
+test("Gmail native host opens only its constructed OAuth URL and disconnect releases the callback", async () => {
+  const dir = await fs.realpath(
+    await fs.mkdtemp(path.join(os.tmpdir(), "migrate-gmail-desktop-")),
+  );
+  const app = await electron.launch({
+    executablePath: require("../../../tools/node_modules/electron"),
+    args: [path.resolve(__dirname, "..")],
+    env: {
+      ...process.env,
+      CRUX_MIGRATION_TEST_PROFILE: path.join(dir, "profile"),
+    },
+  });
+  try {
+    await app.evaluate(({ shell }) => {
+      global.gmailOpened = [];
+      shell.openExternal = async (url) => {
+        global.gmailOpened.push(url);
+      };
+    });
+    const page = await app.firstWindow();
+    await page
+      .getByRole("button", { name: "Cloud services", exact: true })
+      .click();
+    await page
+      .getByRole("combobox", { name: "Service", exact: true })
+      .selectOption("Gmail");
+    await page
+      .getByText("One-time Google connection setup", { exact: true })
+      .click();
+    for (let i = 0; i < 2; i++) {
+      await page
+        .getByLabel("Google desktop client ID", { exact: true })
+        .fill("fixture.apps.googleusercontent.com");
+      await page
+        .getByRole("button", { name: "Connect Gmail", exact: true })
+        .click();
+      await expect(
+        page.getByText(
+          "Complete the Gmail connection in your browser, then return here.",
+        ),
+      ).toBeVisible();
+      await expect(
+        page.getByLabel("Google desktop client ID", { exact: true }),
+      ).toHaveValue("");
+      const opened = await app.evaluate(() => global.gmailOpened);
+      expect(opened).toHaveLength(i + 1);
+      const url = new URL(opened.at(-1));
+      expect(url.origin).toBe("https://accounts.google.com");
+      expect(url.pathname).toBe("/o/oauth2/v2/auth");
+      expect(url.searchParams.get("redirect_uri")).toMatch(
+        /^http:\/\/127\.0\.0\.1:\d+\/callback$/,
+      );
+      expect(url.searchParams.get("scope")).toBe(
+        "https://www.googleapis.com/auth/gmail.readonly",
+      );
+      expect(url.searchParams.get("code_challenge_method")).toBe("S256");
+      expect(
+        await page.evaluate(() => window.migrationAPI.request("cloudStatus")),
+      ).not.toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({ authorizationUrl: expect.any(String) }),
+        ]),
+      );
+      await page
+        .getByRole("button", { name: "Disconnect", exact: true })
+        .click();
+      await expect(
+        page.getByText(
+          "Complete the Gmail connection in your browser, then return here.",
+        ),
+      ).toHaveCount(0);
+    }
+    await page.setViewportSize({ width: 420, height: 850 });
+    await expect
+      .poll(() =>
+        page.evaluate(
+          () => document.documentElement.scrollWidth <= innerWidth + 1,
+        ),
+      )
+      .toBe(true);
+    // Plasma coalesces native resize events before reallocating its drawing buffer.
+    await expect
+      .poll(() =>
+        page.evaluate(() => {
+          const canvas = document.querySelector("canvas.plasma-ground");
+          return (
+            !canvas ||
+            Math.abs(canvas.width / canvas.height - innerWidth / innerHeight) <
+              0.01
+          );
+        }),
+      )
+      .toBe(true);
+    await page.screenshot({
+      path: path.resolve(
+        __dirname,
+        "../../../test-results/migrate-gmail-setup.png",
+      ),
+    });
+  } finally {
+    await app.close();
+    await fs.rm(dir, { recursive: true, force: true });
+  }
+});

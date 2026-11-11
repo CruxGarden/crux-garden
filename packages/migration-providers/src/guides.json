@@ -214,6 +214,11 @@
     "provisional": false,
     "steps": [
       {
+        "id": "account-api",
+        "label": "Choose an account download or full export",
+        "text": "For selected messages or labels, use Cloud services → Gmail and follow the Google desktop registration steps. Approve read-only Gmail access, select messages/groups, and download EML files plus their provider-metadata manifest. Nothing is selected automatically; the All messages group includes Spam and Trash. Full Takeout remains the broader settings-preservation option. Account downloads are fixture-tested; real-account acceptance is pending."
+      },
+      {
         "id": "takeout",
         "label": "Prepare a Takeout export",
         "text": "For an account export, open takeout.google.com, deselect unrelated products, select Mail, and inspect the inclusion and format options. Choose a one-time ZIP export with email delivery. Download every part. Generation can take minutes to days; managed accounts can restrict exports. Keep the selected options with your download."

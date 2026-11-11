@@ -124,14 +124,17 @@ export function network(open: DownloadOpen = openHttps) {
     signal: AbortSignal,
     headers?: Record<string, string>,
     options?: { method: "POST"; body?: string },
+    maxBytes = 8 * 1024 * 1024,
   ) {
     const res = await response(url, signal, headers, options);
     const chunks: Buffer[] = [];
     let size = 0;
     try {
+      if ((contentSize(res) ?? 0) > maxBytes)
+        throw new CloudError("The service returned too much metadata.");
       for await (const chunk of res) {
         size += chunk.length;
-        if (size > 8 * 1024 * 1024)
+        if (size > maxBytes)
           throw new CloudError("The service returned too much metadata.");
         chunks.push(Buffer.from(chunk));
       }
