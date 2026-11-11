@@ -2,7 +2,11 @@ import { parentPort, workerData } from "node:worker_threads";
 import { createHash, randomUUID } from "node:crypto";
 import { join } from "node:path";
 import { exclusiveJson } from "./files";
-import { readPreservationReceipt, readReviewFile } from "./review-files";
+import {
+  readPreservationReceipt,
+  readReviewFile,
+  visitReviewFile,
+} from "./review-files";
 import { type PhotoRecord } from "./photo-metadata";
 
 import { photoAdapter } from "./photo-adapters";
@@ -27,12 +31,13 @@ async function run() {
   const sidecars = files.filter((f) => adapter.accepts(f.path));
   const records: PhotoRecord[] = [];
   let total = 0;
+  let retainedBytes = 0;
   let relationships = 0;
   for (const [index, file] of sidecars.entries()) {
     stop();
-    if ((total += file.size) > 64 * 1024 ** 2)
+    if ((total += file.size) > (adapter.stream ? 1024 : 64) * 1024 ** 2)
       throw new Error(
-        "Selected metadata exceeds the 64 MB review limit. Preserve a smaller selection as a new import.",
+        "Selected metadata exceeds the total review limit. Originals remain preserved.",
       );
     parentPort!.postMessage({
       state: "running",
@@ -40,37 +45,64 @@ async function run() {
       total: sidecars.length,
     });
     try {
-      const bytes = await readReviewFile(
-        join(output, "files"),
-        file.path,
-        8 * 1024 ** 2,
-        stop,
-      );
-      if (
-        bytes.length !== file.size ||
-        createHash("sha256").update(bytes).digest("hex") !== file.sha256
-      )
-        throw new Error(
-          "Sidecar differs from the preservation receipt. Verify this import before reviewing again.",
+      const parsed: PhotoRecord[] = [];
+      let pendingRelationships = 0,
+        pendingBytes = 0;
+      const emit = (batch: PhotoRecord[]) => {
+        for (const record of batch) {
+          pendingRelationships +=
+            record.candidates.length +
+            (record.members?.reduce(
+              (n, m) => n + Math.max(1, m.candidates.length),
+              0,
+            ) || 0);
+          pendingBytes += Buffer.byteLength(JSON.stringify(record));
+          if (
+            records.length + parsed.length >= 30000 ||
+            relationships + pendingRelationships > 100000 ||
+            retainedBytes + pendingBytes > 16 * 1024 ** 2
+          )
+            throw new Error(
+              "Metadata results exceed the bounded review budget. Originals remain preserved.",
+            );
+          parsed.push(record);
+        }
+      };
+      if (adapter.stream) {
+        const parser = adapter.stream(file, emit);
+        await visitReviewFile(
+          join(output, "files"),
+          file,
+          256 * 1024 ** 2,
+          stop,
+          parser.push,
         );
-      const value = adapter.decode
-        ? adapter.decode(file, bytes.toString("utf8"))
-        : JSON.parse(bytes.toString("utf8"));
-      const parsed = adapter.parse(file, value);
-      relationships += parsed.reduce(
-        (sum, r) =>
-          sum +
-          r.candidates.length +
-          (r.members?.reduce(
-            (n, m) => n + Math.max(1, m.candidates.length),
-            0,
-          ) || 0),
-        0,
-      );
+        parser.finish();
+      } else {
+        const bytes = await readReviewFile(
+          join(output, "files"),
+          file.path,
+          8 * 1024 ** 2,
+          stop,
+        );
+        if (
+          bytes.length !== file.size ||
+          createHash("sha256").update(bytes).digest("hex") !== file.sha256
+        )
+          throw new Error(
+            "Sidecar differs from the preservation receipt. Verify this import before reviewing again.",
+          );
+        const value = JSON.parse(bytes.toString("utf8"));
+        emit(adapter.parse(file, value));
+      }
+      // Nothing escapes this file's provisional buffer until full syntax and
+      // preserved-byte verification succeed. Failure discards every partial link.
+      relationships += pendingRelationships;
+      retainedBytes += pendingBytes;
       records.push(...parsed);
     } catch (e) {
       stop();
-      records.push({
+      const invalid: PhotoRecord = {
         kind: "unrecognized",
         path: file.path,
         sha256: file.sha256,
@@ -82,7 +114,13 @@ async function run() {
             : e instanceof Error
               ? e.message
               : "Could not read metadata.",
-      });
+      };
+      retainedBytes += Buffer.byteLength(JSON.stringify(invalid));
+      if (retainedBytes > 16 * 1024 ** 2)
+        throw new Error(
+          "Metadata results exceed the bounded review budget. Originals remain preserved.",
+        );
+      records.push(invalid);
     }
     if (records.length > 30000)
       throw new Error("Too many metadata records for one review.");

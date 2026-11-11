@@ -384,7 +384,7 @@ for (const app of [
       );
     const xArchiveSource = path.join(fixture, "xArchive-source");
     const {
-      entries: xArchiveEntries,
+      playbackEntries: xArchiveEntries,
     } = require("../packages/migration-engine/tests/x-fixture.cjs");
     for (const [name, bytes] of Object.entries(xArchiveEntries)) {
       await mkdir(path.dirname(path.join(xArchiveSource, name)), {
@@ -413,7 +413,7 @@ for (const app of [
       "complete",
       xArchiveResult.photoReview.error,
     );
-    assert.equal(xArchiveResult.photoReview.counts.matched, 1);
+    assert.equal(xArchiveResult.photoReview.counts.matched, 2);
     for (const [name, bytes] of Object.entries(xArchiveEntries))
       assert.equal(
         await readFile(path.join(xArchiveResult.output, "files", name), "utf8"),
@@ -424,7 +424,7 @@ for (const app of [
     assert.equal(
       (await request("list")).find((j) => j.id === xArchive.id).photoReview
         .counts.matched,
-      1,
+      2,
     );
     assert.equal(
       (await request("list")).find((j) => j.id === facebook.id).photoReview

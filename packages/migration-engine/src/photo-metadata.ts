@@ -14,6 +14,7 @@ export interface PhotoRecord {
   dateTaken?: string;
   description?: string;
   reference?: string;
+  mediaRole?: "photo" | "playback";
   exportedTime?: { timestamp: string; formatted?: string };
   exportedLocation?: {
     geoData?: Record<string, number>;
@@ -142,7 +143,10 @@ export interface MetadataAdapter {
   version: string;
   mediaFiles: PreservedFile[];
   accepts(path: string): boolean;
-  decode?(file: PreservedFile, text: string): unknown;
+  stream?(
+    file: PreservedFile,
+    emit: (records: PhotoRecord[]) => void,
+  ): { push(bytes: Buffer): void; finish(): number };
   parse(file: PreservedFile, value: unknown): PhotoRecord[];
   finalize(records: PhotoRecord[]): void;
   limitations: string[];

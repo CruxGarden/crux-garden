@@ -19,7 +19,7 @@ Dates retain exported text with no guessed timezone. Text previews stop at 4096 
 
 The shared review runs off the API thread and can be paused. Restarting an interrupted review starts it afresh; it does not resume within a JSON file. Preservation state remains independent. The canonical API saves only a bounded summary in the existing SQLite job; the complete derived report stays on disk.
 
-Only receipt-listed files are considered: up to 20,000 files, a 32 MiB receipt, 8 MiB per sidecar, 64 MiB total sidecars, 30,000 derived records, 100,000 relationships, 100 candidate paths per ID and a 64 MiB report. A separate worker has a 256 MiB old-generation heap limit. Oversized individual sidecars are reported; aggregate limits stop the review. Links and unsafe receipt paths are rejected. These limits qualify bounded selections, not an arbitrary-size photo library.
+Only receipt-listed files are considered: up to 20,000 files, a 32 MiB receipt, 8 MiB per sidecar, 64 MiB total sidecars, 30,000 derived records, 16 MiB retained record encoding, 100,000 relationships, 100 candidate paths per ID and a 64 MiB report. A separate worker has a 256 MiB old-generation heap limit. Oversized individual sidecars are reported; aggregate limits stop the review. Links and unsafe receipt paths are rejected. These limits qualify bounded selections, not an arbitrary-size photo library.
 
 Local API clients use authenticated `POST /v1/jobs/<id>/photoReview` and poll the existing jobs endpoint. Pause uses the ordinary job pause operation. The caller supplies an existing verified supported photo-export job ID, not a filesystem path or download URL. Electron and Tauri expose the same command to the reusable React area.
 
@@ -35,4 +35,4 @@ Google Photos now uses the same bounded workflow through a separate adapter. See
 
 Instagram now reuses this worker for bounded numbered-post media references. See [Meta export methods and exact limits](meta-export-methods.md). The observed older Facebook numbered-post layout also uses the same resolver; newer layouts remain uninterpreted.
 
-X archive data now uses the same review through a strictly inert assignment decoder. See [X archive methods and limits](x-archive-methods.md). Other adapters continue using ordinary JSON decoding.
+X archive data now uses the same review through a bounded streaming array decoder. Results remain provisional until the complete script syntax and receipt fingerprint pass; one failed script contributes no partial links. See [X archive methods and limits](x-archive-methods.md). Other adapters continue using ordinary JSON decoding.

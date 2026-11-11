@@ -66,4 +66,4 @@ Gmail exports now support a bounded background MBOX inventory after preservation
 
 Instagram and observed older Facebook numbered-post media reference review share the preserved-export worker; see [Meta export methods](docs/meta-export-methods.md) for scope and manual download limits.
 
-X archive photo-reference review parses supported archive wrappers as inert JSON; see [X methods and limits](docs/x-archive-methods.md).
+X archive photo/MP4-reference review streams supported archive wrappers as inert JSON; see [X methods and limits](docs/x-archive-methods.md).

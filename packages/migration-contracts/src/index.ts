@@ -61,6 +61,7 @@ export interface PhotoReview {
     title?: string;
     dateTaken?: string;
     reference?: string;
+    mediaRole?: "photo" | "playback";
     status: string;
     issue?: string;
     candidates: string[];

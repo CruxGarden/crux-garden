@@ -73,7 +73,7 @@ export default function PhotoReview({
               ? "by Flickr ID"
               : social
                 ? job.provider === "X"
-                  ? "by exact post IDs and observed archive photo names"
+                  ? "by exact post IDs and observed archive media names"
                   : "by literal exported local paths"
                 : "by Takeout names and exported folders"}
             . Media bytes have not been checked again; use Verify again for
@@ -91,7 +91,7 @@ export default function PhotoReview({
                     <strong>
                       {record.title || record.id || "Unrecognized record"}
                     </strong>{" "}
-                    — {record.kind}, {record.status}
+                    — {record.mediaRole || record.kind}, {record.status}
                     <div>{record.path}</div>
                     {record.reference && (
                       <div>Reference: {record.reference}</div>

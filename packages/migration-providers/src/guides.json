@@ -959,8 +959,8 @@
       },
       {
         "id": "local-review",
-        "label": "Review preserved photo references",
-        "text": "After preservation, Review export media checks supported tweet data files against selected local photo files. Archive scripts are parsed as data and never executed. Videos and unsupported formats remain visible or uninterpreted; export requests and downloads are manual."
+        "label": "Review preserved media references",
+        "text": "After preservation, Review export media checks supported post photo and MP4 playback references against selected files. Every supported video/GIF variant is checked separately; a poster is never substituted for playback. Large scripts are streamed within documented limits and never executed. Unknown formats remain preserved; export requests and downloads are manual."
       }
     ],
     "checks": "Sample an old post, a reply chain, a quoted post, a long post if present, an image, a video, and a DM attachment. Inspect whether media is actual local content. Relationship lists and liked/bookmarked references should remain distinct from copies of other people's posts. Do not claim that every referenced or deleted post is recoverable.",

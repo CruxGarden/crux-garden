@@ -1413,7 +1413,7 @@ test("X export references run through native picker authority and preserve origi
   await fs.mkdir(source);
   await fs.mkdir(destination);
   const {
-    entries,
+    playbackEntries: entries,
   } = require("../../../packages/migration-engine/tests/x-fixture.cjs");
   for (const [name, bytes] of Object.entries(entries)) {
     await fs.mkdir(path.dirname(path.join(source, name)), { recursive: true });
@@ -1466,16 +1466,16 @@ test("X export references run through native picker authority and preserve origi
         .getByRole("region", { name: "Export media review" })
         .getByRole("status"),
     ).toContainText(
-      "1 matched · 0 ambiguous · 1 unmatched · 1 unreadable or unrecognized",
+      "2 matched · 0 ambiguous · 1 unmatched · 0 unreadable or unrecognized",
     );
     const [job] = await page.evaluate(() =>
       window.migrationAPI.request("list"),
     );
-    expect(job.photoReview.counts.matched).toBe(1);
+    expect(job.photoReview.counts.matched).toBe(2);
     const report = JSON.parse(
       await fs.readFile(path.join(job.output, job.photoReview.report), "utf8"),
     );
-    expect(report.adapter).toBe("x-archive-photo-reference-v1");
+    expect(report.adapter).toBe("x-archive-media-reference-v2");
     for (const [name, bytes] of Object.entries(entries))
       expect(
         await fs.readFile(path.join(job.output, "files", name), "utf8"),

@@ -127,7 +127,6 @@ Official Apple documentation supports the current manual export/staging paths an
 
 The final rebuilt package also passes the packaged selected-files, archive, Flickr/Google Photos review and SQLite restart checks. A focused browser recheck passes after the guide correction. Actual final Tauri reopen retains all nine imports and the two-file selection; the corrected guide's entire check paragraph is visible. The previous ready Dropbox view is restored. Final package checks do not imply live iCloud acceptance.
 
-
 ## PhotoKit bridge foundation — November 10, 2026
 
 The verify gate passes **116 engine/API/process checks**, TypeScript, architecture boundaries and production builds. Seventeen added process checks cover a separate compiled Photos fixture, permissions without prompts, bounded pages, duplicate names and resource roles, stale selections, explicit network choice, byte-for-byte selected streams, partial completion errors, changed assets before/after data, maximum bytes, abandoned iteration, abort/idle/deadline cancellation and malformed subprocess messages. Missing helpers and oversized requests also fail safely. Production receives only inert hello/unknown commands; no real library status or fetch is exercised.
@@ -138,7 +137,6 @@ All ten desktop journeys (36.1 seconds) and seven browser embedding journeys (19
 
 The final Tauri release build and packaged-runtime check pass. The shipped helper answers protocol 1 with fixtures and authorization requests disabled; no status/library command is sent. The packaged Node API/native SQLite still preserve selected files, folders, ZIP/TAR.GZ and multiple export parts, retain photo-review summaries and reopen synthetic history. The production helper is 139,200 bytes before archive compression. No manual native-window or real Photos acceptance is implied.
 
-
 ## PhotoKit durable selected resources — November 10, 2026
 
 The verify gate passes **127 engine/API/process checks**, TypeScript, boundaries and production builds. All 127 checks also pass after strengthening direct read-only inspection of the synthetic SQLite fingerprint catalog. Eleven new checks cover the trusted-factory gate, selected unknown-length transfers and manifest hashes, pause/restart, new session handles, later-page rediscovery, changed source revisions, modified completed destinations, partial/completion failure, low disk space, metadata-only reuse refusal and malformed/ambiguous native metadata. These use the same API-owned SQLite runtime and shared collection worker as other services, with a separately compiled synthetic Photos helper. Original/paired resources with identical filenames stay separate; only selected resources are transferred. Synthetic bytes do not qualify real Live Photo fidelity.
@@ -148,7 +146,6 @@ Saved selections freeze resource descriptors/revisions; no native handle is save
 All ten desktop journeys (36.3 seconds) and seven browser journeys (20.0 seconds) pass. The final Tauri release build and packaged Node/SQLite preservation/review/restart checks pass. The actual packaged backend explicitly rejects Photos connection requests, including attempts to pass a factory/network flag over the client protocol. The production helper receives only its inert hello check; no real Photos status, permission or library request is used. Engine build staging now removes obsolete compiled outputs before bundling.
 
 Native permission presentation, source namespace lifecycle, actual Photos fidelity, minimum-OS/Intel runtime checks and manual Tauri window acceptance remain pending. The Mac was locked during the prior attempt; no repeated unlock request or real-library readiness test was made. No production host registers this internal adapter and no Photos Connect action has been added. See [the updated bridge/adapter contract](photokit-bridge.md) and workspace ADR0099.
-
 
 ## Photos host boundary and fixture selection — November 10, 2026
 
@@ -209,3 +206,13 @@ All **fifteen Electron desktop journeys** pass (57.0s), including X preservation
 Final Tauri release packaging passes (41.20s compilation). Packaged Node/SQLite acceptance preserves the X fixture, runs the actual bundled review worker, verifies original script/media bytes and retains results after restart alongside other services. Production Photos remains disabled and only receives inert helper negotiation. Manual Tauri-window acceptance remains pending after the earlier locked-Mac attempt.
 
 This is fixture-qualified photo-reference review, not an X account connector, full social archive interpretation, video preservation qualification or large-archive acceptance. Export requests/downloads remain manual. Scripts above 8 MiB and unsupported forms stay preserved but are not interpreted. [Method comparison, primary format evidence and exact bounds](x-archive-methods.md).
+
+## X playback variants and bounded metadata streaming — November 10, 2026
+
+Final verify passes TypeScript, package boundaries, production builds and **180 engine/API/process checks**. Eleven additional tests qualify separate video/animated-GIF MP4 variants, missing higher-resolution resources, no poster substitution, unsafe URLs/HLS refusal, variant bounds, duplicate references, UTF-8 and entry framing across chunk sizes, strict syntax/trailer/internal-BOM rejection, entry/depth/count/output budgets, file symlinks/replacement/mutation/truncation/growth, cancellation and retry after API restart. A roughly 9 MiB/9,001-entry synthetic script passes the former 8 MiB limit; original bytes remain unchanged. Late syntax/hash/budget failures publish no partial links from that script. Reader unit fixtures initially used macOS's /var temporary-directory alias; resolving the fixture root corrected the setup and all reader checks pass.
+
+All **fifteen Electron desktop journeys** pass (56.2s) and all **fourteen browser journeys** pass (18.7s) against the final fixed build. X host journeys now preserve MP4 variants and a poster separately, display playback roles, expose the absent variant, retain original bytes and restore the review after restart. Narrow 420px layout/screenshot was inspected. An earlier desktop run overlapped a runtime rebuild and stalled at Gmail; that run was stopped and discarded, then the complete final suite passed. Do not rebuild runtime-dist while an acceptance runner is using it.
+
+Final Tauri release packaging passes (29.65s compilation). Packaged Node/SQLite checks preserve the new playback fixture, use the actual streaming review worker, verify unchanged originals and retain results after restart alongside other services. Manual Tauri-window acceptance remains pending after the earlier locked-Mac attempt. Production Photos remains disabled; no real library/status/permission was requested.
+
+The optional streaming adapter replaces the now-unused whole-file assignment decoder; regular photo/Meta adapters retain their smaller input limits. This is fixture qualification, not maximum-limit performance, a complete X account inventory or proof of media playability. Query-style video URLs/HLS and real X archives remain unqualified; export requests/downloads are manual. [Exact grammar, bounds and primary observations](x-archive-methods.md).

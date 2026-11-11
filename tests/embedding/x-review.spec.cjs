@@ -14,7 +14,8 @@ test("X export review embeds, renders untrusted text safely, retains history and
         cleanup = fn;
       },
     },
-    require("../../packages/migration-engine/tests/x-fixture.cjs").entries,
+    require("../../packages/migration-engine/tests/x-fixture.cjs")
+      .playbackEntries,
     "X",
   );
   try {
@@ -39,7 +40,7 @@ test("X export review embeds, renders untrusted text safely, retains history and
       .click();
     const section = page.getByRole("region", { name: "Export media review" });
     await expect(section.getByRole("status")).toHaveText(
-      "1 matched · 0 ambiguous · 1 unmatched · 1 unreadable or unrecognized",
+      "2 matched · 0 ambiguous · 1 unmatched · 0 unreadable or unrecognized",
     );
     await section
       .getByText("Review records (up to 50, problems first)")
@@ -51,9 +52,7 @@ test("X export review embeds, renders untrusted text safely, retains history and
     ).toBeVisible();
     await expect(section.locator("script")).toHaveCount(0);
     await expect(
-      section.getByText(
-        "Unsupported media type or URL form; original retained and no URL fetched.",
-      ),
+      section.getByText("playback, unmatched", { exact: false }),
     ).toBeVisible();
     await page.setViewportSize({ width: 420, height: 850 });
     expect(
@@ -72,7 +71,7 @@ test("X export review embeds, renders untrusted text safely, retains history and
       .locator(".migration-history button")
       .filter({ hasText: "X" })
       .click();
-    await expect(section.getByRole("status")).toContainText("1 matched");
+    await expect(section.getByRole("status")).toContainText("2 matched");
   } finally {
     await cleanup();
   }

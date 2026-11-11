@@ -157,7 +157,7 @@ test("X split archives use selected receipt entries and retain collisions", asyn
 });
 test("X bounds post and media lists and verifies the full original script hash before decoding", async (t) => {
   const f = await fixture(t, {
-    [metadataPath]: wrap(Array(10001).fill({})),
+    [metadataPath]: wrap(Array(100001).fill({})),
     "data/tweets-part1.js": wrap([tweet(Array(30001).fill(photo()))], 1),
   });
   let done = await f.review();
@@ -205,4 +205,174 @@ test("X malformed authoritative media containers do not fall back to a partial a
   const done = await f.review();
   assert.equal(done.photoReview.counts.invalid, 3);
   assert.equal(done.photoReview.counts.matched, 0);
+});
+
+test("X playback variants stay separate from posters, preserve missing variants and retain restart roles", async (t) => {
+  const { playbackEntries } = require("./x-fixture.cjs");
+  const f = await fixture(t, playbackEntries);
+  const done = await f.review(),
+    report = await f.report(done);
+  assert.deepEqual(report.counts, {
+    matched: 2,
+    unmatched: 1,
+    ambiguous: 0,
+    invalid: 0,
+  });
+  assert.equal(
+    report.records.every((r) => r.mediaRole === "playback"),
+    true,
+  );
+  assert.equal(report.uninterpretedFiles[0].path.endsWith("Poster.jpg"), true);
+  assert.equal(report.records[0].candidates[0].endsWith("-Clip.mp4"), true);
+  assert.equal(report.records[1].candidates.length, 0); // higher bitrate is absent
+  await f.restart();
+  assert.equal(
+    (await f.runtime.request("list"))[0].photoReview.preview[0].mediaRole,
+    "playback",
+  );
+  for (const [name, content] of Object.entries(playbackEntries))
+    assert.equal(
+      await fs.readFile(path.join(done.output, "files", name), "utf8"),
+      content,
+    );
+});
+test("X playback rejects URL tricks, HLS, invalid variants and oversized variant lists without poster fallback", async (t) => {
+  const { video } = require("./x-fixture.cjs");
+  const urls = [
+    "https://video.twimg.com/tweet_video/Clip.mp4?tag=1",
+    "https://video.twimg.com/tweet_video/%43lip.mp4",
+    "https://video.twimg.com/tweet_video/../Clip.mp4",
+    "https://video.twimg.com.evil/tweet_video/Clip.mp4",
+    "https://user@video.twimg.com/tweet_video/Clip.mp4",
+    "https://video.twimg.com/tweet_video/Clip.mp4#frag",
+    "https://video.twimg.com/ext_tw_video/1/pu/pl/Clip.m3u8",
+  ];
+  const m = video();
+  m.video_info.variants = urls.map((url) => ({
+    url,
+    content_type: "video/mp4",
+  }));
+  m.video_info.variants.push(null, {
+    url: "https://video.twimg.com/tweet_video/Clip.mp4",
+    content_type: "application/x-mpegURL",
+  });
+  const big = video();
+  big.video_info.variants = Array(33).fill(big.video_info.variants[0]);
+  const f = await fixture(t, {
+    [metadataPath]: wrap([tweet([m, big])]),
+    "data/tweets_media/9007199254740993123-Clip.mp4": "selected",
+    "data/tweets_media/9007199254740993123-Poster.jpg": "poster",
+  });
+  const report = await f.report(await f.review());
+  assert.equal(report.counts.invalid, 10);
+  assert.equal(report.counts.matched, 0);
+});
+test("X playback recognizes observed amplify/avc1 form but keeps duplicate references and archive collisions", async (t) => {
+  const { video } = require("./x-fixture.cjs");
+  const m = video();
+  m.video_info.variants = [
+    {
+      content_type: "video/mp4",
+      url: "https://video.twimg.com/amplify_video/12/pu/vid/avc1/640x360/Clip.mp4",
+    },
+  ];
+  const f = await fixture(t, {
+    [metadataPath]: wrap([tweet([m, m])]),
+    "data/tweets_media/9007199254740993123-Clip.mp4": "clip",
+  });
+  const report = await f.report(await f.review());
+  assert.equal(report.counts.matched, 2);
+  assert.equal(report.mediaFiles.length, 1);
+});
+test("X streams a script above 8 MiB, keeps UTF-8 and stable entry positions, without editing originals", async (t) => {
+  const posts = Array.from({ length: 9000 }, (_, i) => ({
+    tweet: { id_str: String(i + 1), full_text: "🌿".repeat(260) },
+  }));
+  posts.push(tweet([photo()]));
+  const content = wrap(posts);
+  assert.ok(Buffer.byteLength(content) > 8 * 1024 ** 2);
+  const f = await fixture(t, {
+    [metadataPath]: content,
+    "data/tweets_media/9007199254740993123-Photo.jpg": "photo",
+  });
+  const done = await f.review(),
+    report = await f.report(done);
+  assert.equal(report.counts.matched, 1);
+  assert.equal(report.records[0].id, `${metadataPath}#9000/0`);
+  assert.equal(
+    await fs.readFile(path.join(done.output, "files", metadataPath), "utf8"),
+    content,
+  );
+});
+test("X streamed partial results are discarded on late executable suffix, syntax error and changed hash", async (t) => {
+  const content = wrap([tweet([photo()])]);
+  const f = await fixture(t, {
+    [metadataPath]: content + "evil()",
+    "data/tweets-part1.js": wrap([tweet([photo()])], 1).replace(/\];$/, ",];"),
+    "data/tweets_media/9007199254740993123-Photo.jpg": "photo",
+  });
+  let report = await f.report(await f.review());
+  assert.equal(report.counts.matched, 0);
+  assert.equal(report.counts.invalid, 2);
+  // Same-size different valid script must never commit its provisional association.
+  await fs.writeFile(
+    path.join(f.job.output, "files", metadataPath),
+    content + "      ",
+  );
+  report = await f.report(await f.review());
+  assert.equal(report.counts.matched, 0);
+  assert.match(
+    report.records.find((r) => r.path === metadataPath).issue,
+    /fingerprint|differs/,
+  );
+});
+test("X streamed metadata bounds individual entries, nesting and retained output without partial success", async (t) => {
+  const f = await fixture(t, {
+    [metadataPath]: wrap([
+      { tweet: { id_str: "123", full_text: "a".repeat(1024 ** 2) } },
+    ]),
+    "data/tweets-part1.js":
+      "window.YTD.tweets.part1 = [" +
+      "[".repeat(129) +
+      "0" +
+      "]".repeat(129) +
+      "];",
+    "data/tweets-part2.js": wrap(
+      Array.from({ length: 4500 }, () => ({
+        tweet: {
+          id_str: "123",
+          full_text: "x".repeat(4096),
+          extended_entities: { media: [photo()] },
+        },
+      })),
+      2,
+    ),
+  });
+  const report = await f.report(await f.review());
+  assert.equal(report.counts.invalid, 3);
+  assert.equal(report.counts.unmatched, 0);
+  assert.ok(report.records.some((r) => /1 MiB/.test(r.issue)));
+  assert.ok(report.records.some((r) => /nesting/.test(r.issue)));
+  assert.ok(report.records.some((r) => /budget/.test(r.issue)));
+});
+
+test("X streaming pause discards provisional results and retry after API restart retains preservation", async (t) => {
+  const posts = Array.from({ length: 9000 }, (_, i) => ({
+    tweet: { id_str: String(i + 1), full_text: "a".repeat(1024) },
+  }));
+  posts.push(tweet([photo()]));
+  const f = await fixture(t, {
+    [metadataPath]: wrap(posts),
+    "data/tweets_media/9007199254740993123-Photo.jpg": "photo",
+  });
+  await f.runtime.request("photoReview", { id: f.job.id });
+  await f.runtime.request("pause", { id: f.job.id });
+  const paused = await wait(f.runtime, f.job.id, true);
+  assert.equal(paused.photoReview.state, "paused");
+  assert.equal(paused.state, "verified");
+  assert.equal(paused.photoReview.report, undefined);
+  await f.restart();
+  const done = await f.review();
+  assert.equal(done.photoReview.counts.matched, 1);
+  assert.equal(done.state, "verified");
 });
