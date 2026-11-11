@@ -47,7 +47,7 @@ async function fixture(t) {
   const keys = [];
   const options = {
     cloud: {
-      photosFactory: async (signal) => {
+      photosFactory: async (signal, grant) => {
         bridge = new PhotosBridge(binary);
         const read = bridge.read.bind(bridge);
         bridge.read = (...args) => {
@@ -59,11 +59,7 @@ async function fixture(t) {
           failure,
           changed,
         });
-        return photosAdapter(
-          bridge,
-          { namespace: "fixture-library", networkAllowed: false },
-          signal,
-        );
+        return photosAdapter(bridge, grant, signal);
       },
     },
   };
@@ -76,7 +72,10 @@ async function fixture(t) {
     await runtime.close();
   });
   async function connect() {
-    const c = await call("cloudConnect", { provider: "iCloud Photos" });
+    const c = await runtime.connectPhotos({
+      sourceBinding: "fixture-library",
+      networkAllowed: false,
+    });
     const page = await call("cloudBrowse", { connection: c.id });
     return { c, page };
   }
@@ -207,7 +206,7 @@ test(
         assert.equal(row.revision, item.revision);
         assert.deepEqual(JSON.parse(row.source_key), [
           "iCloud Photos",
-          "photokit:fixture-library",
+          done.identity,
           item.id,
         ]);
       }

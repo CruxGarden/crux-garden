@@ -37,6 +37,21 @@ const roles = [
   "adjustmentBaseVideo",
 ];
 const roleFor = (type: number) => roles[type] ?? "unknown";
+const roleLabels: Record<string, string> = {
+  unknown: "Other resource",
+  originalPhoto: "Original photo",
+  originalVideo: "Original video",
+  originalAudio: "Original audio",
+  alternatePhoto: "Alternate photo",
+  currentPhoto: "Edited photo",
+  currentVideo: "Edited video",
+  adjustmentData: "Edit instructions",
+  adjustmentBasePhoto: "Editing source photo",
+  originalPairedVideo: "Original companion video",
+  currentPairedVideo: "Edited companion video",
+  adjustmentBasePairedVideo: "Editing source companion video",
+  adjustmentBaseVideo: "Editing source video",
+};
 /** Trusted host constructs this only after permission handling is qualified.
  * Stable namespace and network opt-in come from the host, never raw HTTP/IPC input.
  * No authorization request exists in this adapter or helper.
@@ -52,6 +67,8 @@ export async function photosAdapter(
     typeof options.networkAllowed !== "boolean"
   )
     throw fail();
+  // A connection's network choice cannot change through a caller-owned options object.
+  options = { ...options };
   const resources = new Map<string, Resource>();
   const assets = new Set<string>();
   const keys = new Set<string>();
@@ -62,7 +79,7 @@ export async function photosAdapter(
   const view = (r: Resource): CloudEntry => ({
     id: r.item.id,
     revision: r.item.revision,
-    name: `${r.item.metadata!.originalFilename} · ${r.item.metadata!.role}`,
+    name: `${r.item.metadata!.originalFilename} · ${roleLabels[String(r.item.metadata!.role)]}`,
     kind: "file",
   });
   async function page(cursor: string | undefined, requestSignal: AbortSignal) {

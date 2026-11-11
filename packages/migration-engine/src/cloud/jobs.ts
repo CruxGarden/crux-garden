@@ -30,7 +30,10 @@ import type { TokenExchange } from "./oauth";
 import type { DownloadOpen } from "../network";
 export interface CloudOptions {
   // Trusted host injection only. Production hosts do not register Photos yet.
-  photosFactory?: (signal: AbortSignal) => Promise<CloudAdapter>;
+  photosFactory?: (
+    signal: AbortSignal,
+    grant: { namespace: string; networkAllowed: boolean },
+  ) => Promise<CloudAdapter>;
   open?: DownloadOpen;
   s3Factory?: S3Factory;
   tokenExchange?: TokenExchange;
@@ -439,14 +442,18 @@ export async function createCloudJobs(
     list: () => [...jobs.values()].map(summary),
     get: (id: unknown) => structuredClone(jobFor(id)),
     status: () => [...connections.values()].map((c) => structuredClone(c.view)),
-    async connect(input: Record<string, unknown>, authorize = false) {
+    async connect(
+      input: Record<string, unknown>,
+      authorize = false,
+      photos?: { namespace: string; networkAllowed: boolean },
+    ) {
       if (connections.size >= 10)
         throw new CloudError(
           "Disconnect an unused account before adding another.",
         );
       const provider = input.provider;
       if (
-        !(provider === "iCloud Photos" && options.photosFactory) &&
+        !(provider === "iCloud Photos" && options.photosFactory && photos) &&
         !["Bluesky", "Amazon S3", "Google Drive", "Dropbox"].includes(
           String(provider),
         )
@@ -471,12 +478,17 @@ export async function createCloudJobs(
         if (provider === "iCloud Photos") {
           const adapter = await options.photosFactory!(
             AbortSignal.timeout(60_000),
+            photos!,
           );
-          if (adapter.provider !== "iCloud Photos") {
+          if (
+            adapter.provider !== "iCloud Photos" ||
+            adapter.identity !== `photokit:${photos!.namespace}`
+          ) {
             await adapter.close?.();
             throw new CloudError("Invalid Photos host adapter.");
           }
           connected(adapter);
+          c.view.photosNetworkAllowed = photos!.networkAllowed;
           return structuredClone(c.view);
         }
         if (

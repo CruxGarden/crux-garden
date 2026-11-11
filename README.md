@@ -59,3 +59,5 @@ Flickr full-data exports now support a separate photo/album metadata review afte
 Google Photos Takeout now shares the bounded metadata review. It handles observed sidecar names and selected split parts while exposing uncertain album/duplicate relationships. See [Takeout scope and evidence](docs/google-photos-takeout.md).
 
 **Choose files** preserves an explicit selection of downloaded files using the same background verification and history as folder imports. Useful for selected iCloud documents or exported photo components; include sidecars/video companions yourself. See [iCloud methods and automation scope](docs/icloud-methods.md). An internal [PhotoKit bridge foundation](docs/photokit-bridge.md) is compiled and fixture-tested; its durable selected-resource jobs are fixture-tested, while app connection and real-library qualification remain pending.
+
+The optional Photos host action and resource-selection UI are fixture-tested but not installed in production clients. [Native permission evidence and remaining qualification](docs/photos-host-qualification.md) explain the gate, source namespaces and explicit network choice.

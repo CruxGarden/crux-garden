@@ -21,6 +21,8 @@ export interface MigrationStore {
   findFingerprints?: FingerprintStore["findFingerprints"];
   loadCloudJobs?(): Promise<CloudJob[]>;
   saveCloudJob?(job: CloudJob): Promise<void>;
+  loadPhotoBindings?(): Promise<unknown>;
+  savePhotoBindings?(bindings: Record<string, string>): Promise<void>;
   close(): Promise<void>;
 }
 export async function openMigrationStore(
@@ -54,6 +56,18 @@ export async function openMigrationStore(
     "CREATE INDEX IF NOT EXISTS migrate_fingerprints_source ON migrate_fingerprints(source_key, revision)",
   );
   return {
+    async loadPhotoBindings() {
+      const saved = (await api.listSettings()).find(
+        (s) => s.key === "migration:photos-bindings",
+      );
+      return saved ? JSON.parse(saved.value) : {};
+    },
+    async savePhotoBindings(bindings) {
+      await api.putSetting(
+        "migration:photos-bindings",
+        JSON.stringify(bindings),
+      );
+    },
     async putFingerprint(file) {
       await api.run(
         "INSERT INTO migrate_fingerprints(path,bytes,sha256,md5,checked_at,source_key,revision,dropbox) VALUES(?,?,?,?,?,?,?,?) ON CONFLICT(path) DO UPDATE SET bytes=excluded.bytes,sha256=excluded.sha256,md5=excluded.md5,checked_at=excluded.checked_at,source_key=CASE WHEN migrate_fingerprints.sha256=excluded.sha256 THEN COALESCE(excluded.source_key,migrate_fingerprints.source_key) ELSE excluded.source_key END,revision=CASE WHEN migrate_fingerprints.sha256=excluded.sha256 THEN COALESCE(excluded.revision,migrate_fingerprints.revision) ELSE excluded.revision END,dropbox=CASE WHEN migrate_fingerprints.sha256=excluded.sha256 THEN COALESCE(excluded.dropbox,migrate_fingerprints.dropbox) ELSE excluded.dropbox END",

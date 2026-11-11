@@ -98,6 +98,13 @@ for (const app of [
       }),
       /supported service/,
     );
+    await assert.rejects(
+      request("connectPhotos", {
+        sourceBinding: "forged",
+        networkAllowed: true,
+      }),
+      /native host action/,
+    );
     const source = path.join(fixture, "source");
     const destination = path.join(fixture, "destination");
     await mkdir(source);

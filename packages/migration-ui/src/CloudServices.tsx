@@ -35,6 +35,7 @@ export default function CloudServices({
   const [trail, setTrail] = useState<{ id: string; name: string }[]>([]);
   const [selected, setSelected] = useState<Map<string, CloudEntry>>(new Map());
   const [busy, setBusy] = useState(false);
+  const [photosNetwork, setPhotosNetwork] = useState(false);
   const [error, setError] = useState("");
   const current = connections.find((c) => c.id === connection);
   useEffect(() => {
@@ -134,6 +135,7 @@ export default function CloudServices({
               value={provider}
               onChange={(e) => {
                 setProvider(e.target.value as CloudProvider);
+                setPhotosNetwork(false);
                 setFields({ region: "us-east-1" });
               }}
             >
@@ -141,6 +143,7 @@ export default function CloudServices({
               <option>Amazon S3</option>
               <option>Google Drive</option>
               <option>Dropbox</option>
+              {client.connectPhotos && <option>iCloud Photos</option>}
             </select>
           </span>
         </label>
@@ -237,16 +240,49 @@ export default function CloudServices({
             </p>
           </>
         )}
+        {provider === "iCloud Photos" && client.connectPhotos && (
+          <>
+            <p>
+              Browse the Photos library made available by this Mac. Your Mac may
+              ask for read and write Photos access; Migrate only reads and never
+              edits or deletes your library.
+            </p>
+            <p>
+              Choose each original, edited version or companion video you want.
+              Nothing is selected automatically. Albums and hidden items are not
+              included.
+            </p>
+            <label className="cloud-choice">
+              <input
+                type="checkbox"
+                checked={photosNetwork}
+                onChange={(e) => setPhotosNetwork(e.target.checked)}
+              />
+              Allow iCloud downloads for this connection
+            </label>
+            <p>
+              Leave this off to request only locally available resources. File
+              sizes may be unknown until downloading finishes.
+            </p>
+          </>
+        )}
         <Button
           disabled={busy}
           onClick={() =>
             void act(async () => {
-              const c = await client.request<CloudConnection>(
-                provider === "Google Drive" || provider === "Dropbox"
-                  ? "cloudAuthorize"
-                  : "cloudConnect",
-                { ...fields, provider },
-              );
+              const c =
+                provider === "iCloud Photos"
+                  ? await client.connectPhotos?.({
+                      networkAllowed: photosNetwork,
+                    })
+                  : await client.request<CloudConnection>(
+                      provider === "Google Drive" || provider === "Dropbox"
+                        ? "cloudAuthorize"
+                        : "cloudConnect",
+                      { ...fields, provider },
+                    );
+              if (!c) return;
+              setPhotosNetwork(false);
               setConnection(c.id);
               setListing(undefined);
               setTrail([]);
@@ -291,6 +327,14 @@ export default function CloudServices({
               return here.
             </p>
           )}
+          {current?.provider === "iCloud Photos" &&
+            current.state === "connected" && (
+              <p>
+                iCloud downloads:{" "}
+                {current.photosNetworkAllowed ? "allowed" : "off"} for this
+                connection.
+              </p>
+            )}
           {current?.error && <p role="alert">{current.error}</p>}
           <Button
             disabled={busy || current?.state !== "connected"}
@@ -351,7 +395,7 @@ export default function CloudServices({
                           ? " (folder)"
                           : entry.size !== undefined
                             ? ` · ${mb(entry.size)}`
-                            : ""}
+                            : " · size unknown"}
                       </span>
                     </label>
                     {entry.kind === "folder" &&
@@ -387,9 +431,10 @@ export default function CloudServices({
                 </Button>
               )}
               <p>
-                {selected.size} selection{selected.size === 1 ? "" : "s"}.
-                Selected folders include all their descendants, including files
-                not currently shown.
+                {selected.size} selection{selected.size === 1 ? "" : "s"}.{" "}
+                {current?.provider === "iCloud Photos"
+                  ? "Each selected item is one resource. Companion videos and edited versions must be selected separately."
+                  : "Selected folders include all their descendants, including files not currently shown."}
               </p>
               {selected.size > 0 && (
                 <details open>
@@ -448,6 +493,13 @@ export default function CloudServices({
             · {job.files} / {job.totalFiles} files · {mb(job.bytes)} completed ·{" "}
             {job.reusedFiles ?? 0} reused locally
           </p>
+          {!!job.unknownFiles && (
+            <p>
+              {job.unknownFiles}{" "}
+              {job.unknownFiles === 1 ? "file size is" : "file sizes are"} still
+              unknown. Space is checked as files download.
+            </p>
+          )}
           <p>{job.selection.map((v) => v.name).join(", ")}</p>
           <p>{job.folder ?? "Choose a local destination."}</p>
           {job.current && <p role="status">{job.current}</p>}

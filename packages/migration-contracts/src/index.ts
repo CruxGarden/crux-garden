@@ -107,6 +107,12 @@ export type MigrationCommand =
   | "downloadPause"
   | "downloadImport";
 export interface MigrationClient {
+  /** Optional native-host action; never infer it from platform or an HTTP feature flag.
+   * The host owns permission presentation and source binding. Null means cancelled.
+   */
+  connectPhotos?(options: {
+    networkAllowed: boolean;
+  }): Promise<CloudConnection | null>;
   request<T>(
     command: MigrationCommand,
     args?: Record<string, unknown>,
@@ -160,6 +166,7 @@ export interface CloudEntry {
 }
 export interface CloudConnection {
   id: string;
+  photosNetworkAllowed?: boolean;
   provider: CloudProvider;
   label: string;
   state: "connecting" | "connected" | "failed";

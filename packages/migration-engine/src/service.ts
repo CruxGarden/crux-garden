@@ -1,3 +1,4 @@
+import { resolvePhotoNamespace } from "./cloud/photos-binding";
 import { PHOTO_REVIEW_PROVIDERS } from "./photo-adapters";
 import type { Fingerprint } from "./cloud/fingerprints";
 import { createCloudJobs, type CloudOptions } from "./cloud/jobs";
@@ -474,20 +475,48 @@ export async function createMigrationRuntime(
   }
   let queue = Promise.resolve();
   let closing = false;
+  function enqueue<T>(operation: () => Promise<T>) {
+    if (closing)
+      return Promise.reject(new Error("Migration is shutting down."));
+    const task = queue.then(operation);
+    queue = task.then(
+      () => {},
+      () => {},
+    );
+    return task;
+  }
   return {
+    // In-process host boundary only: never dispatched by HTTP or desktop request names.
+    connectPhotos(grant: { sourceBinding: string; networkAllowed: boolean }) {
+      const intent = grant && {
+        sourceBinding: grant.sourceBinding,
+        networkAllowed: grant.networkAllowed,
+      };
+      return enqueue(async () => {
+        if (!cloud || !options.cloud?.photosFactory)
+          throw new Error("This host has not enabled Photos access.");
+        if (!intent || typeof intent.networkAllowed !== "boolean")
+          throw new Error(
+            "Choose whether this connection may retrieve files from iCloud.",
+          );
+        const namespace = await resolvePhotoNamespace(
+          store,
+          intent.sourceBinding,
+        );
+        return cloud.connect({ provider: "iCloud Photos" }, false, {
+          namespace,
+          networkAllowed: intent.networkAllowed,
+        });
+      });
+    },
     request(command: string, args: Record<string, unknown> = {}) {
-      if (closing)
-        return Promise.reject(new Error("Migration is shutting down."));
-      const task = queue.then(async () => {
+      return enqueue(async () => {
         if (!args || typeof args !== "object" || Array.isArray(args))
           throw new Error("Invalid arguments.");
+        if (command === "connectPhotos")
+          throw new Error("Photos connections require the native host action.");
         return structuredClone(await request(command, args));
       });
-      queue = task.then(
-        () => {},
-        () => {},
-      );
-      return task;
     },
     async close() {
       closing = true;
