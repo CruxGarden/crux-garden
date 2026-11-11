@@ -111,7 +111,7 @@
         "text": "Google documents that embedded media metadata can retain original timestamps while the operating system gives downloaded files a new filesystem timestamp. Additional service metadata may be delivered in JSON sidecars. Google Photos export and metadata guidance."
       }
     ],
-    "checks": "Sample an old photo, a scan with no EXIF, a video, a manually adjusted date, and a photo appearing in several albums. Check orientation, time zone, captions, and video playback. Report media count, sidecar count, unpaired sidecars, unique byte count, and album memberships separately. Do not promise recognition labels, every shared-library item, or fully reversible editing history without testing actual exports.",
+    "checks": "Preserve your selected Takeout parts together, then choose Review photo metadata. It suggests links within exported folders and flags missing, ambiguous or unreadable sidecars. Raw dates and location fields stay separate; no EXIF is changed. Check an old photo, a scan, a video, edited versions and repeated album/year copies. Album folder membership is only a candidate list. Verify against your account: the app cannot prove every export part or shared-library item is included.",
     "sources": [
       {
         "title": "Google Photos export and metadata guidance",
@@ -120,6 +120,10 @@
       {
         "title": "Google Takeout instructions",
         "url": "https://support.google.com/accounts/answer/3024190"
+      },
+      {
+        "title": "Google Photos API access changes",
+        "url": "https://developers.google.com/photos/support/updates"
       }
     ]
   },

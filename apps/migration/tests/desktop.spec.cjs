@@ -865,3 +865,83 @@ test("Dropbox native host opens only its constructed OAuth URL and disconnect re
     await fs.rm(dir, { recursive: true, force: true });
   }
 });
+
+test("Google Photos Takeout metadata review is available through the native shared workflow", async () => {
+  const dir = await fs.realpath(
+    await fs.mkdtemp(path.join(os.tmpdir(), "migrate-takeout-desktop-")),
+  );
+  const source = path.join(dir, "source"),
+    destination = path.join(dir, "copies");
+  await fs.mkdir(source);
+  await fs.mkdir(destination);
+  await fs.writeFile(path.join(source, "photo.jpg"), "synthetic image bytes");
+  await fs.writeFile(
+    path.join(source, "photo.jpg.supplemental-metadata.json"),
+    JSON.stringify({
+      title: "photo.jpg",
+      photoTakenTime: { timestamp: "123" },
+    }),
+  );
+  const app = await electron.launch({
+    executablePath: require("../../../tools/node_modules/electron"),
+    args: [path.resolve(__dirname, "..")],
+    env: {
+      ...process.env,
+      CRUX_MIGRATION_TEST_PROFILE: path.join(dir, "profile"),
+    },
+  });
+  try {
+    const page = await app.firstWindow();
+    await page.getByRole("button", { name: "Bring files home" }).click();
+    await page
+      .getByRole("button", { name: "Google Photos", exact: true })
+      .click();
+    await page
+      .getByRole("button", { name: "Start Google Photos import", exact: true })
+      .click();
+    for (const [label, folder] of [
+      ["Choose source", source],
+      ["Choose destination", destination],
+    ]) {
+      await app.evaluate(({ dialog }, folder) => {
+        dialog.showOpenDialog = async () => ({
+          canceled: false,
+          filePaths: [folder],
+        });
+      }, folder);
+      await page.getByRole("button", { name: label, exact: true }).click();
+    }
+    await page
+      .getByRole("button", { name: "Review files", exact: true })
+      .click();
+    await expect(
+      page.getByRole("button", { name: "Preserve files", exact: true }),
+    ).toBeEnabled();
+    await page
+      .getByRole("button", { name: "Preserve files", exact: true })
+      .click();
+    await expect(
+      page.getByRole("button", { name: "Review photo metadata", exact: true }),
+    ).toBeEnabled();
+    await page
+      .getByRole("button", { name: "Review photo metadata", exact: true })
+      .click();
+    await expect(
+      page
+        .getByRole("region", { name: "Photo metadata review" })
+        .getByRole("status"),
+    ).toContainText("1 matched · 0 ambiguous");
+    const [job] = await page.evaluate(() =>
+      window.migrationAPI.request("list"),
+    );
+    expect(job.photoReview.counts.matched).toBe(1);
+    const report = JSON.parse(
+      await fs.readFile(path.join(job.output, job.photoReview.report), "utf8"),
+    );
+    expect(report.adapter).toBe("google-photos-takeout-v1");
+    expect(report.records[0].exportedTime.timestamp).toBe("123");
+  } finally {
+    await app.close();
+    await fs.rm(dir, { recursive: true, force: true });
+  }
+});

@@ -4,11 +4,9 @@ import * as fs from "node:fs/promises";
 import { createHash, randomUUID } from "node:crypto";
 import { join } from "node:path";
 import { checkedPath, exclusiveJson, safeName, portablePathSet } from "./files";
-import {
-  flickrMetadata,
-  type PhotoRecord,
-  type PreservedFile,
-} from "./photo-metadata";
+import { type PhotoRecord, type PreservedFile } from "./photo-metadata";
+
+import { photoAdapter } from "./photo-adapters";
 
 let paused = false;
 parentPort!.on("message", () => {
@@ -65,10 +63,6 @@ async function read(root: string, path: string, limit: number) {
 }
 async function run() {
   const { id, output, provider } = workerData;
-  if (provider !== "Flickr")
-    throw new Error(
-      "Photo metadata review is currently available for Flickr exports.",
-    );
   const receiptBytes = await read(output, "report.json", 32 * 1024 ** 2);
   const receipt = JSON.parse(receiptBytes.toString("utf8"));
   if (
@@ -94,27 +88,10 @@ async function run() {
     add(entry.path, true);
     return entry;
   });
-  const media = new Map<string, string[]>();
-  const mediaFiles = files.filter(
-    (f) => flickrMetadata.mediaIds(f.path).length,
-  );
-  const ambiguousPaths = new Set(
-    mediaFiles
-      .filter((f) => flickrMetadata.mediaIds(f.path).length > 1)
-      .map((f) => f.path),
-  );
-  for (const f of mediaFiles) {
-    for (const key of flickrMetadata.mediaIds(f.path)) {
-      const list = media.get(key) || [];
-      list.push(f.path);
-      media.set(key, list);
-      if (list.length > 100)
-        throw new Error(
-          "Too many candidate files share one Flickr ID. Review a smaller import.",
-        );
-    }
-  }
-  const sidecars = files.filter((f) => flickrMetadata.accepts(f.path));
+  const adapter = photoAdapter(provider, files, receipt.sourceKind);
+  const mediaFiles = adapter.mediaFiles;
+  const mediaSet = new Set(mediaFiles);
+  const sidecars = files.filter((f) => adapter.accepts(f.path));
   const records: PhotoRecord[] = [];
   let total = 0;
   let relationships = 0;
@@ -138,12 +115,7 @@ async function run() {
         throw new Error(
           "Sidecar differs from the preservation receipt. Verify this import before reviewing again.",
         );
-      const parsed = flickrMetadata.parse(
-        file,
-        JSON.parse(bytes.toString("utf8")),
-        media,
-        ambiguousPaths,
-      );
+      const parsed = adapter.parse(file, JSON.parse(bytes.toString("utf8")));
       relationships += parsed.reduce(
         (sum, r) =>
           sum +
@@ -191,18 +163,17 @@ async function run() {
         r.status = "ambiguous";
         r.issue = "Multiple metadata records have this ID.";
       }
-  const photoIds = new Set(
-    records.filter((r) => r.kind === "photo").map((r) => r.id),
+  adapter.finalize(records);
+  const associated = new Set(
+    records.filter((r) => r.kind === "photo").flatMap((r) => r.candidates),
   );
-  const unassociatedMedia = mediaFiles.filter(
-    (f) => !flickrMetadata.mediaIds(f.path).some((id) => photoIds.has(id)),
-  );
+  const unassociatedMedia = mediaFiles.filter((f) => !associated.has(f.path));
   const counts = { matched: 0, ambiguous: 0, unmatched: 0, invalid: 0 };
   for (const r of records) counts[r.status]++;
   const name = `photo-review-${randomUUID()}.json`;
   const report = {
     version: 1,
-    adapter: "flickr-export-v1",
+    adapter: adapter.version,
     importId: id,
     created: new Date().toISOString(),
     receiptSha256: createHash("sha256").update(receiptBytes).digest("hex"),
@@ -212,15 +183,13 @@ async function run() {
     unassociatedMedia,
     mediaFiles,
     uninterpretedFiles: files.filter(
-      (f) =>
-        !flickrMetadata.accepts(f.path) &&
-        !flickrMetadata.mediaIds(f.path).length,
+      (f) => !adapter.accepts(f.path) && !mediaSet.has(f),
     ),
     limitations: [
-      "Matches are candidate associations by Flickr ID, not proof of media identity or export completeness.",
+      "Matches are candidate associations, not proof of media identity or export completeness.",
       "Media bytes are not rehashed by this review. SHA-256 values describe the preservation receipt; use Verify again for current integrity.",
       "Dates retain the exported text without timezone interpretation. Text previews are limited to 4096 characters; originals retain every field.",
-      "Only recognized photo_<ID>.json, albums.json and ID_secret_o or title_ID_o media names are interpreted. Other formats remain preserved.",
+      ...adapter.limitations,
       "This report does not fetch missing files, rewrite EXIF, reconstruct albums, compare a separate directory, or request/download a provider export.",
     ],
   };
@@ -241,7 +210,7 @@ async function run() {
       ...records.filter((r) => r.status === "matched"),
     ]
       .slice(0, 50)
-      .map(({ members, candidates, ...r }) => ({
+      .map(({ members, candidates, exportedLocation: _location, ...r }) => ({
         ...r,
         candidates: candidates.slice(0, 10),
         candidateCount: candidates.length,

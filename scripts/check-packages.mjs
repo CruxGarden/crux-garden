@@ -196,10 +196,47 @@ for (const app of [
       ),
     );
     assert.equal(photoReport.records[0].candidates[0], "summer_101_o.jpg");
+    const takeoutSource = path.join(fixture, "takeout-source");
+    await mkdir(takeoutSource);
+    await writeFile(path.join(takeoutSource, "photo.jpg"), "Takeout fixture");
+    await writeFile(
+      path.join(takeoutSource, "photo.jpg.supplemental-metadata.json"),
+      JSON.stringify({
+        title: "photo.jpg",
+        photoTakenTime: { timestamp: "123" },
+      }),
+    );
+    const takeoutJob = await request("create", { provider: "Google Photos" });
+    await request("source", { id: takeoutJob.id, path: takeoutSource });
+    await request("destination", { id: takeoutJob.id, path: destination });
+    await request("inspect", { id: takeoutJob.id });
+    await settle(takeoutJob.id);
+    await request("start", { id: takeoutJob.id });
+    await settle(takeoutJob.id);
+    await request("photoReview", { id: takeoutJob.id });
+    let takeoutResult;
+    for (let i = 0; i < 150; i++) {
+      takeoutResult = (await request("list")).find(
+        (j) => j.id === takeoutJob.id,
+      );
+      if (takeoutResult.photoReview.state !== "running") break;
+      await new Promise((r) => setTimeout(r, 100));
+    }
+    assert.equal(
+      takeoutResult.photoReview.state,
+      "complete",
+      takeoutResult.photoReview.error,
+    );
+    assert.equal(takeoutResult.photoReview.counts.matched, 1);
     await close();
     launch();
     assert.equal((await request("info")).cruxCount, 0);
     assert.equal((await request("list"))[0].state, "verified");
+    assert.equal(
+      (await request("list")).find((j) => j.id === takeoutJob.id).photoReview
+        .counts.matched,
+      1,
+    );
     assert.equal(
       (await request("list")).find((j) => j.id === photoJob.id).photoReview
         .counts.matched,
@@ -207,7 +244,7 @@ for (const app of [
     );
     await close();
     console.log(
-      `${app}: packaged API, native SQLite, zero Cruxes, folder/ZIP/TAR.GZ and multiple-part preservation, Flickr metadata review, verification and restart passed`,
+      `${app}: packaged API, native SQLite, zero Cruxes, folder/ZIP/TAR.GZ and multiple-part preservation, Flickr/Google Photos metadata review, verification and restart passed`,
     );
   } finally {
     if (child && child.exitCode === null) {

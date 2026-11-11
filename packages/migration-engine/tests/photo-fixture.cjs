@@ -15,7 +15,7 @@ async function wait(runtime, id, photo = false) {
   }
   throw new Error("Photo fixture timed out");
 }
-async function photoFixture(t, entries) {
+async function photoFixture(t, entries, provider = "Flickr") {
   const root = await fs.realpath(
     await fs.mkdtemp(path.join(os.tmpdir(), "migrate-photo-")),
   );
@@ -60,7 +60,7 @@ async function photoFixture(t, entries) {
     await runtime.close();
     await fs.rm(root, { recursive: true, force: true });
   });
-  const job = await runtime.request("create", { provider: "Flickr" });
+  const job = await runtime.request("create", { provider });
   await runtime.request("source", { id: job.id, path: source });
   await runtime.request("destination", { id: job.id, path: destination });
   await runtime.request("inspect", { id: job.id });

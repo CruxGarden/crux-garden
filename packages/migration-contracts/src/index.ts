@@ -70,6 +70,7 @@ export interface MigrationInfo {
     sharedFileDownloads: boolean;
     cloudCollections?: boolean;
     photoMetadata?: boolean;
+    photoMetadataProviders?: string[];
   };
   cruxCount: number;
   runtime: string;

@@ -13,6 +13,11 @@ export interface PhotoRecord {
   title?: string;
   dateTaken?: string;
   description?: string;
+  exportedTime?: { timestamp: string; formatted?: string };
+  exportedLocation?: {
+    geoData?: Record<string, number>;
+    geoDataExif?: Record<string, number>;
+  };
   status: "matched" | "ambiguous" | "unmatched" | "invalid";
   candidates: string[];
   members?: Array<{ id: string; candidates: string[] }>;

@@ -44,7 +44,7 @@ export default function MigrationApp({
   const [ready, setReady] = useState(false);
   const [hasCloud, setHasCloud] = useState(false);
   const [hasDownloads, setHasDownloads] = useState(false);
-  const [hasPhotoMetadata, setHasPhotoMetadata] = useState(false);
+  const [photoProviders, setPhotoProviders] = useState<string[]>([]);
   const [mood, setMood] = useState<Record<string, string>>({});
   const [tokenFilter, setTokenFilter] = useState("");
   const [provider, setProvider] = useState("Dropbox");
@@ -80,7 +80,10 @@ export default function MigrationApp({
         setMood(info.mood);
         setHasCloud(!!info.capabilities?.cloudCollections);
         setHasDownloads(!!info.capabilities?.sharedFileDownloads);
-        setHasPhotoMetadata(!!info.capabilities?.photoMetadata);
+        setPhotoProviders(
+          info.capabilities?.photoMetadataProviders ||
+            (info.capabilities?.photoMetadata ? ["Flickr"] : []),
+        );
         if (appearance === "standalone") applyMigrationMood(info.mood);
         await refresh();
         setReady(true);
@@ -522,19 +525,17 @@ export default function MigrationApp({
                       </p>
                     )}
                     {job.error && <p role="alert">{job.error}</p>}
-                    {hasPhotoMetadata &&
-                      job.provider === "Flickr" &&
-                      job.output && (
-                        <PhotoReview
-                          job={job}
-                          busy={busy}
-                          run={(command) =>
-                            void act(() =>
-                              client.request(command, { id: job.id }),
-                            )
-                          }
-                        />
-                      )}
+                    {photoProviders.includes(job.provider) && job.output && (
+                      <PhotoReview
+                        job={job}
+                        busy={busy}
+                        run={(command) =>
+                          void act(() =>
+                            client.request(command, { id: job.id }),
+                          )
+                        }
+                      />
+                    )}
                     {job.output && (
                       <Button
                         variant="secondary"

@@ -1,6 +1,6 @@
 # Photo export metadata review
 
-Migrate can review preserved **Flickr full-data exports**. Request and download Your Flickr Data in Flickr first, then select the downloaded metadata and media parts together in Migrate. Review files, preserve them, and choose **Review photo metadata**. A downloaded folder works too; review stays within that import's recorded files.
+Migrate can review preserved **Flickr full-data exports** and **Google Photos Takeout exports**. See [Google Photos scope and matching evidence](google-photos-takeout.md) for that adapter. Request and download Your Flickr Data in Flickr first, then select the downloaded metadata and media parts together in Migrate. Review files, preserve them, and choose **Review photo metadata**. A downloaded folder works too; review stays within that import's recorded files.
 
 The result is a separate `photo-review-<id>.json` beside the original preservation receipt. Open files and report to read it. Each run creates a new report; existing reports, archives, sidecars and media are never replaced. The UI shows counts and up to 50 records, with problems first. Full records and candidate paths remain in the report.
 
@@ -21,7 +21,7 @@ The shared review runs off the API thread and can be paused. Restarting an inter
 
 Only receipt-listed files are considered: up to 20,000 files, a 32 MiB receipt, 8 MiB per sidecar, 64 MiB total sidecars, 30,000 derived records, 100,000 relationships, 100 candidate paths per ID and a 64 MiB report. A separate worker has a 256 MiB old-generation heap limit. Oversized individual sidecars are reported; aggregate limits stop the review. Links and unsafe receipt paths are rejected. These limits qualify bounded selections, not an arbitrary-size photo library.
 
-Local API clients use authenticated `POST /v1/jobs/<id>/photoReview` and poll the existing jobs endpoint. Pause uses the ordinary job pause operation. The caller supplies an existing verified Flickr job ID, not a filesystem path or download URL. Electron and Tauri expose the same command to the reusable React area.
+Local API clients use authenticated `POST /v1/jobs/<id>/photoReview` and poll the existing jobs endpoint. Pause uses the ordinary job pause operation. The caller supplies an existing verified supported photo-export job ID, not a filesystem path or download URL. Electron and Tauri expose the same command to the reusable React area.
 
 ## Evidence and limits
 
@@ -31,4 +31,4 @@ Observed filename patterns are documented by a firsthand export-tool author in t
 
 Fixture checks cover both filename forms, numeric ambiguities, duplicate sidecars, missing album members, invalid and changed JSON, links, bounds, pause/retry, restart, authenticated API, browser embedding and native host dispatch. **Daniel's real Flickr export is not yet qualified.** This feature does not automate Flickr export requests, readiness polling or archive downloads.
 
-Google's [Takeout guidance](https://support.google.com/photos/answer/3024190) confirms separate JSON for additional photo metadata, but that alone does not qualify matching rules. Google Photos interpretation is pending representative format fixtures, especially supplemental-metadata suffixes, truncated names, edits, duplicate names across albums/years, split parts and timestamp/location semantics. Preserve all originals while that adapter is developed.
+Google Photos now uses the same bounded workflow through a separate adapter. See [Takeout scope, evidence and qualification](google-photos-takeout.md). Real export qualification, direct provider download automation and broader formats remain pending.

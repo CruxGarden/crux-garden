@@ -1,3 +1,4 @@
+import { PHOTO_REVIEW_PROVIDERS } from "./photo-adapters";
 import type { Fingerprint } from "./cloud/fingerprints";
 import { createCloudJobs, type CloudOptions } from "./cloud/jobs";
 import { message as cloudMessage } from "./cloud/common";
@@ -175,6 +176,7 @@ export async function createMigrationRuntime(
           sharedFileDownloads: !!downloads,
           cloudCollections: !!cloud,
           photoMetadata: true,
+          photoMetadataProviders: PHOTO_REVIEW_PROVIDERS,
         },
       };
     if (command === "mood") {
@@ -235,8 +237,12 @@ export async function createMigrationRuntime(
     if (command === "photoReview") {
       idle(job);
       if (worker) throw new Error("Pause the current operation first.");
-      if (job.provider !== "Flickr" || job.state !== "verified" || !job.output)
-        throw new Error("Preserve and verify a Flickr export first.");
+      if (
+        !PHOTO_REVIEW_PROVIDERS.includes(job.provider) ||
+        job.state !== "verified" ||
+        !job.output
+      )
+        throw new Error("Preserve and verify a supported photo export first.");
       job.photoReview = { state: "running", checked: 0 };
       await save(job);
       activeId = job.id;

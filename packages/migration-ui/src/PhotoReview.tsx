@@ -19,8 +19,8 @@ export default function PhotoReview({
     >
       <h3>Photo metadata</h3>
       <p>
-        Review photo details and albums in the Flickr export parts you selected.
-        Your originals stay intact.
+        Review photo details and albums in the {job.provider} export parts you
+        selected. Your originals stay intact.
       </p>
       <Button
         disabled={busy || (!running && job.state !== "verified")}
@@ -48,15 +48,18 @@ export default function PhotoReview({
           </p>
           {!review.total && (
             <p>
-              No supported Flickr sidecars found. Include the full-data metadata
-              export alongside your media parts.
+              No supported {job.provider} sidecars found. Include the full-data
+              metadata export alongside your media parts.
             </p>
           )}
           <p className="migration-footnote">
-            These are suggested links by Flickr ID. Media bytes have not been
-            checked again; use Verify again for that. Dates keep their original
-            text. This review does not change photo dates or create album
-            folders.
+            These are suggested links{" "}
+            {job.provider === "Flickr"
+              ? "by Flickr ID"
+              : "by Takeout names and exported folders"}
+            . Media bytes have not been checked again; use Verify again for
+            that. Dates keep their original text. This review does not change
+            photo dates or create album folders.
           </p>
           {!!review.preview?.length && (
             <details>
