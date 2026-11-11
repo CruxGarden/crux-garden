@@ -315,3 +315,10 @@
 .service-picker select {
   flex: 1;
 }
+.migration-photo-review {
+  margin-block: 1.5rem;
+  overflow-wrap: anywhere;
+}
+.migration-photo-review li {
+  margin-block: 1rem;
+}

@@ -72,7 +72,7 @@ No second database owner, filesystem deletions, automatic credential discovery, 
 
 ## Multiple export archives
 
-`sourceKind: archive-set` reuses the preservation worker, archive readers, safe writer, review, pause/restart and SQLite owner. The job stores a canonical parent directory plus explicit selected basenames. Review binds the combined inventory and each original archive's SHA-256; no folder enumeration broadens the selection. All selected parts are reviewed before writes. A single receipt retains original archive identities and namespaced extracted-file paths. Namespacing by part avoids silently merging or overwriting repeated filenames and leaves provider-specific metadata interpretation as a separate future stage. This is a reusable intake method, not a new Flickr-specific transfer engine.
+`sourceKind: archive-set` reuses the preservation worker, archive readers, safe writer, review, pause/restart and SQLite owner. The job stores a canonical parent directory plus explicit selected basenames. Review binds the combined inventory and each original archive's SHA-256; no folder enumeration broadens the selection. All selected parts are reviewed before writes. A single receipt retains original archive identities and namespaced extracted-file paths. Namespacing by part avoids silently merging or overwriting repeated filenames and keeps provider-specific metadata interpretation separate from preservation. This is a reusable intake method, not a new Flickr-specific transfer engine.
 
 The host's multi-file picker grants `archiveSet` authority; generic renderer commands cannot supply paths. Authenticated native integrations can use the local HTTP route. There is no source deletion, account automation or format-specific metadata rewriting.
 
@@ -83,3 +83,8 @@ The host's multi-file picker grants `archiveSet` authority; generic renderer com
 ## Shared public-client authorization
 
 `cloud/oauth.ts` owns state, PKCE, loopback lifecycle, bounded lifetime and cancellation for Google and Dropbox. Google retains its ephemeral desktop port; Dropbox uses the exact registered `http://127.0.0.1:53683/callback/dropbox`. Provider adapters own authorization parameters, token exchange/refresh and source identity. Both native hosts allow only their constructed provider authorization endpoints. Dropbox's fixed-origin RPC/content adapter uses the same public-IP-pinned HTTPS transport with an internal POST option; renderer input cannot select arbitrary endpoints. Its first scope is the home namespace with current downloadable files. Unsupported cloud documents fail explicitly; broader namespace/export support and live-account qualification are future work.
+
+
+## Derived photo metadata review
+
+A background worker reads only an existing verified import's preservation receipt and recognized, hash-checked sidecars. A thin Flickr adapter maps observed export IDs to candidate paths and album references. The shared workflow owns bounds, safe reads, pause, new immutable report creation and compact SQLite job summaries. It cannot fetch sidecar URLs or rewrite original files. Candidate association never substitutes for content fingerprints or current integrity verification. Detailed scope and evidence: [photo export metadata](photo-export-metadata.md). Google Photos adapter qualification remains next.

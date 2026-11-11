@@ -52,3 +52,6 @@ Personal account inventories and real exports do not belong in this source repos
 The standalone product is **Crux Garden Migrate**. The repository remains **CruxGarden/crux-garden** for the wider product family. Internal `migration-*` packages, transport names and application identifiers remain stable; they describe the migration domain. In particular, renaming the display name does not move the profile, reset history, change the local API contract, or rename already preserved output folders.
 
 Service choices use bundled SVG brand artwork for all 32 catalog services. See [icon sources and licenses](docs/service-icons.md).
+
+
+Flickr full-data exports now support a separate photo/album metadata review after preservation. It shows candidate matches, ambiguous IDs, missing records and unreadable sidecars while retaining originals. See [photo metadata scope, evidence and limits](docs/photo-export-metadata.md). This does not automate Flickr's export request/download or modify photo metadata.

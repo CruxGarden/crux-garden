@@ -6,7 +6,7 @@ const root = fileURLToPath(new URL("..", import.meta.url));
 const engine = path.join(root, "packages/migration-engine");
 const output = path.join(root, "apps/migration/runtime-dist");
 await build({
-  entryPoints: ["backend", "worker", "http"].map((name) =>
+  entryPoints: ["backend", "worker", "photo-review-worker", "http"].map((name) =>
     path.join(engine, "src", name + ".ts"),
   ),
   outdir: path.join(engine, "dist"),

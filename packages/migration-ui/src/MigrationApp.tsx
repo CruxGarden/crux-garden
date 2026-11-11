@@ -15,6 +15,7 @@ import { MIGRATION_GUIDES, findGuide } from "@cruxgarden/migration-providers";
 import MigrationGuide from "./MigrationGuide";
 import Downloads from "./Downloads";
 import CloudServices from "./CloudServices";
+import PhotoReview from "./PhotoReview";
 import "./migration.css";
 
 const size = (n: number) =>
@@ -43,6 +44,7 @@ export default function MigrationApp({
   const [ready, setReady] = useState(false);
   const [hasCloud, setHasCloud] = useState(false);
   const [hasDownloads, setHasDownloads] = useState(false);
+  const [hasPhotoMetadata, setHasPhotoMetadata] = useState(false);
   const [mood, setMood] = useState<Record<string, string>>({});
   const [tokenFilter, setTokenFilter] = useState("");
   const [provider, setProvider] = useState("Dropbox");
@@ -78,6 +80,7 @@ export default function MigrationApp({
         setMood(info.mood);
         setHasCloud(!!info.capabilities?.cloudCollections);
         setHasDownloads(!!info.capabilities?.sharedFileDownloads);
+        setHasPhotoMetadata(!!info.capabilities?.photoMetadata);
         if (appearance === "standalone") applyMigrationMood(info.mood);
         await refresh();
         setReady(true);
@@ -519,6 +522,19 @@ export default function MigrationApp({
                       </p>
                     )}
                     {job.error && <p role="alert">{job.error}</p>}
+                    {hasPhotoMetadata &&
+                      job.provider === "Flickr" &&
+                      job.output && (
+                        <PhotoReview
+                          job={job}
+                          busy={busy}
+                          run={(command) =>
+                            void act(() =>
+                              client.request(command, { id: job.id }),
+                            )
+                          }
+                        />
+                      )}
                     {job.output && (
                       <Button
                         variant="secondary"

@@ -614,7 +614,15 @@ test("multiple export parts use native selection, stay separate and fit a narrow
   for (let i = 0; i < parts.length; i++)
     await fs.writeFile(
       parts[i],
-      zipFixture([{ name: "photo.txt", data: `Photo ${i}` }]),
+      zipFixture([
+        { name: "photo.txt", data: `Photo ${i}` },
+        i === 0
+          ? {
+              name: "photo_101.json",
+              data: JSON.stringify({ id: "101", name: "Summer fixture" }),
+            }
+          : { name: "101_abcdef_o.jpg", data: "Synthetic photo" },
+      ]),
     );
   const app = await electron.launch({
     executablePath: require("../../../tools/node_modules/electron"),
@@ -724,6 +732,14 @@ test("multiple export parts use native selection, stay separate and fit a narrow
           "utf8",
         ),
       ).toBe(`Photo ${i}`);
+    await page
+      .getByRole("button", { name: "Review photo metadata", exact: true })
+      .click();
+    await expect(
+      page
+        .getByRole("region", { name: "Photo metadata review" })
+        .getByRole("status"),
+    ).toContainText("1 matched · 0 ambiguous");
     await page.reload();
     await expect
       .poll(

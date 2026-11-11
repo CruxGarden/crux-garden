@@ -146,7 +146,7 @@
         "text": "Inspect an original photo, a video and an edited caption. Original EXIF remains in media; details added after uploading can be in separate JSON. Album and Camera Roll bulk downloads have different limits and exclude videos; use the full-data export for account preservation."
       }
     ],
-    "checks": "Use Choose export parts to select the downloaded ZIPs together from one folder, then review and preserve. Migrate keeps every selected original ZIP and extracts each into a separate folder. Confirm you selected every supplied part; the app cannot prove account completeness. JSON is preserved unchanged; albums, captions and permissions are not yet rebuilt. Camera Roll/album downloads omit videos and may reduce image size on Free accounts. The API also restricts originals from Free accounts; full Flickr Data is the recommended starting point.",
+    "checks": "Use Choose export parts to select the downloaded ZIPs together from one folder, then review and preserve. Migrate keeps every selected original ZIP and extracts each into a separate folder. Confirm you selected every supplied part; the app cannot prove account completeness. After preservation, use Review photo metadata for candidate photo and album links, including ambiguous or missing matches. JSON stays unchanged; album folders, captions and permissions are not rebuilt. Camera Roll/album downloads omit videos and may reduce image size on Free accounts. The API also restricts originals from Free accounts; full Flickr Data is the recommended starting point.",
     "sources": [
       {
         "title": "Flickr download instructions",

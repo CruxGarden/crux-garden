@@ -21,6 +21,7 @@ export interface MigrationJob {
   current?: string;
   error?: string;
   checklist?: Record<string, boolean>;
+  photoReview?: PhotoReview;
   inspection?: {
     files: number;
     bytes: number;
@@ -37,9 +38,39 @@ export interface MigrationJob {
     }>;
   };
 }
+export interface PhotoReview {
+  state: "running" | "complete" | "failed" | "paused";
+  checked?: number;
+  total?: number;
+  error?: string;
+  report?: string;
+  counts?: {
+    matched: number;
+    ambiguous: number;
+    unmatched: number;
+    invalid: number;
+  };
+  unassociatedMedia?: number;
+  preview?: Array<{
+    kind: string;
+    path: string;
+    id?: string;
+    title?: string;
+    dateTaken?: string;
+    status: string;
+    issue?: string;
+    candidates: string[];
+    candidateCount: number;
+    memberCount?: number;
+  }>;
+}
 export interface MigrationInfo {
   product: "migration";
-  capabilities?: { sharedFileDownloads: boolean; cloudCollections?: boolean };
+  capabilities?: {
+    sharedFileDownloads: boolean;
+    cloudCollections?: boolean;
+    photoMetadata?: boolean;
+  };
   cruxCount: number;
   runtime: string;
   mood: Record<string, string>;
@@ -52,6 +83,7 @@ export type MigrationCommand =
   | "start"
   | "pause"
   | "inspect"
+  | "photoReview"
   | "checklist"
   | "help"
   | "cloudConnect"

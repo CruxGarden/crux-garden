@@ -135,6 +135,7 @@ async fn migration_request(
         "start",
         "pause",
         "inspect",
+        "photoReview",
         "checklist",
         "cloudConnect",
         "cloudStatus",

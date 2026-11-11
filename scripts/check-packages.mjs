@@ -159,13 +159,55 @@ for (const app of [
         await readFile(path.join(exportParts, name)),
       );
     }
+    const photoSource = path.join(fixture, "photo-source");
+    await mkdir(photoSource);
+    await writeFile(
+      path.join(photoSource, "photo_101.json"),
+      JSON.stringify({ id: "101", name: "Packaged photo" }),
+    );
+    await writeFile(
+      path.join(photoSource, "summer_101_o.jpg"),
+      "Synthetic photo bytes",
+    );
+    const photoJob = await request("create", { provider: "Flickr" });
+    await request("source", { id: photoJob.id, path: photoSource });
+    await request("destination", { id: photoJob.id, path: destination });
+    await request("inspect", { id: photoJob.id });
+    await settle(photoJob.id);
+    await request("start", { id: photoJob.id });
+    await settle(photoJob.id);
+    await request("photoReview", { id: photoJob.id });
+    let reviewed;
+    for (let i = 0; i < 150; i++) {
+      reviewed = (await request("list")).find((j) => j.id === photoJob.id);
+      if (reviewed.photoReview.state !== "running") break;
+      await new Promise((r) => setTimeout(r, 100));
+    }
+    assert.equal(
+      reviewed.photoReview.state,
+      "complete",
+      reviewed.photoReview.error,
+    );
+    assert.equal(reviewed.photoReview.counts.matched, 1);
+    const photoReport = JSON.parse(
+      await readFile(
+        path.join(reviewed.output, reviewed.photoReview.report),
+        "utf8",
+      ),
+    );
+    assert.equal(photoReport.records[0].candidates[0], "summer_101_o.jpg");
     await close();
     launch();
     assert.equal((await request("info")).cruxCount, 0);
     assert.equal((await request("list"))[0].state, "verified");
+    assert.equal(
+      (await request("list")).find((j) => j.id === photoJob.id).photoReview
+        .counts.matched,
+      1,
+    );
     await close();
     console.log(
-      `${app}: packaged API, native SQLite, zero Cruxes, folder/ZIP/TAR.GZ and multiple-part preservation, verification and restart passed`,
+      `${app}: packaged API, native SQLite, zero Cruxes, folder/ZIP/TAR.GZ and multiple-part preservation, Flickr metadata review, verification and restart passed`,
     );
   } finally {
     if (child && child.exitCode === null) {

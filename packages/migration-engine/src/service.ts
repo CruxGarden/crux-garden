@@ -53,6 +53,11 @@ export async function createMigrationRuntime(
       : undefined;
   const jobs = new Map<string, MigrationJob>();
   for (const job of await store.loadJobs()) {
+    if (job.photoReview?.state === "running")
+      job.photoReview = {
+        state: "paused",
+        error: "Review interrupted. Run it again when ready.",
+      };
     if (job.state === "running" || job.state === "inspecting")
       job.state = "paused";
     jobs.set(job.id, job);
@@ -73,6 +78,8 @@ export async function createMigrationRuntime(
     return job;
   };
   const idle = (job: MigrationJob) => {
+    if (job.photoReview?.state === "running")
+      throw new Error("Pause the photo review before changing this import.");
     if (job.state === "running" || job.state === "inspecting")
       throw new Error("Pause this import before changing it.");
   };
@@ -167,6 +174,7 @@ export async function createMigrationRuntime(
         capabilities: {
           sharedFileDownloads: !!downloads,
           cloudCollections: !!cloud,
+          photoMetadata: true,
         },
       };
     if (command === "mood") {
@@ -224,6 +232,44 @@ export async function createMigrationRuntime(
       return job;
     }
     const job = get(args.id);
+    if (command === "photoReview") {
+      idle(job);
+      if (worker) throw new Error("Pause the current operation first.");
+      if (job.provider !== "Flickr" || job.state !== "verified" || !job.output)
+        throw new Error("Preserve and verify a Flickr export first.");
+      job.photoReview = { state: "running", checked: 0 };
+      await save(job);
+      activeId = job.id;
+      worker = new Worker(join(__dirname, "photo-review-worker.cjs"), {
+        workerData: { id: job.id, provider: job.provider, output: job.output },
+        resourceLimits: { maxOldGenerationSizeMb: 256 },
+      });
+      let result: MigrationJob["photoReview"];
+      worker.on(
+        "message",
+        (update: NonNullable<MigrationJob["photoReview"]>) => {
+          if (update.state === "running") job.photoReview = update;
+          else result = update;
+        },
+      );
+      worker.on("error", () => {
+        result = {
+          state: "failed",
+          error:
+            "Photo review stopped. The selected metadata may exceed the review limits.",
+        };
+      });
+      worker.on("exit", () => {
+        job.photoReview = result || {
+          state: "failed",
+          error: "Photo review stopped. You can retry.",
+        };
+        worker = undefined;
+        activeId = undefined;
+        void save(job).catch(console.error);
+      });
+      return null;
+    }
     if (command === "checklist") {
       if (
         typeof args.step !== "string" ||
