@@ -60,6 +60,7 @@ export interface PhotoReview {
     id?: string;
     title?: string;
     dateTaken?: string;
+    reference?: string;
     status: string;
     issue?: string;
     candidates: string[];

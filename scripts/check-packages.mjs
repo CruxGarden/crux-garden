@@ -310,8 +310,48 @@ for (const app of [
       await readFile(path.join(mailResult.output, "files/all.mbox"), "utf8"),
       mailBytes,
     );
+    const socialSource = path.join(fixture, "social-source");
+    const {
+      entries,
+    } = require("../packages/migration-engine/tests/instagram-fixture.cjs");
+    for (const [name, bytes] of Object.entries(entries)) {
+      await mkdir(path.dirname(path.join(socialSource, name)), {
+        recursive: true,
+      });
+      await writeFile(path.join(socialSource, name), bytes);
+    }
+    const social = await request("create", { provider: "Instagram" });
+    await request("source", { id: social.id, path: socialSource });
+    await request("destination", { id: social.id, path: destination });
+    await request("inspect", { id: social.id });
+    await settle(social.id);
+    await request("start", { id: social.id });
+    assert.equal((await settle(social.id)).state, "verified");
+    await request("photoReview", { id: social.id });
+    let socialResult;
+    for (let i = 0; i < 500; i++) {
+      socialResult = (await request("list")).find((j) => j.id === social.id);
+      if (socialResult.photoReview.state !== "running") break;
+      await new Promise((r) => setTimeout(r, 20));
+    }
+    assert.equal(
+      socialResult.photoReview.state,
+      "complete",
+      socialResult.photoReview.error,
+    );
+    assert.equal(socialResult.photoReview.counts.matched, 1);
+    for (const [name, bytes] of Object.entries(entries))
+      assert.equal(
+        await readFile(path.join(socialResult.output, "files", name), "utf8"),
+        bytes,
+      );
     await close();
     launch();
+    assert.equal(
+      (await request("list")).find((j) => j.id === social.id).photoReview.counts
+        .matched,
+      1,
+    );
     assert.deepEqual(
       (await request("list")).find((j) => j.id === selectedJob.id).sourceFiles,
       ["photo.jpg"],
@@ -335,7 +375,7 @@ for (const app of [
     );
     await close();
     console.log(
-      `${app}: packaged API, native SQLite, zero Cruxes, selected files/folder/ZIP/TAR.GZ and multiple-part preservation, Flickr/Google Photos metadata and Gmail inventory review, verification and restart passed`,
+      `${app}: packaged API, native SQLite, zero Cruxes, selected files/folder/ZIP/TAR.GZ and multiple-part preservation, Flickr/Google Photos/Instagram metadata and Gmail inventory review, verification and restart passed`,
     );
   } finally {
     if (child && child.exitCode === null) {

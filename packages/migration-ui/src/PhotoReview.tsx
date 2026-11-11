@@ -10,24 +10,31 @@ export default function PhotoReview({
   busy: boolean;
   run: (command: "photoReview" | "pause") => void;
 }) {
+  const social = job.provider === "Instagram";
   const review = job.photoReview;
   const running = review?.state === "running";
   return (
     <section
       className="migration-photo-review"
-      aria-label="Photo metadata review"
+      aria-label={social ? "Export media review" : "Photo metadata review"}
     >
-      <h3>Photo metadata</h3>
+      <h3>{social ? "Export media references" : "Photo metadata"}</h3>
       <p>
-        Review photo details and albums in the {job.provider} export parts you
-        selected. Your originals stay intact.
+        {social
+          ? "Check numbered Instagram post media references against your selected files. Counts describe media references, not posts or account completeness."
+          : `Review photo details and albums in the ${job.provider} export parts you selected.`}{" "}
+        Your originals stay intact.
       </p>
       <Button
         disabled={busy || (!running && job.state !== "verified")}
         variant="secondary"
         onClick={() => run(running ? "pause" : "photoReview")}
       >
-        {running ? "Pause metadata review" : "Review photo metadata"}
+        {running
+          ? "Pause metadata review"
+          : social
+            ? "Review export media"
+            : "Review photo metadata"}
       </Button>
       {running && (
         <p role="status">
@@ -43,23 +50,31 @@ export default function PhotoReview({
             {review.counts.invalid} unreadable or unrecognized
           </p>
           <p>
-            {review.unassociatedMedia} recognized media files have no photo
-            record. Counts cover only the selected export parts.
+            {social
+              ? "Only supported numbered post lists are interpreted. Other files stay preserved."
+              : `${review.unassociatedMedia} recognized media files have no photo record.`}{" "}
+            Counts cover only the selected export parts.
           </p>
           {!review.total && (
             <p>
               No supported {job.provider} sidecars found. Include the full-data
-              metadata export alongside your media parts.
+              metadata export alongside your media parts.{" "}
+              {social &&
+                "This version recognizes your_instagram_activity/media/posts_N.json only."}
             </p>
           )}
           <p className="migration-footnote">
             These are suggested links{" "}
             {job.provider === "Flickr"
               ? "by Flickr ID"
-              : "by Takeout names and exported folders"}
+              : social
+                ? "by literal exported local paths"
+                : "by Takeout names and exported folders"}
             . Media bytes have not been checked again; use Verify again for
-            that. Dates keep their original text. This review does not change
-            photo dates or create album folders.
+            that.{" "}
+            {social
+              ? "Exported timestamps remain in the separate report without date correction. References do not prove that media are playable or complete."
+              : "Dates keep their original text. This review does not change photo dates or create album folders."}
           </p>
           {!!review.preview?.length && (
             <details>
@@ -72,6 +87,9 @@ export default function PhotoReview({
                     </strong>{" "}
                     — {record.kind}, {record.status}
                     <div>{record.path}</div>
+                    {record.reference && (
+                      <div>Reference: {record.reference}</div>
+                    )}
                     {record.dateTaken && (
                       <div>Date taken: {record.dateTaken} (as exported)</div>
                     )}

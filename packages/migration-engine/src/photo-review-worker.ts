@@ -24,7 +24,6 @@ async function run() {
   );
   const adapter = photoAdapter(provider, files, receipt.sourceKind);
   const mediaFiles = adapter.mediaFiles;
-  const mediaSet = new Set(mediaFiles);
   const sidecars = files.filter((f) => adapter.accepts(f.path));
   const records: PhotoRecord[] = [];
   let total = 0;
@@ -103,8 +102,11 @@ async function run() {
         r.issue = "Multiple metadata records have this ID.";
       }
   adapter.finalize(records);
+  const mediaSet = new Set(mediaFiles);
   const associated = new Set(
-    records.filter((r) => r.kind === "photo").flatMap((r) => r.candidates),
+    records
+      .filter((r) => r.kind === "photo" || r.kind === "media-reference")
+      .flatMap((r) => r.candidates),
   );
   const unassociatedMedia = mediaFiles.filter((f) => !associated.has(f.path));
   const counts = { matched: 0, ambiguous: 0, unmatched: 0, invalid: 0 };

@@ -32,3 +32,5 @@ Observed filename patterns are documented by a firsthand export-tool author in t
 Fixture checks cover both filename forms, numeric ambiguities, duplicate sidecars, missing album members, invalid and changed JSON, links, bounds, pause/retry, restart, authenticated API, browser embedding and native host dispatch. **Daniel's real Flickr export is not yet qualified.** This feature does not automate Flickr export requests, readiness polling or archive downloads.
 
 Google Photos now uses the same bounded workflow through a separate adapter. See [Takeout scope, evidence and qualification](google-photos-takeout.md). Real export qualification, direct provider download automation and broader formats remain pending.
+
+Instagram now reuses this worker for bounded numbered-post media references. See [Meta export methods and exact limits](meta-export-methods.md). Facebook remains preservation-only pending format qualification.

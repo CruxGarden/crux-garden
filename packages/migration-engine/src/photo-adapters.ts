@@ -5,12 +5,15 @@ import {
 } from "./photo-metadata";
 import { googlePhotoMetadata } from "./google-photo-metadata";
 
-export const PHOTO_REVIEW_PROVIDERS = ["Flickr", "Google Photos"];
+import { instagramMetadata } from "./instagram-metadata";
+
+export const PHOTO_REVIEW_PROVIDERS = ["Flickr", "Google Photos", "Instagram"];
 export function photoAdapter(
   provider: string,
   files: PreservedFile[],
   sourceKind: unknown,
 ) {
+  if (provider === "Instagram") return instagramMetadata(files, sourceKind);
   if (provider === "Google Photos")
     return googlePhotoMetadata(files, sourceKind);
   if (provider !== "Flickr")

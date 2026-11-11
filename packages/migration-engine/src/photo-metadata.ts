@@ -6,13 +6,14 @@ export interface PreservedFile {
   sha256: string;
 }
 export interface PhotoRecord {
-  kind: "photo" | "album" | "unrecognized";
+  kind: "photo" | "album" | "media-reference" | "unrecognized";
   path: string;
   sha256: string;
   id?: string;
   title?: string;
   dateTaken?: string;
   description?: string;
+  reference?: string;
   exportedTime?: { timestamp: string; formatted?: string };
   exportedLocation?: {
     geoData?: Record<string, number>;

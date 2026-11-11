@@ -417,6 +417,11 @@
         "id": "step-3",
         "label": "Check the download",
         "text": "Download all archive parts and keep the export settings. Current button labels and category coverage require confirmation in the account; Instagram's help page returned a rate-limit error during preparation."
+      },
+      {
+        "id": "local-review",
+        "label": "Review preserved media references",
+        "text": "After selecting and preserving the downloaded export parts, choose Review export media. Migrate checks your_instagram_activity/media/posts_N.json references against the selected receipt, including extensionless videos. Missing and ambiguous paths stay visible. Other layouts remain preserved; requests and downloads are manual."
       }
     ],
     "checks": "Inspect a carousel, reel, old post, emoji-rich caption, and message attachment. Check aspect ratio and playback rather than only checking filenames. Distinguish the export date from publication date. Do not promise every expired story, unsent message, or licensed music component without export evidence. A thumbnail or remote URL does not satisfy a media-preservation requirement.",
