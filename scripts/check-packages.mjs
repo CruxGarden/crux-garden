@@ -345,8 +345,50 @@ for (const app of [
         await readFile(path.join(socialResult.output, "files", name), "utf8"),
         bytes,
       );
+    const facebookSource = path.join(fixture, "facebook-source");
+    const {
+      entries: facebookEntries,
+    } = require("../packages/migration-engine/tests/facebook-fixture.cjs");
+    for (const [name, bytes] of Object.entries(facebookEntries)) {
+      await mkdir(path.dirname(path.join(facebookSource, name)), {
+        recursive: true,
+      });
+      await writeFile(path.join(facebookSource, name), bytes);
+    }
+    const facebook = await request("create", { provider: "Facebook" });
+    await request("source", { id: facebook.id, path: facebookSource });
+    await request("destination", { id: facebook.id, path: destination });
+    await request("inspect", { id: facebook.id });
+    await settle(facebook.id);
+    await request("start", { id: facebook.id });
+    assert.equal((await settle(facebook.id)).state, "verified");
+    await request("photoReview", { id: facebook.id });
+    let facebookResult;
+    for (let i = 0; i < 500; i++) {
+      facebookResult = (await request("list")).find(
+        (j) => j.id === facebook.id,
+      );
+      if (facebookResult.photoReview.state !== "running") break;
+      await new Promise((r) => setTimeout(r, 20));
+    }
+    assert.equal(
+      facebookResult.photoReview.state,
+      "complete",
+      facebookResult.photoReview.error,
+    );
+    assert.equal(facebookResult.photoReview.counts.matched, 1);
+    for (const [name, bytes] of Object.entries(facebookEntries))
+      assert.equal(
+        await readFile(path.join(facebookResult.output, "files", name), "utf8"),
+        bytes,
+      );
     await close();
     launch();
+    assert.equal(
+      (await request("list")).find((j) => j.id === facebook.id).photoReview
+        .counts.matched,
+      1,
+    );
     assert.equal(
       (await request("list")).find((j) => j.id === social.id).photoReview.counts
         .matched,
@@ -375,7 +417,7 @@ for (const app of [
     );
     await close();
     console.log(
-      `${app}: packaged API, native SQLite, zero Cruxes, selected files/folder/ZIP/TAR.GZ and multiple-part preservation, Flickr/Google Photos/Instagram metadata and Gmail inventory review, verification and restart passed`,
+      `${app}: packaged API, native SQLite, zero Cruxes, selected files/folder/ZIP/TAR.GZ and multiple-part preservation, Flickr/Google Photos/Instagram/Facebook metadata and Gmail inventory review, verification and restart passed`,
     );
   } finally {
     if (child && child.exitCode === null) {

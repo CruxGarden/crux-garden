@@ -382,6 +382,11 @@
         "id": "step-3",
         "label": "Check the download",
         "text": "Record the settings and download all parts when ready. Exact current labels and encrypted-message coverage could not be verified through the help pages, which redirected to login during preparation. Check these in your account before assuming the export is complete."
+      },
+      {
+        "id": "local-review",
+        "label": "Review preserved media references",
+        "text": "After preservation, Review export media can check the observed older posts/your_posts_N.json layout. Exact selected local references are checked; missing and ambiguous paths stay visible. Newer layouts remain preserved but uninterpreted. Requests and downloads are manual."
       }
     ],
     "checks": "Inspect the earliest and latest expected posts, one photo album, a video, and a known message thread. Count records and local media independently. Missing comments or context from other people must remain visible as gaps. A personal export is not a copy of Facebook's entire social graph or every group the user has joined.",

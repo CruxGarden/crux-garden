@@ -10,7 +10,7 @@ export default function PhotoReview({
   busy: boolean;
   run: (command: "photoReview" | "pause") => void;
 }) {
-  const social = job.provider === "Instagram";
+  const social = ["Instagram", "Facebook"].includes(job.provider);
   const review = job.photoReview;
   const running = review?.state === "running";
   return (
@@ -21,7 +21,7 @@ export default function PhotoReview({
       <h3>{social ? "Export media references" : "Photo metadata"}</h3>
       <p>
         {social
-          ? "Check numbered Instagram post media references against your selected files. Counts describe media references, not posts or account completeness."
+          ? `Check supported ${job.provider} post media references against your selected files. Counts cover references and unsupported entries, not posts or account completeness.`
           : `Review photo details and albums in the ${job.provider} export parts you selected.`}{" "}
         Your originals stay intact.
       </p>
@@ -60,7 +60,9 @@ export default function PhotoReview({
               No supported {job.provider} sidecars found. Include the full-data
               metadata export alongside your media parts.{" "}
               {social &&
-                "This version recognizes your_instagram_activity/media/posts_N.json only."}
+                (job.provider === "Facebook"
+                  ? "This version recognizes the older posts/your_posts_N.json layout only."
+                  : "This version recognizes your_instagram_activity/media/posts_N.json only.")}
             </p>
           )}
           <p className="migration-footnote">

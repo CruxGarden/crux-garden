@@ -1321,3 +1321,85 @@ test("Instagram export references run through native picker authority and preser
     await fs.rm(dir, { recursive: true, force: true });
   }
 });
+
+test("Facebook export references run through native picker authority and preserve original files", async () => {
+  const dir = await fs.realpath(
+    await fs.mkdtemp(path.join(os.tmpdir(), "migrate-facebook-desktop-")),
+  );
+  const source = path.join(dir, "source"),
+    destination = path.join(dir, "copies");
+  await fs.mkdir(source);
+  await fs.mkdir(destination);
+  const {
+    entries,
+  } = require("../../../packages/migration-engine/tests/facebook-fixture.cjs");
+  for (const [name, bytes] of Object.entries(entries)) {
+    await fs.mkdir(path.dirname(path.join(source, name)), { recursive: true });
+    await fs.writeFile(path.join(source, name), bytes);
+  }
+  const app = await electron.launch({
+    executablePath: require("../../../tools/node_modules/electron"),
+    args: [path.resolve(__dirname, "..")],
+    env: {
+      ...process.env,
+      CRUX_MIGRATION_TEST_PROFILE: path.join(dir, "profile"),
+    },
+  });
+  try {
+    const page = await app.firstWindow();
+    await page.getByRole("button", { name: "Bring files home" }).click();
+    await page.getByRole("button", { name: "Facebook", exact: true }).click();
+    await page
+      .getByRole("button", { name: "Start Facebook import", exact: true })
+      .click();
+    for (const [label, folder] of [
+      ["Choose source", source],
+      ["Choose destination", destination],
+    ]) {
+      await app.evaluate(({ dialog }, folder) => {
+        dialog.showOpenDialog = async () => ({
+          canceled: false,
+          filePaths: [folder],
+        });
+      }, folder);
+      await page.getByRole("button", { name: label, exact: true }).click();
+    }
+    await page
+      .getByRole("button", { name: "Review files", exact: true })
+      .click();
+    await expect(
+      page.getByRole("button", { name: "Preserve files", exact: true }),
+    ).toBeEnabled();
+    await page
+      .getByRole("button", { name: "Preserve files", exact: true })
+      .click();
+    await expect(
+      page.getByRole("button", { name: "Review export media", exact: true }),
+    ).toBeEnabled();
+    await page
+      .getByRole("button", { name: "Review export media", exact: true })
+      .click();
+    await expect(
+      page
+        .getByRole("region", { name: "Export media review" })
+        .getByRole("status"),
+    ).toContainText(
+      "1 matched · 0 ambiguous · 1 unmatched · 1 unreadable or unrecognized",
+    );
+    const [job] = await page.evaluate(() =>
+      window.migrationAPI.request("list"),
+    );
+    expect(job.photoReview.counts.matched).toBe(1);
+    const report = JSON.parse(
+      await fs.readFile(path.join(job.output, job.photoReview.report), "utf8"),
+    );
+    expect(report.adapter).toBe("facebook-numbered-post-media-v1");
+    for (const [name, bytes] of Object.entries(entries))
+      expect(
+        await fs.readFile(path.join(job.output, "files", name), "utf8"),
+      ).toBe(bytes);
+  } finally {
+    await app.close();
+    await fs.rm(dir, { recursive: true, force: true });
+  }
+});

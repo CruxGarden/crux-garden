@@ -33,4 +33,4 @@ Fixture checks cover both filename forms, numeric ambiguities, duplicate sidecar
 
 Google Photos now uses the same bounded workflow through a separate adapter. See [Takeout scope, evidence and qualification](google-photos-takeout.md). Real export qualification, direct provider download automation and broader formats remain pending.
 
-Instagram now reuses this worker for bounded numbered-post media references. See [Meta export methods and exact limits](meta-export-methods.md). Facebook remains preservation-only pending format qualification.
+Instagram now reuses this worker for bounded numbered-post media references. See [Meta export methods and exact limits](meta-export-methods.md). The observed older Facebook numbered-post layout also uses the same resolver; newer layouts remain uninterpreted.
