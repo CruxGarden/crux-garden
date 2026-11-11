@@ -62,3 +62,13 @@ A final real-profile reopen found an older Dropbox completion-recovery race: a m
 The corrected final Tauri bundle reopened the same saved profile successfully, displaying the verified live Bluesky import and earlier Dropbox history. Its service icons were visually checked in the native webview. Final packaged runtime checks pass again.
 
 Daniel requested consistent grid alignment: service buttons now use a fixed leading inset and left-aligned content. The embedded journey and a fresh visual check confirm aligned icon columns and unchanged accessible labels.
+
+## Multiple export parts — 2026-11-10
+
+The full verify gate passes **67 engine/API/process checks**. Seven desktop journeys pass (25.8 seconds), including native multi-file picker authority, explicit part lists, duplicate names across parts, byte preservation, reload and a narrow window. Three browser embedding journeys pass. Rust formatting/check and release packaging pass; the packaged runtime preserves a mixed ZIP/TAR.GZ selection as well as existing single-source imports and survives restart.
+
+New cases cover unchanged JSON, unselected archives staying excluded, source changes invalidating review, unsafe later parts failing before copy, replacement symlinks, atomic/bounded selection, a combined entry limit, authenticated local-API selection, pause/restart and refusal to overwrite a locally modified result. Actual Tauri native pickers selected two synthetic ZIPs, reviewed and preserved all four extracted files (94 bytes). Independent disk checks matched both original archives and every extracted file to the receipt. The final Tauri package reopened the saved two-part selection and verified history. This is controlled export intake, **not live Flickr-account verification** or account-side export/download automation.
+
+Visual review caught a horizontal flex basis becoming vertical blank space at narrow widths; the column layout now resets that basis and the desktop journey checks label height. The first new desktop test also needed to select Flickr in the catalog before starting its import; that test setup was corrected, and the complete suite passed. Original archive files now join extracted files in the existing fingerprint catalog. Flickr album/metadata reconstruction, missing-part detection, provider-request polling and automatic archive downloading remain open.
+
+The narrow-window capture waits for Plasma’s coalesced drawing-buffer resize before taking a viewport screenshot; an immediate full-page capture had sampled stale surface dimensions. No Plasma engine or Mood defaults changed in this increment.

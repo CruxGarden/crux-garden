@@ -9,7 +9,9 @@ export interface MigrationJob {
   id: string;
   provider: string;
   source?: string;
-  sourceKind?: "folder" | "zip" | "tar";
+  sourceKind?: "folder" | "zip" | "tar" | "archive-set";
+  /** Selected archive basenames, relative to source. Originals remain separate. */
+  sourceArchives?: string[];
   destination?: string;
   output?: string;
   state: JobState;
@@ -27,6 +29,12 @@ export interface MigrationJob {
     checkedAt: string;
     digest: string;
     archive?: { size: number; modified: number; sha256: string };
+    archives?: Array<{
+      path: string;
+      size: number;
+      modified: number;
+      sha256: string;
+    }>;
   };
 }
 export interface MigrationInfo {
@@ -72,6 +80,7 @@ export interface MigrationClient {
     kind:
       | "source"
       | "archive"
+      | "archiveSet"
       | "destination"
       | "downloadDestination"
       | "cloudDestination"

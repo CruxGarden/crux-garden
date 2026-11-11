@@ -352,7 +352,7 @@ export default function MigrationApp({
                     </details>
                     <div className="migration-choice">
                       <span>
-                        1. Your downloaded folder or archive
+                        1. Your downloaded folder or archives
                         <small>
                           {job.source ||
                             "Choose the files you want to preserve"}
@@ -380,7 +380,38 @@ export default function MigrationApp({
                       >
                         Choose archive
                       </Button>
+                      <Button
+                        variant="secondary"
+                        disabled={
+                          busy || !!job.output || job.state === "inspecting"
+                        }
+                        onClick={() =>
+                          void act(() => client.pick(job.id, "archiveSet"))
+                        }
+                      >
+                        Choose export parts
+                      </Button>
                     </div>
+                    {job.sourceArchives && (
+                      <details className="migration-export-parts" open>
+                        <summary>
+                          {job.sourceArchives.length} export{" "}
+                          {job.sourceArchives.length === 1 ? "part" : "parts"}{" "}
+                          selected
+                        </summary>
+                        <ul>
+                          {job.sourceArchives.map((part) => (
+                            <li key={part}>{part}</li>
+                          ))}
+                        </ul>
+                        <p>
+                          Each original archive is kept. Its files stay in a
+                          separate folder named after that part, so repeated
+                          names cannot overwrite one another. Check that you
+                          selected every part supplied by your service.
+                        </p>
+                      </details>
+                    )}
                     <div className="migration-choice">
                       <span>
                         2. A place to keep your copy

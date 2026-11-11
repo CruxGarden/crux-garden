@@ -1,6 +1,6 @@
 # Selected cloud migrations
 
-This increment starts with three services from Daniel's inventory, easiest to hardest: public Bluesky export, authenticated S3 object download, and Google Drive OAuth/file export. These exercise reusable method workflows rather than copied transfer engines. Flickr and the larger photo/mail/social export services follow; they are not yet automated by this increment.
+This increment starts with three services from Daniel's inventory, easiest to hardest: public Bluesky export, authenticated S3 object download, and Google Drive OAuth/file export. These exercise reusable method workflows rather than copied transfer engines. Flickr full-data export parts now use the reusable archive workflow below. Requesting and downloading those parts still happens on Flickr; this is not an authenticated Flickr downloader. Other photo/mail/social connectors follow.
 
 ## What is automated
 
@@ -21,6 +21,22 @@ Google local names carry stable ID suffixes so duplicate Drive names remain dist
 5. **Start selected migration**. Progress survives app restart. Reconnect the same account/bucket before resuming. **Review cloud export** then feeds the complete files and manifest into ordinary review/preservation for another verified copy.
 
 Closing the window keeps work running. Explicit Quit pauses it. This method has per-file recovery: completed files are rehashed and retained; interrupted files restart from the beginning. Cross-restart byte-range resume for these collection methods is not implemented. The existing Dropbox shared-link range implementation remains unchanged.
+
+## Flickr: full-data export parts
+
+Start with **Your Flickr Data**, available to Free and Pro accounts. Flickr's [download guide](https://www.flickrhelp.com/hc/en-us/articles/4404079675156-Downloading-content-from-Flickr) describes requesting the export from account settings, an emailed notification, expiring download links, and separate JSON for metadata added after upload. Preparation may take hours to weeks.
+
+The [API restrictions](https://www.flickrhelp.com/hc/en-us/articles/4404070036884-Flickr-API) limit original/large photo downloads from Free accounts and require Pro to request API keys. An authenticated selective API connector remains a useful future alternative where it can retrieve originals. It is not the default full-fidelity route. Camera Roll and album ZIPs exclude videos and may reduce Free-account image size; they are not equivalent to a full data export. [Flickr download guide](https://www.flickrhelp.com/hc/en-us/articles/4404079675156-Downloading-content-from-Flickr).
+
+1. Request the full data export in Flickr settings. Download every media and metadata ZIP offered, keeping the original part names in one local folder. Migrate does not request, poll or download this export yet.
+2. In Migrate, start a **Flickr** import. Use **Choose export parts** to select the archives together. Confirm the displayed selection against Flickr's supplied list; unrelated files in that folder are excluded.
+3. Choose a separate destination and **Review files**. Review checks every selected archive before copying and estimates room for originals, extracted content and temporary files. Select smaller batches if the preview limits are exceeded.
+4. **Preserve files**. Each archive remains under `original/<part-name>`; extracted files are under `files/<part-name>/`. This keeps repeated filenames distinct. Source archives are never deleted or modified.
+5. Check the receipt and inspect sample photos, videos and JSON. The app verifies bytes and records fingerprints; it cannot yet prove account completeness or reconstruct albums, captions, permissions or links between metadata and media across different parts.
+
+The same **Choose export parts** workflow works for downloaded export archives from other services. It accepts 1–500 selected ZIP/TAR/TAR.GZ files from one folder, with a combined 20,000-entry / 1 TiB expanded-data bound and 1 TiB archive-input bound. Existing expansion/path/link/encryption rules still apply. It preserves only selected parts and does not infer missing numbered parts. Split ZIP volumes (`.z01`, etc.) are not supported; each selected archive must open independently. Google Takeout parts may use this byte-preservation workflow, but Google Photos metadata reconciliation and Gmail MBOX interpretation are not implemented.
+
+Review binds each archive's SHA-256 and inventory to the saved job. Changed parts require a new review before copying or a new import after copying starts. Resume rechecks completed files and restarts interrupted files; no partial-byte resume is claimed. One immutable receipt contains all selected parts, and both original archives and extracted files enter the existing SQLite fingerprint catalog. Originals and each exported file retain independent copies.
 
 ## Fingerprints and reuse
 

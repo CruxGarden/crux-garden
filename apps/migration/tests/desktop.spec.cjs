@@ -599,3 +599,146 @@ test("cloud selection starts empty, exposes Google setup and retains native path
     await fs.rm(dir, { recursive: true, force: true });
   }
 });
+
+test("multiple export parts use native selection, stay separate and fit a narrow window", async () => {
+  const dir = await fs.realpath(
+    await fs.mkdtemp(path.join(os.tmpdir(), "migrate-parts-desktop-")),
+  );
+  const source = path.join(dir, "exports"),
+    destination = path.join(dir, "copies");
+  await fs.mkdir(source);
+  await fs.mkdir(destination);
+  const parts = ["part-1.zip", "part-2.zip"].map((name) =>
+    path.join(source, name),
+  );
+  for (let i = 0; i < parts.length; i++)
+    await fs.writeFile(
+      parts[i],
+      zipFixture([{ name: "photo.txt", data: `Photo ${i}` }]),
+    );
+  const app = await electron.launch({
+    executablePath: require("../../../tools/node_modules/electron"),
+    args: [path.resolve(__dirname, "..")],
+    env: {
+      ...process.env,
+      CRUX_MIGRATION_TEST_PROFILE: path.join(dir, "profile"),
+    },
+  });
+  try {
+    const page = await app.firstWindow();
+    await expect(
+      page.getByRole("button", { name: "Bring files home" }),
+    ).toBeEnabled({ timeout: 30000 });
+    await page.getByRole("button", { name: "Bring files home" }).click();
+    await page.getByRole("button", { name: "Flickr", exact: true }).click();
+    await page
+      .getByRole("button", { name: "Start Flickr import", exact: true })
+      .click();
+    expect(
+      await page.evaluate(() =>
+        window.migrationAPI
+          .request("archiveSet", { id: "bad", paths: ["/"] })
+          .then(
+            () => false,
+            () => true,
+          ),
+      ),
+    ).toBe(true);
+    await app.evaluate(({ dialog }, parts) => {
+      dialog.showOpenDialog = async (_window, options) => {
+        if (
+          !options.properties.includes("multiSelections") ||
+          !options.properties.includes("openFile")
+        )
+          throw new Error("Expected native multiple-file selection");
+        return { canceled: false, filePaths: parts };
+      };
+    }, parts);
+    await page.getByRole("button", { name: "Choose export parts" }).click();
+    await expect(
+      page.getByText("2 export parts selected", { exact: true }),
+    ).toBeVisible();
+    await expect(page.getByText("part-1.zip", { exact: true })).toBeVisible();
+    await app.evaluate(({ BrowserWindow }) =>
+      BrowserWindow.getAllWindows()[0].setSize(500, 800),
+    );
+    await expect(
+      page.getByRole("button", { name: "Choose export parts" }),
+    ).toBeVisible();
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= window.innerWidth,
+      ),
+    ).toBe(true);
+    // A row's horizontal label basis must not become a tall spacer in column layout.
+    expect(
+      await page
+        .locator(".migration-choice > span")
+        .evaluateAll((labels) =>
+          labels.every((label) => label.getBoundingClientRect().height < 160),
+        ),
+    ).toBe(true);
+    // Plasma coalesces native resize events before reallocating its drawing buffer.
+    await expect
+      .poll(() =>
+        page.evaluate(() => {
+          const canvas = document.querySelector("canvas.plasma-ground");
+          return (
+            !canvas ||
+            Math.abs(canvas.width / canvas.height - innerWidth / innerHeight) <
+              0.01
+          );
+        }),
+      )
+      .toBe(true);
+    await page.screenshot({
+      path: path.join(__dirname, "../test-results/export-parts-narrow.png"),
+      fullPage: false,
+    });
+    await app.evaluate(({ dialog }, destination) => {
+      dialog.showOpenDialog = async () => ({
+        canceled: false,
+        filePaths: [destination],
+      });
+    }, destination);
+    await page.getByRole("button", { name: "Choose destination" }).click();
+    await page
+      .getByRole("button", { name: "Review files", exact: true })
+      .click();
+    await expect(
+      page.getByRole("button", { name: "Preserve files", exact: true }),
+    ).toBeEnabled({ timeout: 30000 });
+    await page
+      .getByRole("button", { name: "Preserve files", exact: true })
+      .click();
+    await expect(
+      page.getByText("Your files are preserved and verified.", { exact: true }),
+    ).toBeVisible({ timeout: 30000 });
+    const [job] = await page.evaluate(() =>
+      window.migrationAPI.request("list"),
+    );
+    for (let i = 0; i < parts.length; i++)
+      expect(
+        await fs.readFile(
+          path.join(job.output, "files", path.basename(parts[i]), "photo.txt"),
+          "utf8",
+        ),
+      ).toBe(`Photo ${i}`);
+    await page.reload();
+    await expect
+      .poll(
+        async () =>
+          await page.evaluate(() => window.migrationAPI.request("list")),
+      )
+      .toMatchObject([
+        {
+          sourceKind: "archive-set",
+          state: "verified",
+          sourceArchives: ["part-1.zip", "part-2.zip"],
+        },
+      ]);
+  } finally {
+    await app.close();
+    await fs.rm(dir, { recursive: true, force: true });
+  }
+});

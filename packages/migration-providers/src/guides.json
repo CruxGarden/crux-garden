@@ -146,7 +146,7 @@
         "text": "Inspect an original photo, a video and an edited caption. Original EXIF remains in media; details added after uploading can be in separate JSON. Album and Camera Roll bulk downloads have different limits and exclude videos; use the full-data export for account preservation."
       }
     ],
-    "checks": "Keep the JSON alongside the media. Migrate preserves these files but does not yet rebuild Flickr albums, captions or permissions. Import each numbered ZIP separately and confirm that you have all parts.",
+    "checks": "Use Choose export parts to select the downloaded ZIPs together from one folder, then review and preserve. Migrate keeps every selected original ZIP and extracts each into a separate folder. Confirm you selected every supplied part; the app cannot prove account completeness. JSON is preserved unchanged; albums, captions and permissions are not yet rebuilt. Camera Roll/album downloads omit videos and may reduce image size on Free accounts. The API also restricts originals from Free accounts; full Flickr Data is the recommended starting point.",
     "sources": [
       {
         "title": "Flickr download instructions",
@@ -155,6 +155,10 @@
       {
         "title": "Opening every Flickr data ZIP",
         "url": "https://www.flickrhelp.com/hc/en-us/articles/4404071661844-Opening-Your-Flickr-Data-Zip-Files"
+      },
+      {
+        "title": "Flickr API access and original-size limits",
+        "url": "https://www.flickrhelp.com/hc/en-us/articles/4404070036884-Flickr-API"
       }
     ]
   },

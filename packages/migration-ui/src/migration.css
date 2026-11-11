@@ -88,6 +88,7 @@
 }
 .migration-choice {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
@@ -96,6 +97,14 @@
 }
 .migration-choice span {
   min-width: 0;
+  flex: 1 1 16rem;
+}
+.migration-export-parts {
+  overflow-wrap: anywhere;
+}
+.migration-export-parts ul {
+  max-height: 12rem;
+  overflow: auto;
 }
 .migration-choice small {
   display: block;
@@ -174,6 +183,9 @@
   .migration-choice {
     align-items: flex-start;
     flex-direction: column;
+  }
+  .migration-choice span {
+    flex: 0 1 auto;
   }
   .migration-welcome {
     min-height: 320px;

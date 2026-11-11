@@ -164,6 +164,30 @@ async fn migration_pick(
     kind: String,
     context: Option<Value>,
 ) -> Result<(), String> {
+    if kind == "archiveSet" {
+        let chosen = tauri::async_runtime::spawn_blocking(move || {
+            app.dialog()
+                .file()
+                .set_title("Choose your export parts from one folder")
+                .add_filter("Export archives", &["zip", "tar", "tgz", "gz"])
+                .blocking_pick_files()
+        })
+        .await
+        .map_err(|e| e.to_string())?;
+        if let Some(files) = chosen {
+            let paths = files
+                .into_iter()
+                .map(|file| file.into_path().map_err(|e| e.to_string()))
+                .collect::<Result<Vec<_>, _>>()?;
+            call(
+                service.inner().clone(),
+                "archiveSet".into(),
+                json!({ "id": id, "paths": paths }),
+            )
+            .await?;
+        }
+        return Ok(());
+    }
     if kind != "source"
         && kind != "destination"
         && kind != "archive"

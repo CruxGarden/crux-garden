@@ -4,18 +4,19 @@ The desktop service listens on an ephemeral `127.0.0.1` port. Its selected profi
 
 Every request requires `Authorization: Bearer <token>`. POST requests require `Content-Type: application/json`, a JSON object, and at most 150,000 bytes. Responses are `{ "result": ... }` or `{ "error": "..." }`. This initial API uses 200, 400, 403 and 404 status codes.
 
-| Method | Path                       | Body / result                                                  |
-| ------ | -------------------------- | -------------------------------------------------------------- |
-| GET    | `/v1/info`                 | Product/runtime, Mood, zero-Crux check                         |
-| GET    | `/v1/providers`            | Bundled guide catalog                                          |
-| GET    | `/v1/jobs`                 | Current job snapshots and progress                             |
-| POST   | `/v1/jobs`                 | `{ "provider": "Dropbox" }` → new job                          |
-| POST   | `/v1/jobs/:id/source`      | `{ "path": "/absolute/export" }` (folder or supported archive) |
-| POST   | `/v1/jobs/:id/destination` | `{ "path": "/absolute/copies" }`                               |
-| POST   | `/v1/jobs/:id/inspect`     | `{}` → begin review                                            |
-| POST   | `/v1/jobs/:id/start`       | `{}` → preserve/resume after review                            |
-| POST   | `/v1/jobs/:id/pause`       | `{}` → request cooperative pause                               |
-| POST   | `/v1/jobs/:id/checklist`   | `{ "step": "catalog-step-id", "checked": true }`               |
+| Method | Path                       | Body / result                                                                                                                |
+| ------ | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| GET    | `/v1/info`                 | Product/runtime, Mood, zero-Crux check                                                                                       |
+| GET    | `/v1/providers`            | Bundled guide catalog                                                                                                        |
+| GET    | `/v1/jobs`                 | Current job snapshots and progress                                                                                           |
+| POST   | `/v1/jobs`                 | `{ "provider": "Dropbox" }` → new job                                                                                        |
+| POST   | `/v1/jobs/:id/source`      | `{ "path": "/absolute/export" }` (folder or supported archive)                                                               |
+| POST   | `/v1/jobs/:id/archiveSet`  | `{ "paths": ["/absolute/exports/part-1.zip", "/absolute/exports/part-2.zip"] }` — 1–500 independent archives from one folder |
+| POST   | `/v1/jobs/:id/destination` | `{ "path": "/absolute/copies" }`                                                                                             |
+| POST   | `/v1/jobs/:id/inspect`     | `{}` → begin review                                                                                                          |
+| POST   | `/v1/jobs/:id/start`       | `{}` → preserve/resume after review                                                                                          |
+| POST   | `/v1/jobs/:id/pause`       | `{}` → request cooperative pause                                                                                             |
+| POST   | `/v1/jobs/:id/checklist`   | `{ "step": "catalog-step-id", "checked": true }`                                                                             |
 
 Poll `/v1/jobs` for this slice; event subscriptions are not implemented. `inspect`/`start` acknowledge scheduling rather than completion; check the job's state. Clients must not infer success from HTTP 200 alone. Source/destination changes are rejected after copying begins.
 

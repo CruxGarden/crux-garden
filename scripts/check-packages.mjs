@@ -130,13 +130,42 @@ for (const app of [
         bytes,
       );
     }
+    const exportParts = path.join(fixture, "export-parts");
+    await mkdir(exportParts);
+    const selected = [];
+    for (const name of ["export.zip", "export.tar.gz"]) {
+      const file = path.join(exportParts, name);
+      await writeFile(file, await readFile(path.join(fixture, name)));
+      selected.push(file);
+    }
+    const partsJob = await request("create", { provider: "Flickr" });
+    await request("archiveSet", { id: partsJob.id, paths: selected });
+    await request("destination", { id: partsJob.id, path: destination });
+    await request("inspect", { id: partsJob.id });
+    assert.equal((await settle(partsJob.id)).state, "ready");
+    await request("start", { id: partsJob.id });
+    const partResult = await settle(partsJob.id);
+    assert.equal(partResult.state, "verified", partResult.error);
+    for (const name of ["export.zip", "export.tar.gz"]) {
+      assert.equal(
+        await readFile(
+          path.join(partResult.output, "files", name, "memory.txt"),
+          "utf8",
+        ),
+        "A portable archive.",
+      );
+      assert.deepEqual(
+        await readFile(path.join(partResult.output, "original", name)),
+        await readFile(path.join(exportParts, name)),
+      );
+    }
     await close();
     launch();
     assert.equal((await request("info")).cruxCount, 0);
     assert.equal((await request("list"))[0].state, "verified");
     await close();
     console.log(
-      `${app}: packaged API, native SQLite, zero Cruxes, folder/ZIP/TAR.GZ preservation, verification and restart passed`,
+      `${app}: packaged API, native SQLite, zero Cruxes, folder/ZIP/TAR.GZ and multiple-part preservation, verification and restart passed`,
     );
   } finally {
     if (child && child.exitCode === null) {

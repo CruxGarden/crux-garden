@@ -8,6 +8,7 @@ import {
   inventory,
   inventoryDigest,
   preserve,
+  portablePathSet,
   type FileEntry,
 } from "./files";
 import { preserveZip, zipInventory, type ZipEntry } from "./zip";
@@ -24,6 +25,7 @@ async function run() {
   const {
     source,
     sourceKind,
+    sourceArchives,
     destination,
     output,
     id,
@@ -34,35 +36,100 @@ async function run() {
   } = workerData;
   const kind = sourceKind || "folder";
   const isArchive = kind !== "folder";
-  let archive: { size: number; modified: number; sha256: string } | undefined;
+  const multiple = kind === "archive-set";
+  type Part = FileEntry & {
+    sha256: string;
+    entries: FileEntry[];
+    source: string;
+    zip: boolean;
+  };
+  const parts: Part[] = [];
+  let entries: FileEntry[] = [];
   if (isArchive) {
-    const before = await fs.stat(source);
-    if (before.size > 1024 ** 4) throw new Error("This archive exceeds 1 TiB.");
-    archive = {
-      size: before.size,
-      modified: before.mtimeMs,
-      sha256: await hashFile(source, stop),
-    };
+    if (
+      multiple &&
+      (!Array.isArray(sourceArchives) ||
+        !sourceArchives.length ||
+        sourceArchives.length > 500)
+    )
+      throw new Error("Select export parts before reviewing.");
+    const add = portablePathSet("combined export");
+    const names = multiple ? sourceArchives : [basename(source)];
+    let expanded = 0,
+      compressed = 0;
+    for (const name of names) {
+      stop();
+      if (multiple && (typeof name !== "string" || basename(name) !== name))
+        throw new Error("Invalid export part name.");
+      const file = multiple ? await checkedPath(source, name) : source;
+      const before = await fs.lstat(file);
+      if (!before.isFile() || before.isSymbolicLink())
+        throw new Error("Export parts must be regular files, not links.");
+      compressed += before.size;
+      if (compressed > 1024 ** 4)
+        throw new Error(
+          "Selected archives exceed 1 TiB. Choose a smaller batch.",
+        );
+      const sha256 = await hashFile(file, stop);
+      const zip = /\.zip$/i.test(file);
+      const partEntries = zip
+        ? await zipInventory(file, stop)
+        : await tarInventory(file, stop);
+      const after = await fs.lstat(file);
+      if (
+        after.size !== before.size ||
+        after.mtimeMs !== before.mtimeMs ||
+        after.ino !== before.ino ||
+        after.dev !== before.dev
+      )
+        throw new Error("Archive source changed during review.");
+      if (multiple) add(name, false);
+      for (const entry of partEntries) {
+        const path = multiple ? `${name}/${entry.path}` : entry.path;
+        add(path, true);
+        expanded += entry.size;
+        if (expanded > 1024 ** 4)
+          throw new Error(
+            "Combined archive expansion exceeds 1 TiB. Choose a smaller batch.",
+          );
+        entries.push({ ...entry, path });
+      }
+      parts.push({
+        path: name,
+        source: file,
+        zip,
+        entries: partEntries,
+        size: before.size,
+        modified: before.mtimeMs,
+        sha256,
+      });
+    }
+  } else {
+    entries = await inventory(source, stop);
   }
-  const entries =
-    kind === "zip"
-      ? await zipInventory(source, stop)
-      : kind === "tar"
-        ? await tarInventory(source, stop)
-        : await inventory(source, stop);
-  if (archive) {
-    const after = await fs.stat(source);
-    if (after.size !== archive.size || after.mtimeMs !== archive.modified)
-      throw new Error("Archive source changed during review.");
-  }
+  const identities = parts.map(({ path, size, modified, sha256 }) => ({
+    path,
+    size,
+    modified,
+    sha256,
+  }));
+  const archive =
+    !multiple && parts[0]
+      ? {
+          size: parts[0].size,
+          modified: parts[0].modified,
+          sha256: parts[0].sha256,
+        }
+      : undefined;
+  const archives = multiple ? identities : undefined;
   const totalBytes = entries.reduce((sum, e) => sum + e.size, 0);
   const disk = await fs.statfs(destination);
   const availableBytes = disk.bavail * disk.bsize;
   // Conservative: allow a full copy plus one temporary file when rechecking.
   const requiredBytes =
     totalBytes +
-    (archive?.size || 0) +
-    Math.max(archive?.size || 0, ...entries.map((e) => e.size)) +
+    parts.reduce((sum, part) => sum + part.size, 0) +
+    Math.max(0, ...parts.map((p) => p.size), ...entries.map((e) => e.size)) +
     1024 ** 2;
   if (mode === "inspect") {
     parentPort!.postMessage({
@@ -75,6 +142,7 @@ async function run() {
         checkedAt: new Date().toISOString(),
         digest: inventoryDigest(entries),
         archive,
+        archives,
       },
       current: undefined,
       error: undefined,
@@ -84,7 +152,8 @@ async function run() {
   if (
     !inspection ||
     inventoryDigest(entries) !== inspection.digest ||
-    JSON.stringify(archive) !== JSON.stringify(inspection.archive)
+    JSON.stringify(archive) !== JSON.stringify(inspection.archive) ||
+    JSON.stringify(archives) !== JSON.stringify(inspection.archives)
   )
     throw new Error(
       "The source changed since your review. Review it again or start a new import.",
@@ -105,42 +174,79 @@ async function run() {
       "The source changed since this import began. Start a new import.",
     );
   let report: Array<FileEntry & { sha256: string }> = [];
-  let originalArchive: (FileEntry & { sha256: string }) | undefined;
+  const originalArchives: Array<FileEntry & { sha256: string }> = [];
   const progress = (files: number, bytes: number, current: string) =>
     parentPort!.postMessage({ files, bytes, current });
-  if (isArchive && archive) {
+  if (isArchive) {
     const originals = await checkedPath(output, "original");
     await fs.mkdir(originals).catch((e) => {
       if (e.code !== "EEXIST") throw e;
     });
-    originalArchive = await preserve(
-      dirname(source),
-      originals,
-      {
-        path: basename(source),
-        size: archive.size,
-        modified: archive.modified,
-      },
-      stop,
-    );
-    if (originalArchive.sha256 !== archive.sha256)
-      throw new Error("Archive source changed. Start a new import.");
-    const savedArchive = join(originals, originalArchive.path);
-    report =
-      kind === "zip"
+    for (const part of parts) {
+      stop();
+      progress(
+        report.length,
+        report.reduce((sum, entry) => sum + entry.size, 0),
+        `Original: ${part.path}`,
+      );
+      const originalArchive = await preserve(
+        dirname(part.source),
+        originals,
+        {
+          path: part.path,
+          size: part.size,
+          modified: part.modified,
+        },
+        stop,
+      );
+      if (originalArchive.sha256 !== part.sha256)
+        throw new Error("Archive source changed. Start a new import.");
+      const savedArchive = join(originals, originalArchive.path);
+      originalArchives.push(originalArchive);
+      const partRoot = multiple
+        ? await checkedPath(filesRoot, part.path)
+        : filesRoot;
+      if (multiple)
+        await fs.mkdir(partRoot).catch((e) => {
+          if (e.code !== "EEXIST") throw e;
+        });
+      const offsetFiles = report.length;
+      const offsetBytes = report.reduce((sum, entry) => sum + entry.size, 0);
+      const partProgress = (files: number, bytes: number, current: string) =>
+        progress(
+          offsetFiles + files,
+          offsetBytes + bytes,
+          multiple ? `${part.path}/${current}` : current,
+        );
+      const extracted = part.zip
         ? await preserveZip(
             savedArchive,
-            filesRoot,
-            entries as ZipEntry[],
+            partRoot,
+            part.entries as ZipEntry[],
             stop,
-            progress,
+            partProgress,
           )
-        : await preserveTar(savedArchive, filesRoot, entries, stop, progress);
-    if (
-      (await hashFile(savedArchive, stop)) !== archive.sha256 ||
-      (await hashFile(source, stop)) !== archive.sha256
-    )
-      throw new Error("Archive changed during preservation.");
+        : await preserveTar(
+            savedArchive,
+            partRoot,
+            part.entries,
+            stop,
+            partProgress,
+          );
+      report.push(
+        ...extracted.map((entry) => ({
+          ...entry,
+          path: multiple ? `${part.path}/${entry.path}` : entry.path,
+        })),
+      );
+    }
+    for (const part of parts) {
+      if (
+        (await hashFile(join(originals, part.path), stop)) !== part.sha256 ||
+        (await hashFile(part.source, stop)) !== part.sha256
+      )
+        throw new Error("Archive changed during preservation.");
+    }
   } else {
     let copiedBytes = 0;
     for (const entry of entries) {
@@ -163,7 +269,8 @@ async function run() {
     output,
     status: "verified",
     sourceKind: kind,
-    originalArchive,
+    originalArchive: multiple ? undefined : originalArchives[0],
+    originalArchives: multiple ? originalArchives : undefined,
     preserved: true,
     interpreted: false,
     backedUp: false,
@@ -181,19 +288,31 @@ async function run() {
   if (
     original.id !== id ||
     JSON.stringify(original.files) !== JSON.stringify(report) ||
-    JSON.stringify(original.originalArchive) !== JSON.stringify(originalArchive)
+    JSON.stringify(original.originalArchive) !==
+      JSON.stringify(receipt.originalArchive) ||
+    JSON.stringify(original.originalArchives) !==
+      JSON.stringify(receipt.originalArchives)
   )
     throw new Error(
       "The saved report does not match these files. Keep the report and start a new import.",
     );
   parentPort!.postMessage({
-    fingerprints: report.map((entry) => ({
-      path: join(filesRoot, entry.path),
-      bytes: entry.size,
-      sha256: entry.sha256,
-      md5: "",
-      checkedAt: receipt.verifiedAt,
-    })),
+    fingerprints: [
+      ...report.map((entry) => ({
+        path: join(filesRoot, entry.path),
+        bytes: entry.size,
+        sha256: entry.sha256,
+        md5: "",
+        checkedAt: receipt.verifiedAt,
+      })),
+      ...originalArchives.map((entry) => ({
+        path: join(output, "original", entry.path),
+        bytes: entry.size,
+        sha256: entry.sha256,
+        md5: "",
+        checkedAt: receipt.verifiedAt,
+      })),
+    ],
     files: report.length,
     bytes,
     state: "verified",
