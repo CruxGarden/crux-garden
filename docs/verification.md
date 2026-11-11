@@ -72,3 +72,13 @@ New cases cover unchanged JSON, unselected archives staying excluded, source cha
 Visual review caught a horizontal flex basis becoming vertical blank space at narrow widths; the column layout now resets that basis and the desktop journey checks label height. The first new desktop test also needed to select Flickr in the catalog before starting its import; that test setup was corrected, and the complete suite passed. Original archive files now join extracted files in the existing fingerprint catalog. Flickr album/metadata reconstruction, missing-part detection, provider-request polling and automatic archive downloading remain open.
 
 The narrow-window capture waits for Plasma’s coalesced drawing-buffer resize before taking a viewport screenshot; an immediate full-page capture had sampled stale surface dimensions. No Plasma engine or Mood defaults changed in this increment.
+
+## Dropbox content-hash foundation — 2026-11-10
+
+`npm run verify` passes TypeScript, package boundaries, production build and all 72 engine/API/process tests. Five new checks cover independently generated empty/block-boundary/multi-block vectors across transport chunk sizes; upgrading an existing API-owned SQLite catalog while retaining history/Mood/source identities; shared transfer checksum verification and reuse across restart with independent output copies; renamed local matches that are invalidated after modification; and wrong-checksum refusal without published files. These use a controlled adapter exercising the shared checksum contract, not a Dropbox account connection.
+
+All seven Electron journeys pass (27.8s), and all three browser-embedding journeys pass (17.6s). The final Tauri release build succeeds; final packaged Node/SQLite checks pass folder, single archive, mixed archive selection and restart preservation. The actual rebuilt native app opens its existing profile with all five saved imports intact, opens the two-part Flickr fixture, and verifies its four files/94 bytes again. No UI or Mood design changes were made.
+
+New scans and collection verification calculate Dropbox hashes without another file read. Existing rows gain a nullable column and retain old fingerprints; they are not automatically rescanned. Metadata-only/SHA-only writes preserve a known Dropbox hash only if content SHA-256 is unchanged. Ordinary preservation and shared-link records do not assert a provider-certified hash.
+
+Account registration, OAuth, selected Dropbox browsing and revision-bound API downloads are still pending. There is no new live Dropbox account evidence and no extension of the existing shared-link range-resume claim. The researched implementation sequence and official sources are in [Dropbox account method](dropbox-account-method.md).

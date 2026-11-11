@@ -36,6 +36,14 @@ export async function openMigrationStore(
   await api.run(
     "CREATE TABLE IF NOT EXISTS migrate_fingerprints (path TEXT PRIMARY KEY, bytes INTEGER NOT NULL, sha256 TEXT NOT NULL, md5 TEXT NOT NULL, checked_at TEXT NOT NULL, source_key TEXT, revision TEXT)",
   );
+  const columns = await api.all<{ name: string }>(
+    "SELECT name FROM pragma_table_info('migrate_fingerprints')",
+  );
+  if (!columns.some((column) => column.name === "dropbox"))
+    await api.run("ALTER TABLE migrate_fingerprints ADD COLUMN dropbox TEXT");
+  await api.run(
+    "CREATE INDEX IF NOT EXISTS migrate_fingerprints_dropbox ON migrate_fingerprints(dropbox, bytes)",
+  );
   await api.run(
     "CREATE INDEX IF NOT EXISTS migrate_fingerprints_sha ON migrate_fingerprints(sha256)",
   );
@@ -48,7 +56,7 @@ export async function openMigrationStore(
   return {
     async putFingerprint(file) {
       await api.run(
-        "INSERT INTO migrate_fingerprints(path,bytes,sha256,md5,checked_at,source_key,revision) VALUES(?,?,?,?,?,?,?) ON CONFLICT(path) DO UPDATE SET bytes=excluded.bytes,sha256=excluded.sha256,md5=excluded.md5,checked_at=excluded.checked_at,source_key=CASE WHEN migrate_fingerprints.sha256=excluded.sha256 THEN COALESCE(excluded.source_key,migrate_fingerprints.source_key) ELSE excluded.source_key END,revision=CASE WHEN migrate_fingerprints.sha256=excluded.sha256 THEN COALESCE(excluded.revision,migrate_fingerprints.revision) ELSE excluded.revision END",
+        "INSERT INTO migrate_fingerprints(path,bytes,sha256,md5,checked_at,source_key,revision,dropbox) VALUES(?,?,?,?,?,?,?,?) ON CONFLICT(path) DO UPDATE SET bytes=excluded.bytes,sha256=excluded.sha256,md5=excluded.md5,checked_at=excluded.checked_at,source_key=CASE WHEN migrate_fingerprints.sha256=excluded.sha256 THEN COALESCE(excluded.source_key,migrate_fingerprints.source_key) ELSE excluded.source_key END,revision=CASE WHEN migrate_fingerprints.sha256=excluded.sha256 THEN COALESCE(excluded.revision,migrate_fingerprints.revision) ELSE excluded.revision END,dropbox=CASE WHEN migrate_fingerprints.sha256=excluded.sha256 THEN COALESCE(excluded.dropbox,migrate_fingerprints.dropbox) ELSE excluded.dropbox END",
         [
           file.path,
           file.bytes,
@@ -57,16 +65,19 @@ export async function openMigrationStore(
           file.checkedAt,
           file.sourceKey ?? null,
           file.revision ?? null,
+          file.dropbox ?? null,
         ],
       );
     },
     async findFingerprints(sourceKey, revision, checksum, size) {
       return api.all<Fingerprint>(
-        "SELECT path,bytes,sha256,md5,checked_at AS checkedAt,source_key AS sourceKey,revision FROM migrate_fingerprints WHERE ((? IS NOT NULL AND source_key=? AND revision=?) OR (?='sha256' AND sha256=?) OR (?='md5' AND md5=?)) AND (? IS NULL OR bytes=?) ORDER BY checked_at DESC LIMIT 20",
+        "SELECT path,bytes,sha256,md5,dropbox,checked_at AS checkedAt,source_key AS sourceKey,revision FROM migrate_fingerprints WHERE ((? IS NOT NULL AND source_key=? AND revision=?) OR (?='sha256' AND sha256=?) OR (?='md5' AND md5=?) OR (?='dropbox' AND dropbox=?)) AND (? IS NULL OR bytes=?) ORDER BY checked_at DESC LIMIT 20",
         [
           revision ?? null,
           sourceKey,
           revision ?? null,
+          checksum?.algorithm ?? null,
+          checksum?.hex.toLowerCase() ?? null,
           checksum?.algorithm ?? null,
           checksum?.hex.toLowerCase() ?? null,
           checksum?.algorithm ?? null,

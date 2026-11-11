@@ -40,13 +40,15 @@ Review binds each archive's SHA-256 and inventory to the saved job. Changed part
 
 ## Fingerprints and reuse
 
-The `migrate_fingerprints` table is owned by the existing local API/SQLite adapter. It records SHA-256, available MD5, byte count, verified path, timestamp and optional provider/source/version identity. Indexes make repeated lookups independent of a full directory rescan. Newly completed downloads and preservation outputs register automatically; scan a folder to include pre-existing files.
+The `migrate_fingerprints` table is owned by the existing local API/SQLite adapter. It records SHA-256, available MD5 and Dropbox content hash, byte count, verified path, timestamp and optional provider/source/version identity. Indexes make repeated lookups independent of a full directory rescan. Newly completed downloads and preservation outputs register automatically; scan a folder to include pre-existing files.
 
 A candidate must have matching provider checksum evidence, or a previously recorded source identity and stable version. The app rehashes the local file before reuse and checks its bytes while copying. Missing, moved, modified or unreadable files are not reusable. Names and sizes alone are never proof. Provider MD5 matches retain that algorithm's limits; local SHA-256 is also recorded. When no supported checksum or prior version-matched copy exists, comparison reports uncertainty instead of claiming a duplicate.
 
 Reuse avoids network transfers across runs, filenames and services when comparable fingerprints exist. It also avoids downloading identical content twice within one selection. Each export keeps independent local copies plus a manifest, so editing one export cannot mutate another through a hard link. This is transfer deduplication, not disk-storage deduplication or automatic deletion of existing files.
 
 The scan is bounded to 20,000 entries and 1 TiB, refuses links/unsafe paths, and can be paused. The collection reserves manifest space under the same entry limit. Discovery runs again if interrupted before its complete plan is saved; once saved, the plan is fixed. Changed remote versions require a new selection. Empty folders are not preserved. Unsupported/colliding S3 names fail before downloads; nothing is silently overwritten. Output publication requires a filesystem supporting hard links, such as APFS or NTFS.
+
+Dropbox hash support is a shared-engine foundation, not an account connection. New local scans and collection-file verification calculate it in the existing file read; older catalog entries need an explicit rescan. Dropbox shared-link downloads do not receive a provider content hash. See [Dropbox account method and current status](dropbox-account-method.md).
 
 ## Google one-time setup
 

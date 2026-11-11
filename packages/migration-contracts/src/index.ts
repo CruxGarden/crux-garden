@@ -127,7 +127,7 @@ export interface CloudItem {
   path: string;
   revision?: string;
   size?: number;
-  checksum?: { algorithm: "sha256" | "md5"; hex: string };
+  checksum?: { algorithm: "sha256" | "md5" | "dropbox"; hex: string };
   metadata?: Record<string, unknown>;
   completed?: { bytes: number; sha256: string; reused?: boolean };
 }

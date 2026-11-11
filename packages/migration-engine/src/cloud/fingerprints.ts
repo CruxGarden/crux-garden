@@ -1,12 +1,14 @@
 import * as fs from "node:fs/promises";
 import { constants } from "node:fs";
 import { createHash } from "node:crypto";
+import { DropboxContentHash } from "../checksums";
 import type { CloudItem, CloudJob } from "@cruxgarden/migration-contracts";
 export interface Fingerprint {
   path: string;
   bytes: number;
   sha256: string;
   md5: string;
+  dropbox?: string;
   checkedAt: string;
   sourceKey?: string;
   revision?: string;
@@ -33,11 +35,13 @@ export async function fingerprint(
     if (!before.isFile()) throw new Error("Not a regular file");
     const sha = createHash("sha256"),
       md5 = createHash("md5");
+    const dropbox = new DropboxContentHash();
     let bytes = 0;
     for await (const chunk of file.createReadStream({ autoClose: false })) {
       signal.throwIfAborted();
       sha.update(chunk);
       md5.update(chunk);
+      dropbox.update(chunk);
       bytes += chunk.length;
     }
     const after = await file.stat();
@@ -53,6 +57,7 @@ export async function fingerprint(
       bytes,
       sha256: sha.digest("hex"),
       md5: md5.digest("hex"),
+      dropbox: dropbox.digest("hex"),
       checkedAt: new Date().toISOString(),
     };
   } finally {

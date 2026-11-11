@@ -41,3 +41,7 @@ Controlled HTTP fixtures exercise restart/resume, connection loss, changed/weak 
 A live user-supplied test PDF was downloaded on November 10, 2026: 400,436 bytes, confirmed PDF, then reviewed and preserved byte-for-byte with SHA-256 `17b74e5930324e61dea29d56c8cdb1b4ee63b893599e364b4bd642b75223e797`. Its link and contents are not in this repository. The live response did not supply a strong resume validator, so range-resume remains fixture-qualified rather than claimed for that link. Fixtures prove additional recovery mechanics, not every behavior of Dropbox's live edge servers. Force-killed service ownership still uses the existing manual stale-lock recovery procedure; no claim of automatic recovery from an OS/app crash is made.
 
 Provider reference, reviewed November 10, 2026: [Dropbox's shared-link download instructions](https://help.dropbox.com/share/force-download). Full-account authorization will use the separate [Dropbox OAuth guidance](https://developers.dropbox.com/oauth-guide).
+
+## Account-method preparation
+
+The shared collection engine and local fingerprint catalog now support Dropbox block content hashes. That foundation is fixture-tested and does not change the shared-link behavior described above. Account OAuth, selected browsing and revision-bound downloads remain next; see [account method, registration prerequisites and acceptance](dropbox-account-method.md).

@@ -7,6 +7,7 @@ import {
 import * as fs from "node:fs/promises";
 import { constants } from "node:fs";
 import { createHash, randomUUID } from "node:crypto";
+import { contentHasher } from "../checksums";
 import type {
   CloudConnection,
   CloudEntry,
@@ -274,7 +275,7 @@ export async function createCloudJobs(
         const file = await fs.open(temp, "wx", 0o600);
         const sha = createHash("sha256");
         const providerHash = item.checksum
-          ? createHash(item.checksum.algorithm)
+          ? contentHasher(item.checksum.algorithm)
           : undefined;
         let bytes = 0;
         try {
