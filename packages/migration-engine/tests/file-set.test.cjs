@@ -5,7 +5,7 @@ const path = require("node:path");
 const os = require("node:os");
 const { createMigrationRuntime } = require("../dist/backend.cjs");
 const { wait } = require("./photo-fixture.cjs");
-async function fixture(t) {
+async function fixture(t, provider = "iCloud Photos") {
   const root = await fs.realpath(
     await fs.mkdtemp(path.join(os.tmpdir(), "migrate-selected-")),
   );
@@ -13,12 +13,18 @@ async function fixture(t) {
     destination = path.join(root, "copies");
   await fs.mkdir(source);
   await fs.mkdir(destination);
-  const data = {
-    "IMG_01.HEIC": "original image",
-    "IMG_01.MOV": "original video",
-    "IMG_01.xmp": "<x:xmpmeta>untouched fixture</x:xmpmeta>",
-    "not-selected.txt": "excluded",
-  };
+  const data =
+    provider === "iCloud Messages"
+      ? {
+          ...require("./messages-fixture.cjs").data,
+          "not-selected.txt": "excluded",
+        }
+      : {
+          "IMG_01.HEIC": "original image",
+          "IMG_01.MOV": "original video",
+          "IMG_01.xmp": "<x:xmpmeta>untouched fixture</x:xmpmeta>",
+          "not-selected.txt": "excluded",
+        };
   for (const [name, bytes] of Object.entries(data))
     await fs.writeFile(path.join(source, name), bytes);
   let runtime = await createMigrationRuntime(path.join(root, "profile"));
@@ -26,7 +32,7 @@ async function fixture(t) {
     await runtime.close();
     await fs.rm(root, { recursive: true, force: true });
   });
-  const job = await runtime.request("create", { provider: "iCloud Photos" });
+  const job = await runtime.request("create", { provider });
   const selected = Object.keys(data).slice(0, 3),
     paths = selected.map((n) => path.join(source, n));
   await runtime.request("fileSet", { id: job.id, paths });
@@ -52,44 +58,55 @@ async function fixture(t) {
     },
   };
 }
-test("selected files preserve only explicit photo components and record fingerprints across restart", async (t) => {
-  const f = await fixture(t);
-  // A sibling with an invalid portable name and a link must not be traversed.
-  await fs.writeFile(path.join(f.source, "ignored:unsafe.txt"), "ignored");
-  await fs.symlink(f.paths[0], path.join(f.source, "ignored-link"));
-  assert.equal((await f.run("inspect")).inspection.files, 3);
-  await fs.writeFile(
-    path.join(f.source, "not-selected.txt"),
-    "changed outside selection",
-  );
-  const done = await f.run("start");
-  assert.equal(done.state, "verified", done.error);
-  assert.deepEqual(
-    (await fs.readdir(path.join(done.output, "files"))).sort(),
-    f.selected.sort(),
-  );
-  for (const name of f.selected)
-    assert.equal(
-      await fs.readFile(path.join(done.output, "files", name), "utf8"),
-      f.data[name],
+for (const provider of ["iCloud Photos", "iCloud Messages"]) {
+  test(`${provider} selected files preserve only explicit components and record fingerprints across restart`, async (t) => {
+    const f = await fixture(t, provider);
+    // A sibling with an invalid portable name and a link must not be traversed.
+    await fs.writeFile(path.join(f.source, "ignored:unsafe.txt"), "ignored");
+    await fs.symlink(f.paths[0], path.join(f.source, "ignored-link"));
+    assert.equal((await f.run("inspect")).inspection.files, 3);
+    await fs.writeFile(
+      path.join(f.source, "not-selected.txt"),
+      "changed outside selection",
     );
-  const report = JSON.parse(
-    await fs.readFile(path.join(done.output, "report.json")),
-  );
-  assert.equal(report.sourceKind, "file-set");
-  assert.deepEqual(report.selectedFiles, f.selected);
-  assert.ok(report.files.every((x) => /^[a-f0-9]{64}$/.test(x.sha256)));
-  await f.restart();
-  const retained = (await f.runtime.request("list"))[0];
-  assert.deepEqual(retained.sourceFiles, f.selected);
-  assert.equal((await f.run("start")).state, "verified");
-  await fs.writeFile(
-    path.join(done.output, "files", f.selected[0]),
-    "changed output",
-  );
-  assert.equal((await f.run("start")).state, "failed");
-  assert.equal(await fs.readFile(f.paths[0], "utf8"), f.data["IMG_01.HEIC"]);
-});
+    const done = await f.run("start");
+    assert.equal(done.state, "verified", done.error);
+    assert.deepEqual(
+      (await fs.readdir(path.join(done.output, "files"))).sort(),
+      f.selected.sort(),
+    );
+    for (const name of f.selected)
+      assert.equal(
+        await fs.readFile(path.join(done.output, "files", name), "utf8"),
+        f.data[name],
+      );
+    const report = JSON.parse(
+      await fs.readFile(path.join(done.output, "report.json")),
+    );
+    assert.equal(report.sourceKind, "file-set");
+    assert.deepEqual(report.selectedFiles, f.selected);
+    assert.ok(report.files.every((x) => /^[a-f0-9]{64}$/.test(x.sha256)));
+    const { createHash } = require("node:crypto");
+    for (const item of report.files)
+      assert.equal(
+        item.sha256,
+        createHash("sha256").update(f.data[item.path]).digest("hex"),
+      );
+    await f.restart();
+    const retained = (await f.runtime.request("list"))[0];
+    assert.deepEqual(retained.sourceFiles, f.selected);
+    assert.equal((await f.run("start")).state, "verified");
+    await fs.writeFile(
+      path.join(done.output, "files", f.selected[0]),
+      "changed output",
+    );
+    assert.equal((await f.run("start")).state, "failed");
+    assert.equal(
+      await fs.readFile(f.paths[0], "utf8"),
+      f.data[path.basename(f.paths[0])],
+    );
+  });
+}
 test("invalid file selections are atomic and bounded, cannot grant directories or links", async (t) => {
   const f = await fixture(t);
   const before = (await f.runtime.request("list"))[0];

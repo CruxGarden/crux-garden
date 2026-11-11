@@ -334,6 +334,7 @@ export default function MigrationApp({
                       {job.provider} · {job.state}
                     </p>
                     <h3>A copy you can keep.</h3>
+                    {guide.scope && <p>{guide.scope}</p>}
                     <details key={job.id}>
                       <summary>
                         How to prepare your {job.provider} export

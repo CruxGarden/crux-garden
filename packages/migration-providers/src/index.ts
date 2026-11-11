@@ -6,6 +6,7 @@ export interface MigrationGuide {
   category: string;
   reviewed: string;
   provisional: boolean;
+  scope?: string;
   steps: { id: string; label: string; text: string }[];
   checks: string;
   sources: { title: string; url: string }[];

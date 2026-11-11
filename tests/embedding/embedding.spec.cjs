@@ -21,7 +21,7 @@ test("Migration embeds with an injected host client and preserves host appearanc
   });
   await page.getByRole("button", { name: "Bring files home" }).click();
   const icons = page.locator(".migration-provider-list .service-icon img");
-  await expect(icons).toHaveCount(32);
+  await expect(icons).toHaveCount(33);
   await expect
     .poll(() =>
       icons.evaluateAll((images) =>

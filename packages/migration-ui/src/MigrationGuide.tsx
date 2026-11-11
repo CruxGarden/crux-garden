@@ -16,6 +16,7 @@ export default function MigrationGuide({
 }) {
   return (
     <div className="migration-guide">
+      {!job && guide.scope && <p>{guide.scope}</p>}
       {guide.provisional && (
         <p className="migration-footnote">
           Account check needed: these menus are changing. Confirm the export
@@ -52,8 +53,8 @@ export default function MigrationGuide({
       <p>{guide.checks}</p>
       <p className="migration-footnote">
         Migrate preserves the files you provide. Compare your export with your
-        account to check for missing records and attachments. Sharing rules
-        and service features are not automatically recreated.
+        account to check for missing records and attachments. Sharing rules and
+        service features are not automatically recreated.
       </p>
       <ul className="migration-guide-sources">
         {guide.sources.map((source, index) => (

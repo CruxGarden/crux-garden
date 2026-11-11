@@ -5,7 +5,14 @@ const require = createRequire(import.meta.url);
 const zipFixture = require("../packages/migration-engine/tests/zip-fixture.cjs");
 const tar = require("../packages/migration-engine/node_modules/tar-stream");
 import { spawn } from "node:child_process";
-import { mkdtemp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import {
+  mkdtemp,
+  mkdir,
+  readFile,
+  readdir,
+  rm,
+  writeFile,
+} from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { createInterface } from "node:readline";
@@ -278,6 +285,40 @@ for (const app of [
     );
     assert.deepEqual(selectedReport.selectedFiles, ["photo.jpg"]);
     assert.equal(selectedReport.files.length, 1);
+    const messageSource = path.join(fixture, "message-source");
+    await mkdir(messageSource);
+    const {
+      data: messageData,
+      names: messageNames,
+    } = require("../packages/migration-engine/tests/messages-fixture.cjs");
+    for (const [name, bytes] of Object.entries(messageData))
+      await writeFile(path.join(messageSource, name), bytes);
+    await writeFile(path.join(messageSource, "excluded.txt"), "not selected");
+    const messageJob = await request("create", { provider: "iCloud Messages" });
+    await request("checklist", {
+      id: messageJob.id,
+      step: "save-pdf",
+      checked: true,
+    });
+    await request("fileSet", {
+      id: messageJob.id,
+      paths: messageNames.map((n) => path.join(messageSource, n)),
+    });
+    await request("destination", { id: messageJob.id, path: destination });
+    await request("inspect", { id: messageJob.id });
+    assert.equal((await settle(messageJob.id)).inspection.files, 3);
+    await request("start", { id: messageJob.id });
+    const messageResult = await settle(messageJob.id);
+    assert.equal(messageResult.state, "verified", messageResult.error);
+    assert.deepEqual(
+      (await readdir(path.join(messageResult.output, "files"))).sort(),
+      [...messageNames].sort(),
+    );
+    for (const [name, bytes] of Object.entries(messageData))
+      assert.equal(
+        await readFile(path.join(messageResult.output, "files", name), "utf8"),
+        bytes,
+      );
     const mailSource = path.join(fixture, "mail-source");
     await mkdir(mailSource);
     const mailBytes =
@@ -438,6 +479,13 @@ for (const app of [
         .matched,
       2,
     );
+    const restoredMessage = (await request("list")).find(
+      (j) => j.id === messageJob.id,
+    );
+    assert.deepEqual(restoredMessage.sourceFiles, [...messageNames].sort());
+    assert.equal(restoredMessage.checklist["save-pdf"], true);
+    await request("start", { id: messageJob.id });
+    assert.equal((await settle(messageJob.id)).state, "verified");
     assert.deepEqual(
       (await request("list")).find((j) => j.id === selectedJob.id).sourceFiles,
       ["photo.jpg"],
@@ -461,7 +509,7 @@ for (const app of [
     );
     await close();
     console.log(
-      `${app}: packaged API, native SQLite, zero Cruxes, selected files/folder/ZIP/TAR.GZ and multiple-part preservation, Flickr/Google Photos/Instagram/Facebook/X metadata and Gmail inventory review, verification and restart passed`,
+      `${app}: packaged API, native SQLite, zero Cruxes, selected Messages copies and files/folder/ZIP/TAR.GZ and multiple-part preservation, Flickr/Google Photos/Instagram/Facebook/X metadata and Gmail inventory review, verification and restart passed`,
     );
   } finally {
     if (child && child.exitCode === null) {

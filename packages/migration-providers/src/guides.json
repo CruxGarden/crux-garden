@@ -331,6 +331,64 @@
     ]
   },
   {
+    "id": "icloud-messages",
+    "name": "iCloud Messages",
+    "category": "Messages and social",
+    "reviewed": "2026-11-10",
+    "provisional": false,
+    "scope": "Manual copies only. Migrate preserves selected PDFs and saved attachments; it does not connect to Messages or verify complete conversation history.",
+    "steps": [
+      {
+        "id": "choose-scope",
+        "label": "Choose the conversations and dates to keep",
+        "text": "Start with one conversation in Messages on your Mac. Note the intended date range and known gaps in a separate collection-notes file. Messages in iCloud is synchronization: some history may not be local, and deletion can sync to other devices. Leave sync and retention settings unchanged."
+      },
+      {
+        "id": "save-pdf",
+        "label": "Save and inspect a readable copy",
+        "text": "With the chosen conversation open, press Command-P. In the print dialog choose PDF → Save as PDF, and save outside cloud sync. Open the PDF and check its first and last expected messages, page count and readability. This combines Apple’s documented print and PDF actions; it is not a qualified full-history export. If the expected range is missing, record the gap rather than marking the conversation complete."
+      },
+      {
+        "id": "save-attachments",
+        "label": "Save wanted attachments separately",
+        "text": "On iPhone or iPad, open the conversation, tap the contact or group name (Info on some versions), then locate Photos or Documents. Touch and hold an item for its available Save or Share options. Transfer the chosen saved files to your staging folder and check them offline. A picture in a PDF is not proof that the original attachment was saved. Migrate does not link attachments back to messages."
+      },
+      {
+        "id": "preserve-selection",
+        "label": "Select the copies to preserve",
+        "text": "Keep the PDFs, independently saved attachments and collection notes in one dedicated local staging folder. In Migrate, choose files explicitly (up to 500 from one folder), choose a separate destination, review and preserve. Only selected files are copied. Use separate imports for different folders or batches; never select a live Messages application database."
+      },
+      {
+        "id": "check-copies",
+        "label": "Verify files and record remaining gaps",
+        "text": "Use Verify again to check saved bytes, and open representative preserved PDFs and attachments offline. A verified import proves the supplied files were copied intact, not that every message, reaction, edit or attachment was exported. Keep the source copies. iCloud device backup excludes messages already syncing with iCloud and is not a portable message archive."
+      }
+    ],
+    "checks": "Compare the selected PDFs with the intended conversations and dates yourself. Keep missing ranges and attachment gaps in your collection notes. No conversation parsing, automatic download, original attachment recovery or account-completeness check is implemented. This method is intended for selected readable copies, not bulk preservation of a large mailbox.",
+    "sources": [
+      {
+        "title": "Apple: print a Messages conversation",
+        "url": "https://support.apple.com/guide/messages/keyboard-shortcuts-ichtc78b3bff/mac"
+      },
+      {
+        "title": "Apple: save a PDF from the print dialog",
+        "url": "https://support.apple.com/en-gb/guide/mac-help/mchlp1531/mac"
+      },
+      {
+        "title": "Apple: find and save selected attachments",
+        "url": "https://support.apple.com/en-gb/104982"
+      },
+      {
+        "title": "Apple: how Messages in iCloud syncs",
+        "url": "https://support.apple.com/en-gb/guide/icloud/mma17ed475f7/icloud"
+      },
+      {
+        "title": "Apple: what iCloud Backup includes",
+        "url": "https://support.apple.com/en-us/108770"
+      }
+    ]
+  },
+  {
     "id": "onedrive",
     "name": "OneDrive",
     "category": "Files and documents",

@@ -38,6 +38,7 @@ const icons: Record<string, string> = {
   Gmail: icon10,
   "Amazon S3": icon23,
   "iCloud Drive": icon16,
+  "iCloud Messages": icon16,
   OneDrive: icon19,
   Facebook: icon8,
   Instagram: icon17,
