@@ -167,13 +167,18 @@ async fn migration_pick(
     kind: String,
     context: Option<Value>,
 ) -> Result<(), String> {
-    if kind == "archiveSet" {
+    if kind == "archiveSet" || kind == "fileSet" {
+        let archives = kind == "archiveSet";
         let chosen = tauri::async_runtime::spawn_blocking(move || {
-            app.dialog()
-                .file()
-                .set_title("Choose your export parts from one folder")
-                .add_filter("Export archives", &["zip", "tar", "tgz", "gz"])
-                .blocking_pick_files()
+            let dialog = app.dialog().file();
+            let dialog = if archives {
+                dialog
+                    .set_title("Choose your export parts from one folder")
+                    .add_filter("Export archives", &["zip", "tar", "tgz", "gz"])
+            } else {
+                dialog.set_title("Choose downloaded files from one folder")
+            };
+            dialog.blocking_pick_files()
         })
         .await
         .map_err(|e| e.to_string())?;
@@ -184,7 +189,7 @@ async fn migration_pick(
                 .collect::<Result<Vec<_>, _>>()?;
             call(
                 service.inner().clone(),
-                "archiveSet".into(),
+                kind,
                 json!({ "id": id, "paths": paths }),
             )
             .await?;

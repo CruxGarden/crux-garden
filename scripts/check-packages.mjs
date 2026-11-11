@@ -228,8 +228,28 @@ for (const app of [
       takeoutResult.photoReview.error,
     );
     assert.equal(takeoutResult.photoReview.counts.matched, 1);
+    const selectedJob = await request("create", { provider: "iCloud Photos" });
+    await request("fileSet", {
+      id: selectedJob.id,
+      paths: [path.join(takeoutSource, "photo.jpg")],
+    });
+    await request("destination", { id: selectedJob.id, path: destination });
+    await request("inspect", { id: selectedJob.id });
+    assert.equal((await settle(selectedJob.id)).inspection.files, 1);
+    await request("start", { id: selectedJob.id });
+    const selectedResult = await settle(selectedJob.id);
+    assert.equal(selectedResult.state, "verified", selectedResult.error);
+    const selectedReport = JSON.parse(
+      await readFile(path.join(selectedResult.output, "report.json"), "utf8"),
+    );
+    assert.deepEqual(selectedReport.selectedFiles, ["photo.jpg"]);
+    assert.equal(selectedReport.files.length, 1);
     await close();
     launch();
+    assert.deepEqual(
+      (await request("list")).find((j) => j.id === selectedJob.id).sourceFiles,
+      ["photo.jpg"],
+    );
     assert.equal((await request("info")).cruxCount, 0);
     assert.equal((await request("list"))[0].state, "verified");
     assert.equal(
@@ -244,7 +264,7 @@ for (const app of [
     );
     await close();
     console.log(
-      `${app}: packaged API, native SQLite, zero Cruxes, folder/ZIP/TAR.GZ and multiple-part preservation, Flickr/Google Photos metadata review, verification and restart passed`,
+      `${app}: packaged API, native SQLite, zero Cruxes, selected files/folder/ZIP/TAR.GZ and multiple-part preservation, Flickr/Google Photos metadata review, verification and restart passed`,
     );
   } finally {
     if (child && child.exitCode === null) {

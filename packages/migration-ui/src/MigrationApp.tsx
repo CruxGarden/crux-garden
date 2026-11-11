@@ -44,6 +44,7 @@ export default function MigrationApp({
   const [ready, setReady] = useState(false);
   const [hasCloud, setHasCloud] = useState(false);
   const [hasDownloads, setHasDownloads] = useState(false);
+  const [hasFileSelection, setHasFileSelection] = useState(false);
   const [photoProviders, setPhotoProviders] = useState<string[]>([]);
   const [mood, setMood] = useState<Record<string, string>>({});
   const [tokenFilter, setTokenFilter] = useState("");
@@ -80,6 +81,7 @@ export default function MigrationApp({
         setMood(info.mood);
         setHasCloud(!!info.capabilities?.cloudCollections);
         setHasDownloads(!!info.capabilities?.sharedFileDownloads);
+        setHasFileSelection(!!info.capabilities?.localFileSelection);
         setPhotoProviders(
           info.capabilities?.photoMetadataProviders ||
             (info.capabilities?.photoMetadata ? ["Flickr"] : []),
@@ -358,7 +360,7 @@ export default function MigrationApp({
                     </details>
                     <div className="migration-choice">
                       <span>
-                        1. Your downloaded folder or archives
+                        1. Your downloaded files, folder or archives
                         <small>
                           {job.source ||
                             "Choose the files you want to preserve"}
@@ -375,6 +377,19 @@ export default function MigrationApp({
                       >
                         Choose source
                       </Button>
+                      {hasFileSelection && (
+                        <Button
+                          variant="secondary"
+                          disabled={
+                            busy || !!job.output || job.state === "inspecting"
+                          }
+                          onClick={() =>
+                            void act(() => client.pick(job.id, "fileSet"))
+                          }
+                        >
+                          Choose files
+                        </Button>
+                      )}
                       <Button
                         variant="secondary"
                         disabled={
@@ -398,6 +413,24 @@ export default function MigrationApp({
                         Choose export parts
                       </Button>
                     </div>
+                    {job.sourceFiles && (
+                      <details className="migration-export-parts" open>
+                        <summary>
+                          {job.sourceFiles.length} files selected
+                        </summary>
+                        <ul>
+                          {job.sourceFiles.map((file) => (
+                            <li key={file}>{file}</li>
+                          ))}
+                        </ul>
+                        <p>
+                          Only these files will be copied. Select any companion
+                          video, XMP or JSON files you want to keep too.
+                          Archives selected here stay intact; use Choose export
+                          parts to unpack them.
+                        </p>
+                      </details>
+                    )}
                     {job.sourceArchives && (
                       <details className="migration-export-parts" open>
                         <summary>

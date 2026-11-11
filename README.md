@@ -57,3 +57,5 @@ Service choices use bundled SVG brand artwork for all 32 catalog services. See [
 Flickr full-data exports now support a separate photo/album metadata review after preservation. It shows candidate matches, ambiguous IDs, missing records and unreadable sidecars while retaining originals. See [photo metadata scope, evidence and limits](docs/photo-export-metadata.md). This does not automate Flickr's export request/download or modify photo metadata.
 
 Google Photos Takeout now shares the bounded metadata review. It handles observed sidecar names and selected split parts while exposing uncertain album/duplicate relationships. See [Takeout scope and evidence](docs/google-photos-takeout.md).
+
+**Choose files** preserves an explicit selection of downloaded files using the same background verification and history as folder imports. Useful for selected iCloud documents or exported photo components; include sidecars/video companions yourself. See [iCloud methods and automation scope](docs/icloud-methods.md). Native PhotoKit automation is researched, not implemented.

@@ -9,9 +9,11 @@ export interface MigrationJob {
   id: string;
   provider: string;
   source?: string;
-  sourceKind?: "folder" | "zip" | "tar" | "archive-set";
+  sourceKind?: "folder" | "zip" | "tar" | "archive-set" | "file-set";
   /** Selected archive basenames, relative to source. Originals remain separate. */
   sourceArchives?: string[];
+  /** Explicit ordinary file basenames relative to source; no sibling discovery. */
+  sourceFiles?: string[];
   destination?: string;
   output?: string;
   state: JobState;
@@ -69,6 +71,7 @@ export interface MigrationInfo {
   capabilities?: {
     sharedFileDownloads: boolean;
     cloudCollections?: boolean;
+    localFileSelection?: boolean;
     photoMetadata?: boolean;
     photoMetadataProviders?: string[];
   };
@@ -114,6 +117,7 @@ export interface MigrationClient {
       | "source"
       | "archive"
       | "archiveSet"
+      | "fileSet"
       | "destination"
       | "downloadDestination"
       | "cloudDestination"

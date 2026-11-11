@@ -3,7 +3,7 @@ import type { Fingerprint } from "./cloud/fingerprints";
 import { createCloudJobs, type CloudOptions } from "./cloud/jobs";
 import { message as cloudMessage } from "./cloud/common";
 import * as fs from "node:fs/promises";
-import { basename, dirname, join } from "node:path";
+import { basename, dirname, isAbsolute, join } from "node:path";
 import { randomUUID } from "node:crypto";
 import { Worker } from "node:worker_threads";
 import type { MigrationJob } from "@cruxgarden/migration-contracts";
@@ -176,6 +176,7 @@ export async function createMigrationRuntime(
           sharedFileDownloads: !!downloads,
           cloudCollections: !!cloud,
           photoMetadata: true,
+          localFileSelection: true,
           photoMetadataProviders: PHOTO_REVIEW_PROVIDERS,
         },
       };
@@ -287,32 +288,39 @@ export async function createMigrationRuntime(
       await save(job);
       return null;
     }
-    if (command === "archiveSet") {
+    if (command === "archiveSet" || command === "fileSet") {
+      const filesOnly = command === "fileSet";
       idle(job);
       if (job.output)
-        throw new Error("Start a new import to change selected export parts.");
+        throw new Error(
+          "Start a new import to change selected files or export parts.",
+        );
       if (
         !Array.isArray(args.paths) ||
         !args.paths.length ||
         args.paths.length > 500
       )
-        throw new Error(
-          "Choose between 1 and 500 export archives from one folder.",
-        );
-      const add = portablePathSet("export part");
+        throw new Error("Choose between 1 and 500 files from one folder.");
+      const add = portablePathSet(filesOnly ? "selected file" : "export part");
       let source: string | undefined;
       const names: string[] = [];
       for (const path of args.paths) {
-        if (typeof path !== "string")
-          throw new Error("Select export archives.");
+        if (typeof path !== "string" || !isAbsolute(path))
+          throw new Error("Select files using absolute paths.");
+        if ((await fs.lstat(path)).isSymbolicLink())
+          throw new Error("Select regular files, not links.");
         const file = await fs.realpath(path);
         if (
           !(await fs.stat(file)).isFile() ||
-          !/\.(zip|tar|tar\.gz|tgz)$/i.test(file)
+          (!filesOnly && !/\.(zip|tar|tar\.gz|tgz)$/i.test(file))
         )
-          throw new Error("Choose ZIP, TAR or TAR.GZ export parts.");
+          throw new Error(
+            filesOnly
+              ? "Select regular downloaded files."
+              : "Choose ZIP, TAR or TAR.GZ export parts.",
+          );
         if (source && dirname(file) !== source)
-          throw new Error("Choose export parts from the same folder.");
+          throw new Error("Choose files from the same folder.");
         source = dirname(file);
         const name = basename(file);
         add(name, true);
@@ -321,8 +329,9 @@ export async function createMigrationRuntime(
       if (job.destination && inside(source!, job.destination))
         throw new Error("Choose a destination outside the source folder.");
       job.source = source;
-      job.sourceKind = "archive-set";
-      job.sourceArchives = names.sort();
+      job.sourceKind = filesOnly ? "file-set" : "archive-set";
+      job.sourceArchives = filesOnly ? undefined : names.sort();
+      job.sourceFiles = filesOnly ? names.sort() : undefined;
       job.inspection = undefined;
       await save(job);
       return null;
@@ -347,6 +356,7 @@ export async function createMigrationRuntime(
         throw new Error("Select a folder, ZIP, TAR or TAR.GZ export.");
       if (command === "source") {
         job.sourceArchives = undefined;
+        job.sourceFiles = undefined;
         job.source = folder;
         job.sourceKind = stat.isDirectory()
           ? "folder"

@@ -136,6 +136,7 @@ export async function exclusiveJson(
 export async function inventory(
   root: string,
   stop: () => void,
+  selected?: string[],
 ): Promise<FileEntry[]> {
   const result: FileEntry[] = [];
   const names = new Set<string>();
@@ -166,7 +167,29 @@ export async function inventory(
       } else throw new Error(`Unsupported file: ${name}`);
     }
   }
-  await walk("");
+  if (selected !== undefined) {
+    if (!Array.isArray(selected) || !selected.length || selected.length > 500)
+      throw new Error("Choose between 1 and 500 files from one folder.");
+    const add = portablePathSet("selected file");
+    for (const name of selected) {
+      stop();
+      if (typeof name !== "string" || name.includes("/"))
+        throw new Error("Invalid selected filename.");
+      add(name, true);
+      const path = await checkedPath(root, name);
+      const stat = await fs.lstat(path);
+      if (!stat.isFile() || stat.isSymbolicLink())
+        throw new Error(
+          "A selected file is missing, became a link or is no longer a regular file.",
+        );
+      bytes += stat.size;
+      if (bytes > 1024 ** 4)
+        throw new Error(
+          "Split exports larger than 1 TiB into smaller batches.",
+        );
+      result.push({ path: name, size: stat.size, modified: stat.mtimeMs });
+    }
+  } else await walk("");
   return result.sort((a, b) => a.path.localeCompare(b.path));
 }
 

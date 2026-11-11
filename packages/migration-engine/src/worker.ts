@@ -26,6 +26,7 @@ async function run() {
     source,
     sourceKind,
     sourceArchives,
+    sourceFiles,
     destination,
     output,
     id,
@@ -35,7 +36,10 @@ async function run() {
     mode,
   } = workerData;
   const kind = sourceKind || "folder";
-  const isArchive = kind !== "folder";
+  const isArchive = kind !== "folder" && kind !== "file-set";
+  if (kind === "file-set" && !Array.isArray(sourceFiles))
+    throw new Error("Select files before reviewing.");
+  const selectedFiles = kind === "file-set" ? sourceFiles : undefined;
   const multiple = kind === "archive-set";
   type Part = FileEntry & {
     sha256: string;
@@ -105,7 +109,7 @@ async function run() {
       });
     }
   } else {
-    entries = await inventory(source, stop);
+    entries = await inventory(source, stop, selectedFiles);
   }
   const identities = parts.map(({ path, size, modified, sha256 }) => ({
     path,
@@ -255,7 +259,7 @@ async function run() {
       report.push(await preserve(source, filesRoot, entry, stop));
       copiedBytes += entry.size;
     }
-    if (JSON.stringify(await inventory(source, stop)) !== plan)
+    if (JSON.stringify(await inventory(source, stop, selectedFiles)) !== plan)
       throw new Error("The source changed during import. Start a new import.");
   }
   const bytes = report.reduce((sum, entry) => sum + entry.size, 0);
@@ -269,6 +273,7 @@ async function run() {
     output,
     status: "verified",
     sourceKind: kind,
+    selectedFiles,
     originalArchive: multiple ? undefined : originalArchives[0],
     originalArchives: multiple ? originalArchives : undefined,
     preserved: true,

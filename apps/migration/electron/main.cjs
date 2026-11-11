@@ -216,6 +216,7 @@ if (!app.requestSingleInstanceLock()) {
           "source",
           "archive",
           "archiveSet",
+          "fileSet",
           "destination",
           "downloadDestination",
           "cloudDestination",
@@ -225,15 +226,17 @@ if (!app.requestSingleInstanceLock()) {
         throw new Error("Invalid folder choice.");
       const chosen = await dialog.showOpenDialog(window, {
         title:
-          kind === "archiveSet"
-            ? "Choose your export parts from one folder"
-            : kind === "archive"
-              ? "Choose your export archive"
-              : kind === "source"
-                ? "Choose your downloaded export folder"
-                : "Choose where to preserve your copy",
+          kind === "fileSet"
+            ? "Choose downloaded files from one folder"
+            : kind === "archiveSet"
+              ? "Choose your export parts from one folder"
+              : kind === "archive"
+                ? "Choose your export archive"
+                : kind === "source"
+                  ? "Choose your downloaded export folder"
+                  : "Choose where to preserve your copy",
         properties:
-          kind === "archiveSet"
+          kind === "archiveSet" || kind === "fileSet"
             ? ["openFile", "multiSelections"]
             : kind === "archive"
               ? ["openFile"]
@@ -254,7 +257,9 @@ if (!app.requestSingleInstanceLock()) {
         await request(kind === "archive" ? "source" : kind, {
           id,
           path: chosen.filePaths[0],
-          ...(kind === "archiveSet" ? { paths: chosen.filePaths } : {}),
+          ...(kind === "archiveSet" || kind === "fileSet"
+            ? { paths: chosen.filePaths }
+            : {}),
           connection:
             typeof context?.connection === "string"
               ? context.connection

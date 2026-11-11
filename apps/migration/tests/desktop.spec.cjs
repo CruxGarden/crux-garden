@@ -945,3 +945,119 @@ test("Google Photos Takeout metadata review is available through the native shar
     await fs.rm(dir, { recursive: true, force: true });
   }
 });
+
+test("selected downloaded files use a native grant and exclude unselected siblings", async () => {
+  const dir = await fs.realpath(
+      await fs.mkdtemp(path.join(os.tmpdir(), "migrate-file-pick-")),
+    ),
+    source = path.join(dir, "source"),
+    dest = path.join(dir, "copies");
+  await fs.mkdir(source);
+  await fs.mkdir(dest);
+  const names = ["IMG_01.HEIC", "IMG_01.MOV", "IMG_01.xmp"];
+  for (const name of [...names, "excluded.txt"])
+    await fs.writeFile(path.join(source, name), "synthetic " + name);
+  const app = await electron.launch({
+    executablePath: require("../../../tools/node_modules/electron"),
+    args: [path.resolve(__dirname, "..")],
+    env: {
+      ...process.env,
+      CRUX_MIGRATION_TEST_PROFILE: path.join(dir, "profile"),
+    },
+  });
+  try {
+    const page = await app.firstWindow();
+    await page.getByRole("button", { name: "Bring files home" }).click();
+    await page
+      .getByRole("button", { name: "iCloud Photos", exact: true })
+      .click();
+    await page
+      .getByRole("button", { name: "Start iCloud Photos import", exact: true })
+      .click();
+    expect(
+      await page.evaluate(async () => {
+        try {
+          await window.migrationAPI.request("fileSet", {
+            id: "bad",
+            paths: ["/"],
+          });
+          return false;
+        } catch {
+          return true;
+        }
+      }),
+    ).toBe(true);
+    await app.evaluate(
+      ({ dialog }, paths) => {
+        dialog.showOpenDialog = async (_w, options) => {
+          if (
+            !options.properties.includes("multiSelections") ||
+            options.filters
+          )
+            throw new Error("Expected unrestricted multi-file picker");
+          return { canceled: false, filePaths: paths };
+        };
+      },
+      names.map((n) => path.join(source, n)),
+    );
+    await page
+      .getByRole("button", { name: "Choose files", exact: true })
+      .click();
+    await expect(
+      page.getByText("3 files selected", { exact: true }),
+    ).toBeVisible();
+    await expect(
+      page.getByText("Only these files will be copied.", { exact: false }),
+    ).toBeVisible();
+    await app.evaluate(({ dialog }, dest) => {
+      dialog.showOpenDialog = async () => ({
+        canceled: false,
+        filePaths: [dest],
+      });
+    }, dest);
+    await page
+      .getByRole("button", { name: "Choose destination", exact: true })
+      .click();
+    await page
+      .getByRole("button", { name: "Review files", exact: true })
+      .click();
+    await expect(
+      page.getByRole("button", { name: "Preserve files", exact: true }),
+    ).toBeEnabled();
+    await page
+      .getByRole("button", { name: "Preserve files", exact: true })
+      .click();
+    await expect(
+      page.getByText("Your files are preserved and verified.", { exact: true }),
+    ).toBeVisible();
+    const [job] = await page.evaluate(() =>
+      window.migrationAPI.request("list"),
+    );
+    expect(job.sourceFiles).toEqual(names.sort());
+    expect((await fs.readdir(path.join(job.output, "files"))).sort()).toEqual(
+      names.sort(),
+    );
+    await app.evaluate(({ BrowserWindow }) =>
+      BrowserWindow.getAllWindows()[0].setSize(500, 850),
+    );
+    await expect
+      .poll(() =>
+        page.evaluate(
+          () => document.documentElement.scrollWidth <= innerWidth + 1,
+        ),
+      )
+      .toBe(true);
+    await page.reload();
+    await page.getByRole("button", { name: "Bring files home" }).click();
+    await page
+      .locator(".migration-history button")
+      .filter({ hasText: "iCloud Photos" })
+      .click();
+    await expect(
+      page.getByText("3 files selected", { exact: true }),
+    ).toBeVisible();
+  } finally {
+    await app.close();
+    await fs.rm(dir, { recursive: true, force: true });
+  }
+});

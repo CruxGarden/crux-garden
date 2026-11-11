@@ -181,7 +181,7 @@
       {
         "id": "step-2",
         "label": "Choose what to keep",
-        "text": "Choose File → Export → Export Unmodified Original. Include available metadata-sidecar options when useful."
+        "text": "Choose File → Export → Export Unmodified Original. Enable Export IPTC as XMP if you want exported metadata sidecars. Use a dedicated folder outside cloud sync."
       },
       {
         "id": "step-3",
@@ -191,14 +191,18 @@
       {
         "id": "step-4",
         "label": "Keep related files together",
-        "text": "Keep paired Live Photo components together. Apple documents that an unmodified Live Photo export produces a still image and a video. Photos export guide."
+        "text": "Keep every exported component: a Live Photo includes a still and a video. In Migrate, Choose files selects individual downloaded files from one folder; include video and XMP companions explicitly. Choose source imports the whole exported folder. Do not select the Photos library package."
       }
     ],
-    "checks": "Test Live Photos, HEIC, RAW-plus-JPEG pairs, edited images, slow-motion clips, and an item with a manually changed date. Verify the originals open offline. Compare logical item count and physical file count separately because one library item can produce multiple files. Face groups, shared-library ownership, and nondestructive editing state should remain outside the promise unless validated with the selected route.",
+    "checks": "Open representative originals offline: Live Photo still/video pairs, RAW/JPEG variants, edits and changed dates. Library-item and physical-file counts differ. Keep each batch below 20,000 entries, including sidecars. Migrate preserves bytes but does not interpret Apple XMP, pair Live Photos, rebuild albums or restore Photos editing state. Check Shared Library and Shared Album coverage separately.",
     "sources": [
       {
         "title": "Photos export guide",
         "url": "https://support.apple.com/en-gb/guide/photos/pht6e157c5f/12.0/mac/27"
+      },
+      {
+        "title": "Download originals and browser batch limits",
+        "url": "https://support.apple.com/en-us/111762"
       }
     ]
   },
@@ -287,12 +291,12 @@
       {
         "id": "step-1",
         "label": "Prepare your export",
-        "text": "In Finder, open iCloud Drive, select the intended files, and copy them to a separate local or external destination."
+        "text": "In Finder, open iCloud Drive, select the intended items and choose Download Now; use Keep Downloaded when available. Wait for Finder to show them downloaded."
       },
       {
         "id": "step-2",
         "label": "Choose what to keep",
-        "text": "Let downloads finish. Apple states that optimized iCloud files download before being copied."
+        "text": "Copy the selection to a dedicated local or external staging folder outside cloud sync. Use Copy/Paste so the cloud originals remain. In Migrate, Choose files selects individual staged files; Choose source selects the staged folder. Online-only files must finish downloading first."
       },
       {
         "id": "step-3",
@@ -309,6 +313,10 @@
       {
         "title": "Apple's archive instructions",
         "url": "https://support.apple.com/en-ca/108306"
+      },
+      {
+        "title": "Download Now and Keep Downloaded",
+        "url": "https://support.apple.com/en-euro/guide/mac-help/mchl1a02d711/27/mac/27"
       }
     ]
   },
