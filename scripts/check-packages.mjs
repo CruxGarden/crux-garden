@@ -270,11 +270,48 @@ for (const app of [
     );
     assert.deepEqual(selectedReport.selectedFiles, ["photo.jpg"]);
     assert.equal(selectedReport.files.length, 1);
+    const mailSource = path.join(fixture, "mail-source");
+    await mkdir(mailSource);
+    const mailBytes =
+      "From sender@example.test Sat Jan 01 00:00:00 2022\nFrom: sender@example.test\nSubject: Package fixture\n\nKeep body\n";
+    await writeFile(path.join(mailSource, "all.mbox"), mailBytes);
+    const mailJob = await request("create", { provider: "Gmail" });
+    await request("fileSet", {
+      id: mailJob.id,
+      paths: [path.join(mailSource, "all.mbox")],
+    });
+    await request("destination", { id: mailJob.id, path: destination });
+    await request("inspect", { id: mailJob.id });
+    await settle(mailJob.id);
+    await request("start", { id: mailJob.id });
+    assert.equal((await settle(mailJob.id)).state, "verified");
+    await request("mailReview", { id: mailJob.id });
+    let mailResult;
+    for (let i = 0; i < 500; i++) {
+      mailResult = (await request("list")).find((j) => j.id === mailJob.id);
+      if (mailResult.mailReview.state !== "running") break;
+      await new Promise((r) => setTimeout(r, 20));
+    }
+    assert.equal(
+      mailResult.mailReview.state,
+      "complete",
+      mailResult.mailReview.error,
+    );
+    assert.equal(mailResult.mailReview.counts.candidates, 1);
+    assert.equal(
+      await readFile(path.join(mailResult.output, "files/all.mbox"), "utf8"),
+      mailBytes,
+    );
     await close();
     launch();
     assert.deepEqual(
       (await request("list")).find((j) => j.id === selectedJob.id).sourceFiles,
       ["photo.jpg"],
+    );
+    assert.equal(
+      (await request("list")).find((j) => j.id === mailJob.id).mailReview.counts
+        .candidates,
+      1,
     );
     assert.equal((await request("info")).cruxCount, 0);
     assert.equal((await request("list"))[0].state, "verified");
@@ -290,7 +327,7 @@ for (const app of [
     );
     await close();
     console.log(
-      `${app}: packaged API, native SQLite, zero Cruxes, selected files/folder/ZIP/TAR.GZ and multiple-part preservation, Flickr/Google Photos metadata review, verification and restart passed`,
+      `${app}: packaged API, native SQLite, zero Cruxes, selected files/folder/ZIP/TAR.GZ and multiple-part preservation, Flickr/Google Photos metadata and Gmail inventory review, verification and restart passed`,
     );
   } finally {
     if (child && child.exitCode === null) {

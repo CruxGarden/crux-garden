@@ -188,6 +188,7 @@ if (!app.requestSingleInstanceLock()) {
           "pause",
           "inspect",
           "photoReview",
+          "mailReview",
           "checklist",
           "cloudConnect",
           "cloudStatus",

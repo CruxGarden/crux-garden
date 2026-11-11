@@ -12,6 +12,7 @@ await build({
     "backend",
     "worker",
     "photo-review-worker",
+    "mail-review-worker",
     "photos-bridge",
     "http",
   ].map((name) => path.join(engine, "src", name + ".ts")),

@@ -1061,3 +1061,76 @@ test("selected downloaded files use a native grant and exclude unselected siblin
     await fs.rm(dir, { recursive: true, force: true });
   }
 });
+
+test("Gmail mail inventory runs through native picker authority and preserves raw messages", async () => {
+  const dir = await fs.realpath(
+    await fs.mkdtemp(path.join(os.tmpdir(), "migrate-mail-desktop-")),
+  );
+  const source = path.join(dir, "source"),
+    destination = path.join(dir, "copies");
+  await fs.mkdir(source);
+  await fs.mkdir(destination);
+  const raw =
+    "From sender@example.test Sat Jan 01 00:00:00 2022\nFrom: sender@example.test\nSubject: Synthetic mail\nX-Gmail-Labels: Inbox\n\nBody stays unchanged\n";
+  await fs.writeFile(path.join(source, "all.mbox"), raw);
+  const app = await electron.launch({
+    executablePath: require("../../../tools/node_modules/electron"),
+    args: [path.resolve(__dirname, "..")],
+    env: {
+      ...process.env,
+      CRUX_MIGRATION_TEST_PROFILE: path.join(dir, "profile"),
+    },
+  });
+  try {
+    const page = await app.firstWindow();
+    await page.getByRole("button", { name: "Bring files home" }).click();
+    await page.getByRole("button", { name: "Gmail", exact: true }).click();
+    await page
+      .getByRole("button", { name: "Start Gmail import", exact: true })
+      .click();
+    for (const [label, folder] of [
+      ["Choose source", source],
+      ["Choose destination", destination],
+    ]) {
+      await app.evaluate(({ dialog }, folder) => {
+        dialog.showOpenDialog = async () => ({
+          canceled: false,
+          filePaths: [folder],
+        });
+      }, folder);
+      await page.getByRole("button", { name: label, exact: true }).click();
+    }
+    await page
+      .getByRole("button", { name: "Review files", exact: true })
+      .click();
+    await expect(
+      page.getByRole("button", { name: "Preserve files", exact: true }),
+    ).toBeEnabled();
+    await page
+      .getByRole("button", { name: "Preserve files", exact: true })
+      .click();
+    await expect(
+      page.getByRole("button", { name: "Review mail inventory", exact: true }),
+    ).toBeEnabled();
+    await page
+      .getByRole("button", { name: "Review mail inventory", exact: true })
+      .click();
+    await expect(
+      page.getByRole("region", { name: "Mail inventory" }).getByRole("status"),
+    ).toContainText("Mailboxes checked: 1 · Message candidates: 1");
+    const [job] = await page.evaluate(() =>
+      window.migrationAPI.request("list"),
+    );
+    expect(job.mailReview.counts.candidates).toBe(1);
+    const report = JSON.parse(
+      await fs.readFile(path.join(job.output, job.mailReview.report), "utf8"),
+    );
+    expect(report.adapter).toBe("mbox-inventory-v1");
+    expect(
+      await fs.readFile(path.join(job.output, "files/all.mbox"), "utf8"),
+    ).toBe(raw);
+  } finally {
+    await app.close();
+    await fs.rm(dir, { recursive: true, force: true });
+  }
+});

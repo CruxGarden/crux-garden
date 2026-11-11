@@ -55,11 +55,12 @@ export async function createMigrationRuntime(
       : undefined;
   const jobs = new Map<string, MigrationJob>();
   for (const job of await store.loadJobs()) {
-    if (job.photoReview?.state === "running")
-      job.photoReview = {
-        state: "paused",
-        error: "Review interrupted. Run it again when ready.",
-      };
+    for (const key of ["photoReview", "mailReview"] as const)
+      if (job[key]?.state === "running")
+        job[key] = {
+          state: "paused",
+          error: "Review interrupted. Run it again when ready.",
+        };
     if (job.state === "running" || job.state === "inspecting")
       job.state = "paused";
     jobs.set(job.id, job);
@@ -80,8 +81,11 @@ export async function createMigrationRuntime(
     return job;
   };
   const idle = (job: MigrationJob) => {
-    if (job.photoReview?.state === "running")
-      throw new Error("Pause the photo review before changing this import.");
+    if (
+      job.photoReview?.state === "running" ||
+      job.mailReview?.state === "running"
+    )
+      throw new Error("Pause the review before changing this import.");
     if (job.state === "running" || job.state === "inspecting")
       throw new Error("Pause this import before changing it.");
   };
@@ -177,6 +181,7 @@ export async function createMigrationRuntime(
           sharedFileDownloads: !!downloads,
           cloudCollections: !!cloud,
           photoMetadata: true,
+          mailInventory: true,
           localFileSelection: true,
           photoMetadataProviders: PHOTO_REVIEW_PROVIDERS,
         },
@@ -236,42 +241,59 @@ export async function createMigrationRuntime(
       return job;
     }
     const job = get(args.id);
-    if (command === "photoReview") {
+    if (command === "photoReview" || command === "mailReview") {
       idle(job);
       if (worker) throw new Error("Pause the current operation first.");
+      const mail = command === "mailReview";
       if (
-        !PHOTO_REVIEW_PROVIDERS.includes(job.provider) ||
+        !(mail
+          ? job.provider === "Gmail"
+          : PHOTO_REVIEW_PROVIDERS.includes(job.provider)) ||
         job.state !== "verified" ||
         !job.output
       )
-        throw new Error("Preserve and verify a supported photo export first.");
-      job.photoReview = { state: "running", checked: 0 };
+        throw new Error("Preserve and verify a supported export first.");
+      const setReview = (
+        value: NonNullable<
+          MigrationJob["photoReview"] | MigrationJob["mailReview"]
+        >,
+      ) => Object.assign(job, { [command]: value });
+      setReview({ state: "running", checked: 0 });
       await save(job);
       activeId = job.id;
-      worker = new Worker(join(__dirname, "photo-review-worker.cjs"), {
-        workerData: { id: job.id, provider: job.provider, output: job.output },
-        resourceLimits: { maxOldGenerationSizeMb: 256 },
-      });
-      let result: MigrationJob["photoReview"];
-      worker.on(
-        "message",
-        (update: NonNullable<MigrationJob["photoReview"]>) => {
-          if (update.state === "running") job.photoReview = update;
-          else result = update;
+      worker = new Worker(
+        join(
+          __dirname,
+          mail ? "mail-review-worker.cjs" : "photo-review-worker.cjs",
+        ),
+        {
+          workerData: {
+            id: job.id,
+            provider: job.provider,
+            output: job.output,
+          },
+          resourceLimits: { maxOldGenerationSizeMb: 256 },
         },
       );
+      let result: MigrationJob["photoReview"] | MigrationJob["mailReview"];
+      worker.on("message", (update: NonNullable<typeof result>) => {
+        if (update.state === "running") setReview(update);
+        else result = update;
+      });
       worker.on("error", () => {
         result = {
           state: "failed",
           error:
-            "Photo review stopped. The selected metadata may exceed the review limits.",
+            "Review stopped. The selected export may exceed the review limits.",
         };
       });
       worker.on("exit", () => {
-        job.photoReview = result || {
-          state: "failed",
-          error: "Photo review stopped. You can retry.",
-        };
+        setReview(
+          result || {
+            state: "failed",
+            error: "Review stopped. You can retry.",
+          },
+        );
         worker = undefined;
         activeId = undefined;
         void save(job).catch(console.error);

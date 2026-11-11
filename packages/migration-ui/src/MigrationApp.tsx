@@ -16,6 +16,7 @@ import MigrationGuide from "./MigrationGuide";
 import Downloads from "./Downloads";
 import CloudServices from "./CloudServices";
 import PhotoReview from "./PhotoReview";
+import MailReview from "./MailReview";
 import "./migration.css";
 
 const size = (n: number) =>
@@ -45,6 +46,7 @@ export default function MigrationApp({
   const [hasCloud, setHasCloud] = useState(false);
   const [hasDownloads, setHasDownloads] = useState(false);
   const [hasFileSelection, setHasFileSelection] = useState(false);
+  const [mailInventory, setMailInventory] = useState(false);
   const [photoProviders, setPhotoProviders] = useState<string[]>([]);
   const [mood, setMood] = useState<Record<string, string>>({});
   const [tokenFilter, setTokenFilter] = useState("");
@@ -82,6 +84,7 @@ export default function MigrationApp({
         setHasCloud(!!info.capabilities?.cloudCollections);
         setHasDownloads(!!info.capabilities?.sharedFileDownloads);
         setHasFileSelection(!!info.capabilities?.localFileSelection);
+        setMailInventory(!!info.capabilities?.mailInventory);
         setPhotoProviders(
           info.capabilities?.photoMetadataProviders ||
             (info.capabilities?.photoMetadata ? ["Flickr"] : []),
@@ -558,6 +561,19 @@ export default function MigrationApp({
                       </p>
                     )}
                     {job.error && <p role="alert">{job.error}</p>}
+                    {mailInventory &&
+                      job.provider === "Gmail" &&
+                      job.output && (
+                        <MailReview
+                          job={job}
+                          busy={busy}
+                          run={(command) =>
+                            void act(() =>
+                              client.request(command, { id: job.id }),
+                            )
+                          }
+                        />
+                      )}
                     {photoProviders.includes(job.provider) && job.output && (
                       <PhotoReview
                         job={job}

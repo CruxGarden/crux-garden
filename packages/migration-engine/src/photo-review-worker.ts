@@ -1,10 +1,9 @@
 import { parentPort, workerData } from "node:worker_threads";
-import { constants } from "node:fs";
-import * as fs from "node:fs/promises";
 import { createHash, randomUUID } from "node:crypto";
 import { join } from "node:path";
-import { checkedPath, exclusiveJson, safeName, portablePathSet } from "./files";
-import { type PhotoRecord, type PreservedFile } from "./photo-metadata";
+import { exclusiveJson } from "./files";
+import { readPreservationReceipt, readReviewFile } from "./review-files";
+import { type PhotoRecord } from "./photo-metadata";
 
 import { photoAdapter } from "./photo-adapters";
 
@@ -15,79 +14,14 @@ parentPort!.on("message", () => {
 const stop = () => {
   if (paused) throw new Error("Review paused. Run it again when ready.");
 };
-// Bounded reads also reject final-component symlinks, devices, and growth races.
-async function read(root: string, path: string, limit: number) {
-  const name = await checkedPath(root, path);
-  const before = await fs.lstat(name);
-  if (!before.isFile() || before.isSymbolicLink() || before.size > limit)
-    throw new Error(
-      "Metadata file is not a regular file or exceeds the review limit.",
-    );
-  const handle = await fs.open(
-    name,
-    constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK,
-  );
-  try {
-    const info = await handle.stat();
-    if (
-      !info.isFile() ||
-      info.size > limit ||
-      info.ino !== before.ino ||
-      info.dev !== before.dev
-    )
-      throw new Error("Metadata file changed while opening.");
-    const buffer = Buffer.alloc(info.size + 1);
-    let used = 0;
-    while (used < buffer.length) {
-      stop();
-      const { bytesRead } = await handle.read(
-        buffer,
-        used,
-        buffer.length - used,
-        null,
-      );
-      if (!bytesRead) break;
-      used += bytesRead;
-    }
-    const after = await handle.stat();
-    if (
-      used !== info.size ||
-      after.size !== info.size ||
-      after.mtimeMs !== info.mtimeMs
-    )
-      throw new Error("Metadata file changed during review.");
-    return buffer.subarray(0, used);
-  } finally {
-    await handle.close();
-  }
-}
 async function run() {
   const { id, output, provider } = workerData;
-  const receiptBytes = await read(output, "report.json", 32 * 1024 ** 2);
-  const receipt = JSON.parse(receiptBytes.toString("utf8"));
-  if (
-    receipt.id !== id ||
-    receipt.provider !== provider ||
-    receipt.status !== "verified" ||
-    !Array.isArray(receipt.files) ||
-    receipt.files.length > 20000
-  )
-    throw new Error("This import has no recognized preservation receipt.");
-  const add = portablePathSet("receipt file");
-  const files: PreservedFile[] = receipt.files.map((entry: PreservedFile) => {
-    if (
-      !entry ||
-      typeof entry.path !== "string" ||
-      !Number.isSafeInteger(entry.size) ||
-      entry.size < 0 ||
-      typeof entry.sha256 !== "string" ||
-      !/^[a-f0-9]{64}$/.test(entry.sha256)
-    )
-      throw new Error("Invalid preservation receipt.");
-    safeName(entry.path);
-    add(entry.path, true);
-    return entry;
-  });
+  const { receiptBytes, receipt, files } = await readPreservationReceipt(
+    output,
+    id,
+    provider,
+    stop,
+  );
   const adapter = photoAdapter(provider, files, receipt.sourceKind);
   const mediaFiles = adapter.mediaFiles;
   const mediaSet = new Set(mediaFiles);
@@ -107,7 +41,12 @@ async function run() {
       total: sidecars.length,
     });
     try {
-      const bytes = await read(join(output, "files"), file.path, 8 * 1024 ** 2);
+      const bytes = await readReviewFile(
+        join(output, "files"),
+        file.path,
+        8 * 1024 ** 2,
+        stop,
+      );
       if (
         bytes.length !== file.size ||
         createHash("sha256").update(bytes).digest("hex") !== file.sha256

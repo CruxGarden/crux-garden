@@ -232,6 +232,11 @@
         "id": "step-3",
         "label": "Check the download",
         "text": "Preserve the X-Gmail-Labels header, which Google uses for label information. A general date-range export is not supported by the documented Takeout workflow. Google Takeout guidance."
+      },
+      {
+        "id": "local-review",
+        "label": "Preserve and review locally",
+        "text": "Select the downloaded export parts, folder, or explicit mailbox files in Migrate, then review and preserve them. After verification, Review mail inventory streams selected .mbox files, checks their fingerprints and saves provisional message-candidate counts and raw label-header previews separately. It does not request exports, parse attachments, restore labels or prove account completeness."
       }
     ],
     "checks": "Reconcile message counts rather than Gmail's conversation count. Test a long thread, an attachment, an inline image, a non-English subject, a forwarded message, a draft, and one message with multiple labels. Do not infer thread membership from subject alone. Check earliest and latest timestamps and a known important message by its ID where possible. Retain unsupported encrypted content unchanged.",

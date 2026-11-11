@@ -56,3 +56,7 @@ Native renderers use injected commands but cannot call destination or scanDirect
 ## Explicit downloaded files
 
 `POST /v1/jobs/:id/fileSet` accepts `{ "paths": ["/absolute/staging/file.ext"] }`: 1–500 regular files in the same folder. Selection is atomic and cannot change after copying starts. Jobs retain `sourceKind: file-set` and `sourceFiles`; receipts include `selectedFiles`. Only selected basenames are inventoried and copied, with existing hash verification and recovery. ZIP/TAR chosen here stays opaque; use `archiveSet` to unpack. The info capability `localFileSelection` advertises native `pick(id, "fileSet")`; direct renderer path-setting remains prohibited. See [iCloud and shared file selection](icloud-methods.md).
+
+## Mail inventory
+
+`POST /v1/jobs/:id/mailReview` with `{}` starts the same bounded background review exposed by the native `mailReview` command. It requires a verified Gmail preservation job and uses only receipt-selected `.mbox` paths. `info.capabilities.mailInventory` advertises support; `job.mailReview` holds progress, provisional counts and a separate report filename. Existing pause and list operations apply. Authentication and native picker authority are unchanged. See [methods, bounds and limitations](gmail-methods.md); this is local review, not a Gmail API connector.
