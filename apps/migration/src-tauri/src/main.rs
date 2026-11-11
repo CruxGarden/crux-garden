@@ -106,7 +106,9 @@ async fn migration_request(
             .get("authorizationUrl")
             .and_then(Value::as_str)
             .ok_or("Missing authorization address")?;
-        if !url.starts_with("https://accounts.google.com/o/oauth2/v2/auth?") {
+        if !url.starts_with("https://accounts.google.com/o/oauth2/v2/auth?")
+            && !url.starts_with("https://www.dropbox.com/oauth2/authorize?")
+        {
             return Err("Invalid authorization address".into());
         }
         app.opener()

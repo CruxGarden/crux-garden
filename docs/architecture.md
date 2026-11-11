@@ -56,7 +56,7 @@ The first shared-file transfer streams into partial files, persists checkpoints 
 
 ## Next slice
 
-Qualify more Dropbox responses and implement account authorization plus selected-file browsing for a full connector. A modest Google Drive export and selected photo services follow. Keep the shared-file download route and preservation workflow independently reusable. Broader personal libraries remain outside the currently verified workload.
+Qualify the selected Dropbox account connector against a real registered application, while continuing photo-export metadata workflows with fixtures. Keep the shared-file download route and preservation workflow independently reusable. Broader personal libraries remain outside the currently verified workload.
 
 ## First direct-download connector
 
@@ -64,7 +64,7 @@ See [Dropbox downloads](dropbox-downloads.md). Download jobs have separate recor
 
 ## Shared collection jobs and file inventory
 
-`cloud/jobs.ts` implements selection snapshots, recursive discovery, safe paths, durable per-file checkpoints, asynchronous streaming, retries through adapters, and read-back verification. `cloud/{bluesky,s3,google-drive}.ts` implement method-specific identity/listing/download rules. This increment resumes at file boundaries: interrupted files restart, completed files are rehashed. Existing Dropbox range-checkpoint behavior remains separate until a real common range/identity contract is proven.
+`cloud/jobs.ts` implements selection snapshots, recursive discovery, safe paths, durable per-file checkpoints, asynchronous streaming, retries through adapters, and read-back verification. `cloud/{bluesky,s3,google-drive,dropbox}.ts` implement method-specific identity/listing/download rules. This increment resumes at file boundaries: interrupted files restart, completed files are rehashed. Existing Dropbox range-checkpoint behavior remains separate until a real common range/identity contract is proven.
 
 `cloud/fingerprints.ts` reads actual bytes and consults `migrate_fingerprints` through the existing API database owner. Indexes support SHA-256, MD5/size, Dropbox content-hash/size and source/version lookups. Completed cloud/Dropbox downloads and newly verified ordinary preservation outputs register locations. An explicit local-directory scan registers older files, then compares against remote source/version evidence or provider checksums. Matching names and sizes never establish a match. Missing/changed local copies fall back to download; copied local matches are rehashed again before publication. MD5 is used only where supplied by a provider; reports retain the algorithm. Local SHA-256 is always recorded. Content matches avoid repeat transfers, not independent export files on disk.
 
@@ -78,4 +78,8 @@ The host's multi-file picker grants `archiveSet` authority; generic renderer com
 
 ## Provider checksum algorithms
 
-`checksums.ts` supplies streaming ordinary SHA-256/MD5 and Dropbox block hashing to the same collection worker. Explicit directory scans and completed collection-file verification compute all three in one read. Dropbox uses SHA-256 over binary digests of 4 MiB blocks, so its hash is a distinct algorithm in the contract and catalog. Existing databases gain a nullable indexed column through the canonical API owner; old rows acquire it only when scanned or verified again. Same-content SHA-only writes retain it, changed-content writes clear it. Controlled fixtures cover the algorithm, database upgrade and shared reuse; Dropbox account OAuth/listing/download is not implemented yet. See [account method and remaining acceptance](dropbox-account-method.md).
+`checksums.ts` supplies streaming ordinary SHA-256/MD5 and Dropbox block hashing to the same collection worker. Explicit directory scans and completed collection-file verification compute all three in one read. Dropbox uses SHA-256 over binary digests of 4 MiB blocks, so its hash is a distinct algorithm in the contract and catalog. Existing databases gain a nullable indexed column through the canonical API owner; old rows acquire it only when scanned or verified again. Same-content SHA-only writes retain it, changed-content writes clear it. Controlled fixtures cover the algorithm, database upgrade and shared reuse; Dropbox account OAuth/listing/download now consumes this contract; live acceptance remains pending. See [account method and remaining acceptance](dropbox-account-method.md).
+
+## Shared public-client authorization
+
+`cloud/oauth.ts` owns state, PKCE, loopback lifecycle, bounded lifetime and cancellation for Google and Dropbox. Google retains its ephemeral desktop port; Dropbox uses the exact registered `http://127.0.0.1:53683/callback/dropbox`. Provider adapters own authorization parameters, token exchange/refresh and source identity. Both native hosts allow only their constructed provider authorization endpoints. Dropbox's fixed-origin RPC/content adapter uses the same public-IP-pinned HTTPS transport with an internal POST option; renderer input cannot select arbitrary endpoints. Its first scope is the home namespace with current downloadable files. Unsupported cloud documents fail explicitly; broader namespace/export support and live-account qualification are future work.

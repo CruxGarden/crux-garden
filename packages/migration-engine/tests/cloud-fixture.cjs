@@ -100,25 +100,28 @@ async function fixture(t, opts = {}) {
     }
   });
   await new Promise((r) => server.listen(0, "127.0.0.1", r));
-  const open = (url, headers, signal) =>
+  const open = (url, headers, signal, options) =>
     new Promise((resolve, reject) => {
-      const req = http.get(
+      const req = http.request(
         {
           hostname: "127.0.0.1",
           port: server.address().port,
           path: "/" + url.href,
           headers,
           signal,
+          method: options?.method ?? "GET",
         },
         resolve,
       );
       req.on("error", reject);
+      req.end(options?.body);
     });
   const runtimeOptions = {
     cloud: {
       s3Factory,
       open,
       tokenExchange: opts.tokenExchange,
+      dropboxTokenExchange: opts.dropboxTokenExchange,
       adapterFactory: opts.adapterFactory,
     },
   };

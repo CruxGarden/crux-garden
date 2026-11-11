@@ -1,6 +1,6 @@
 # Selected cloud migrations
 
-This increment starts with three services from Daniel's inventory, easiest to hardest: public Bluesky export, authenticated S3 object download, and Google Drive OAuth/file export. These exercise reusable method workflows rather than copied transfer engines. Flickr full-data export parts now use the reusable archive workflow below. Requesting and downloading those parts still happens on Flickr; this is not an authenticated Flickr downloader. Other photo/mail/social connectors follow.
+Cloud services supports public Bluesky export, authenticated S3 object downloads, Google Drive OAuth/file export and Dropbox selected-account downloads. These exercise reusable method workflows rather than copied transfer engines. Flickr full-data export parts now use the reusable archive workflow below. Requesting and downloading those parts still happens on Flickr; this is not an authenticated Flickr downloader. Other photo/mail/social connectors follow.
 
 ## What is automated
 
@@ -9,6 +9,8 @@ This increment starts with three services from Daniel's inventory, easiest to ha
 | Bluesky      | Resolve a handle or did:plc identity, find its PDS, select repository CAR and/or public media, paginate blob CIDs, download and verify SHA-256 blob CIDs                                            | Public records/media only; no private messages, preferences or identity/server migration. CAR remains an archive, not a readable post viewer. Captured over time, not an atomic account snapshot. Other DID methods are not supported yet.                               |
 | Amazon S3    | Connect a commercial-region ordinary bucket, browse prefixes/files, recursively list selected prefixes with pagination, conditional download, retry transient SDK failures, preserve basic metadata | Current objects only; no historical versions/delete markers, policies, ACLs or tags. Archive-tier objects must already be restored. AWS request/egress costs can apply. No S3-compatible custom endpoints, directory buckets or automatic AWS-profile discovery.         |
 | Google Drive | Desktop OAuth with PKCE/state/loopback callback, read-only account access, browse My Drive, select files/folders, paginate recursively, download binary files, export Docs/Sheets/Slides/Drawings   | Basic metadata/current content; no comments/permissions/history. Shortcuts, restricted content, unsupported Google types or failed/oversized exports stop the job rather than silently disappearing. Shared-drive roots and Shared with me browsing are not implemented. |
+
+| Dropbox | Scoped PKCE sign-in, browse home files/folders with pagination, select recursively, revision-bound downloads and provider content-hash checks, local comparison/reuse | Home namespace only; no team-space roots, unmounted shares, history, permissions or comments. Non-downloadable cloud documents require separate provider export. App registration and live acceptance remain pending. |
 
 Google local names carry stable ID suffixes so duplicate Drive names remain distinct. Original names and parent IDs remain in the manifest. Native document exports use DOCX, XLSX, PPTX and SVG. Provider version is checked before and after each download. S3 ETags are conditional source validators, not assumed MD5 hashes; only an explicitly full-object SHA-256 checksum is used as content evidence. Bluesky media CIDs must use the supported raw/SHA-256 format. CAR receives local byte verification, not repository-signature or reference-closure certification.
 
@@ -48,7 +50,7 @@ Reuse avoids network transfers across runs, filenames and services when comparab
 
 The scan is bounded to 20,000 entries and 1 TiB, refuses links/unsafe paths, and can be paused. The collection reserves manifest space under the same entry limit. Discovery runs again if interrupted before its complete plan is saved; once saved, the plan is fixed. Changed remote versions require a new selection. Empty folders are not preserved. Unsupported/colliding S3 names fail before downloads; nothing is silently overwritten. Output publication requires a filesystem supporting hard links, such as APFS or NTFS.
 
-Dropbox hash support is a shared-engine foundation, not an account connection. New local scans and collection-file verification calculate it in the existing file read; older catalog entries need an explicit rescan. Dropbox shared-link downloads do not receive a provider content hash. See [Dropbox account method and current status](dropbox-account-method.md).
+Dropbox account downloads now use the shared hash support. New local scans and collection-file verification calculate it in the existing file read; older catalog entries need an explicit rescan. Dropbox shared-link downloads do not receive a provider content hash. See [Dropbox account setup, scope and current status](dropbox-account-method.md).
 
 ## Google one-time setup
 
@@ -66,7 +68,7 @@ Use the exact bucket region and credentials authorized for `s3:ListBucket` on th
 
 ## Evidence
 
-Real-account evidence is limited to a user-authorized Bluesky public-record export: 11,215 bytes, verified through production HTTPS and the packaged Tauri download/review/preservation flow, with matching SHA-256 recorded in private test output. Its handle and contents are excluded from repository fixtures. S3 and Google account behavior is covered by controlled fixtures; actual account verification awaits credentials/client setup.
+Real-account evidence is limited to a user-authorized Bluesky public-record export: 11,215 bytes, verified through production HTTPS and the packaged Tauri download/review/preservation flow, with matching SHA-256 recorded in private test output. Its handle and contents are excluded from repository fixtures. S3, Google and Dropbox account behavior is covered by controlled fixtures; actual account verification awaits credentials/client setup.
 
 Fixtures exercise pagination, explicit selection, unsafe/colliding paths, source version changes, pause/restart/reconnect, local directory comparison, renamed-file matches, content deduplication, stale local copies, provider checksum failures, Google PKCE/state callback, credential exclusion, local API authentication and preservation handoff. UI/native verification results are recorded in `verification.md` after completion. Do not treat fixture coverage as certification of every provider edge case.
 

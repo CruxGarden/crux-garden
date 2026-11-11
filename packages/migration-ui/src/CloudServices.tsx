@@ -72,7 +72,11 @@ export default function CloudServices({
       setJobs(await client.request("cloudJobs"));
     } catch (e) {
       setError(
-        e instanceof Error ? e.message : "This operation needs attention.",
+        e instanceof Error
+          ? e.message
+          : typeof e === "string"
+            ? e
+            : "This operation needs attention.",
       );
     } finally {
       setBusy(false);
@@ -136,6 +140,7 @@ export default function CloudServices({
               <option>Bluesky</option>
               <option>Amazon S3</option>
               <option>Google Drive</option>
+              <option>Dropbox</option>
             </select>
           </span>
         </label>
@@ -196,12 +201,50 @@ export default function CloudServices({
             {field("clientSecret", "Google desktop client secret", true, true)}
           </>
         )}
+        {provider === "Dropbox" && (
+          <>
+            <details>
+              <summary>One-time Dropbox connection setup</summary>
+              <ol>
+                <li>
+                  Create a scoped app in the Dropbox developer console with Full
+                  Dropbox access.
+                </li>
+                <li>
+                  Enable only files.metadata.read, files.content.read and
+                  account_info.read.
+                </li>
+                <li>
+                  Register this exact redirect URI:{" "}
+                  <code>http://127.0.0.1:53683/callback/dropbox</code>
+                </li>
+                <li>
+                  Enter its app key below, then choose Connect Dropbox. Approve
+                  read access in your normal browser.
+                </li>
+              </ol>
+              <p>
+                No app secret is needed. This preview uses your own
+                registration. Another pending Dropbox connection must finish or
+                be disconnected before this callback port can be reused.
+              </p>
+            </details>
+            {field("clientId", "Dropbox app key")}
+            <p>
+              Select files and folders from your Dropbox home. Team-space roots,
+              history, comments and cloud documents requiring export are not
+              included. Existing shared links can still be used under Downloads.
+            </p>
+          </>
+        )}
         <Button
           disabled={busy}
           onClick={() =>
             void act(async () => {
               const c = await client.request<CloudConnection>(
-                provider === "Google Drive" ? "cloudAuthorize" : "cloudConnect",
+                provider === "Google Drive" || provider === "Dropbox"
+                  ? "cloudAuthorize"
+                  : "cloudConnect",
                 { ...fields, provider },
               );
               setConnection(c.id);
@@ -244,7 +287,8 @@ export default function CloudServices({
           </label>
           {current?.state === "connecting" && (
             <p role="status">
-              Complete the Google connection in your browser, then return here.
+              Complete the {current.provider} connection in your browser, then
+              return here.
             </p>
           )}
           {current?.error && <p role="alert">{current.error}</p>}

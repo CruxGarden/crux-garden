@@ -164,8 +164,12 @@ if (!app.requestSingleInstanceLock()) {
         const result = await request(command, args);
         const url = new URL(result.authorizationUrl);
         if (
-          url.origin !== "https://accounts.google.com" ||
-          url.pathname !== "/o/oauth2/v2/auth"
+          !(
+            (url.origin === "https://accounts.google.com" &&
+              url.pathname === "/o/oauth2/v2/auth") ||
+            (url.origin === "https://www.dropbox.com" &&
+              url.pathname === "/oauth2/authorize")
+          )
         )
           throw new Error("Invalid authorization address.");
         await shell.openExternal(url.href);

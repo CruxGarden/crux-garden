@@ -29,15 +29,15 @@ npm start
 
 ## Direct downloads
 
-The first connector accepts an existing Dropbox shared-file link. Downloads have saved checkpoints and pause/resume, then feed the usual review-and-preserve flow. Link contents stay in memory; after restarting, paste the same link to resume. Dropbox account sign-in and folder downloading remain future work. See [Dropbox downloads](docs/dropbox-downloads.md) for supported links, integrity boundaries and validation limits.
+The first connector accepts an existing Dropbox shared-file link. Downloads have saved checkpoints and pause/resume, then feed the usual review-and-preserve flow. Link contents stay in memory; after restarting, paste the same link to resume. Selected Dropbox account files/folders are available separately under Cloud services with your own scoped app registration. See [Dropbox downloads](docs/dropbox-downloads.md) for supported links, integrity boundaries and validation limits.
 
 ## Selected cloud migrations and local comparison
 
-**Cloud services** adds Bluesky public records/media, Amazon S3 bucket objects, and Google Drive files/folders. Browse and select the desired scope; nothing is selected by default. Google uses a user-configured Desktop OAuth client and read-only browser authorization. S3 accepts explicit read credentials, including temporary credentials. Connections stay in memory; jobs survive restart.
+**Cloud services** adds Bluesky public records/media, Amazon S3 bucket objects, Google Drive files/folders, and selected Dropbox account downloads. Browse and select the desired scope; nothing is selected by default. Google uses a user-configured Desktop OAuth client and read-only browser authorization. S3 accepts explicit read credentials, including temporary credentials. Connections stay in memory; jobs survive restart.
 
 Choose **Compare with local folder** before starting to fingerprint a local directory against the selected remote inventory. An indexed fingerprint catalog lives in the existing API-owned SQLite database. Verified local matches avoid repeat network transfers, including identical content under different names. Export copies are independent; this does not delete existing duplicates or deduplicate disk storage. Unsupported remote checksum evidence is reported as uncertain, not inferred from names/sizes.
 
-See [cloud methods, setup and limits](docs/cloud-services.md). Current account evidence: one live Bluesky public-record download; S3 and Google Drive are fixture-qualified pending user account setup.
+See [cloud methods, setup and limits](docs/cloud-services.md). Current account evidence: one live Bluesky public-record download; S3, Google Drive and Dropbox account downloads are fixture-qualified pending user account setup. See [Dropbox registration and scope](docs/dropbox-account-method.md).
 
 ## Background operation
 

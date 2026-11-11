@@ -1,4 +1,4 @@
-import { get } from "node:https";
+import { request } from "node:https";
 import { resolve4 } from "node:dns/promises";
 import { BlockList } from "node:net";
 import type { IncomingMessage } from "node:http";
@@ -23,9 +23,15 @@ export type DownloadOpen = (
   url: URL,
   headers: Record<string, string>,
   signal: AbortSignal,
+  options?: { method: "POST"; body?: string },
 ) => Promise<IncomingMessage>;
 /** Resolve and pin a public IPv4 address, retaining TLS hostname verification. */
-export const openHttps: DownloadOpen = async (url, headers, signal) => {
+export const openHttps: DownloadOpen = async (
+  url,
+  headers,
+  signal,
+  options,
+) => {
   const deadline = AbortSignal.any([signal, AbortSignal.timeout(30_000)]);
   let onAbort: () => void = () => {};
   const aborted = new Promise<never>((_resolve, reject) => {
@@ -41,10 +47,11 @@ export const openHttps: DownloadOpen = async (url, headers, signal) => {
     throw new Error("Download host did not resolve to a public address.");
   if (signal.aborted) throw new Error("Download paused.");
   return new Promise((resolve, reject) => {
-    const req = get(
+    const req = request(
       url,
       {
         headers,
+        method: options?.method ?? "GET",
         signal,
         family: 4,
         lookup: (_host, _options, callback) => callback(null, addresses[0]!, 4),
@@ -53,5 +60,6 @@ export const openHttps: DownloadOpen = async (url, headers, signal) => {
     );
     req.setTimeout(30_000, () => req.destroy(new Error("Download timed out.")));
     req.once("error", reject);
+    req.end(options?.body);
   });
 };

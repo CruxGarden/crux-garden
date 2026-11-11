@@ -44,4 +44,4 @@ Provider reference, reviewed November 10, 2026: [Dropbox's shared-link download 
 
 ## Account-method preparation
 
-The shared collection engine and local fingerprint catalog now support Dropbox block content hashes. That foundation is fixture-tested and does not change the shared-link behavior described above. Account OAuth, selected browsing and revision-bound downloads remain next; see [account method, registration prerequisites and acceptance](dropbox-account-method.md).
+The shared collection engine and local fingerprint catalog now support Dropbox block content hashes. That foundation is fixture-tested and does not change the shared-link behavior described above. Selected account OAuth, browsing and revision-bound downloads are now separately implemented and fixture-qualified; see [account method, registration prerequisites and acceptance](dropbox-account-method.md).

@@ -108,7 +108,11 @@ export interface DownloadJob {
   error?: string;
 }
 
-export type CloudProvider = "Bluesky" | "Amazon S3" | "Google Drive";
+export type CloudProvider =
+  | "Bluesky"
+  | "Amazon S3"
+  | "Google Drive"
+  | "Dropbox";
 export interface CloudEntry {
   id: string;
   name: string;

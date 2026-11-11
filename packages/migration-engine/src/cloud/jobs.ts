@@ -24,12 +24,15 @@ import {
 import { CloudError, message, type CloudAdapter } from "./common";
 import { bluesky } from "./bluesky";
 import { s3, type S3Factory } from "./s3";
-import { beginGoogle, type TokenExchange } from "./google-drive";
+import { beginDropbox } from "./dropbox";
+import { beginGoogle } from "./google-drive";
+import type { TokenExchange } from "./oauth";
 import type { DownloadOpen } from "../network";
 export interface CloudOptions {
   open?: DownloadOpen;
   s3Factory?: S3Factory;
   tokenExchange?: TokenExchange;
+  dropboxTokenExchange?: TokenExchange;
   // Host-owned fixture seam, never settable over IPC/HTTP or environment.
   adapterFactory?: (
     input: Record<string, unknown>,
@@ -435,7 +438,11 @@ export async function createCloudJobs(
           "Disconnect an unused account before adding another.",
         );
       const provider = input.provider;
-      if (!["Bluesky", "Amazon S3", "Google Drive"].includes(String(provider)))
+      if (
+        !["Bluesky", "Amazon S3", "Google Drive", "Dropbox"].includes(
+          String(provider),
+        )
+      )
         throw new CloudError("Choose a supported service.");
       const c: Connection = {
         view: {
@@ -453,12 +460,17 @@ export async function createCloudJobs(
       };
       connections.set(c.view.id, c);
       try {
-        if (provider === "Google Drive" && !options.adapterFactory) {
+        if (
+          (provider === "Google Drive" || provider === "Dropbox") &&
+          !options.adapterFactory
+        ) {
           if (!authorize)
             throw new CloudError(
-              "Use Connect Google Drive to authorize in your browser.",
+              `Use Connect ${provider} to authorize in your browser.`,
             );
-          const auth = await beginGoogle(
+          const auth = await (
+            provider === "Dropbox" ? beginDropbox : beginGoogle
+          )(
             input,
             connected,
             (e) => {
@@ -466,7 +478,9 @@ export async function createCloudJobs(
               c.view.error = message(e);
             },
             options.open,
-            options.tokenExchange,
+            provider === "Dropbox"
+              ? options.dropboxTokenExchange
+              : options.tokenExchange,
           );
           c.cancel = auth.close;
           return { ...c.view, authorizationUrl: auth.url };

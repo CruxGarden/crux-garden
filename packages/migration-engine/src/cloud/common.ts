@@ -62,6 +62,7 @@ export function network(open: DownloadOpen = openHttps) {
     url: URL,
     signal: AbortSignal,
     headers: Record<string, string> = {},
+    options?: { method: "POST"; body?: string },
   ): Promise<IncomingMessage> {
     publicUrl(url.href);
     for (let attempt = 0; ; attempt++) {
@@ -70,6 +71,7 @@ export function network(open: DownloadOpen = openHttps) {
         url,
         { "Accept-Encoding": "identity", ...headers },
         signal,
+        options,
       );
       if (
         (res.statusCode === 429 || (res.statusCode ?? 0) >= 500) &&
@@ -121,8 +123,9 @@ export function network(open: DownloadOpen = openHttps) {
     url: URL,
     signal: AbortSignal,
     headers?: Record<string, string>,
+    options?: { method: "POST"; body?: string },
   ) {
-    const res = await response(url, signal, headers);
+    const res = await response(url, signal, headers, options);
     const chunks: Buffer[] = [];
     let size = 0;
     try {

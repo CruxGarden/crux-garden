@@ -1,6 +1,9 @@
-import { createServer } from "node:http";
-import { randomBytes, createHash } from "node:crypto";
-import type { AddressInfo } from "node:net";
+import { createHash } from "node:crypto";
+import {
+  beginLoopbackOAuth,
+  type OAuthTokens,
+  type TokenExchange,
+} from "./oauth";
 import type { CloudAdapter } from "./common";
 import type { CloudItem } from "@cruxgarden/migration-contracts";
 import { apiUrl, CloudError, contentSize, network, textField } from "./common";
@@ -36,15 +39,6 @@ function segment(name: string, id: string) {
       .slice(0, 80) || "file";
   return `${title} [${createHash("sha256").update(id).digest("hex").slice(0, 12)}]`;
 }
-export interface GoogleTokens {
-  access_token: string;
-  refresh_token?: string;
-  expires_in?: number;
-  scope?: string;
-}
-export type TokenExchange = (
-  values: Record<string, string>,
-) => Promise<GoogleTokens>;
 export const tokenExchange: TokenExchange = async (values) => {
   const response = await fetch("https://oauth2.googleapis.com/token", {
     method: "POST",
@@ -57,7 +51,7 @@ export const tokenExchange: TokenExchange = async (values) => {
     throw new CloudError(
       "Google authorization expired or was rejected. Connect again.",
     );
-  const value = (await response.json()) as GoogleTokens;
+  const value = (await response.json()) as OAuthTokens;
   if (
     typeof value.access_token !== "string" ||
     value.access_token.length > 8192
@@ -83,34 +77,18 @@ export async function beginGoogle(
     : "";
   if (!/^[a-zA-Z0-9._-]+\.apps\.googleusercontent\.com$/.test(clientId))
     throw new CloudError("Enter a Google Desktop app client ID.");
-  const verifier = randomBytes(32).toString("base64url");
-  const state = randomBytes(32).toString("hex");
-  let redirect = "";
-  let used = false;
-  let cancelled = false;
-  const server = createServer(async (request, response) => {
-    response.setHeader("Cache-Control", "no-store");
-    response.setHeader("Content-Type", "text/plain");
-    response.setHeader("Content-Security-Policy", "default-src 'none'");
-    const url = new URL(request.url ?? "/", redirect || "http://127.0.0.1");
-    if (
-      request.method !== "GET" ||
-      request.headers.host !== new URL(redirect).host ||
-      url.pathname !== "/callback" ||
-      url.searchParams.get("state") !== state ||
-      used
-    ) {
-      response.writeHead(400);
-      response.end("Invalid authorization response.");
-      return;
-    }
-    used = true;
-    try {
-      const code = url.searchParams.get("code");
-      if (!code || code.length > 8192 || url.searchParams.has("error"))
-        throw new CloudError(
-          "Google connection was cancelled. You can try again.",
-        );
+  return beginLoopbackOAuth({
+    label: "Google Drive",
+    endpoint: "https://accounts.google.com/o/oauth2/v2/auth",
+    port: 0,
+    path: "/callback",
+    parameters: {
+      client_id: clientId,
+      scope: SCOPE,
+      access_type: "offline",
+      prompt: "consent",
+    },
+    async connect(code, verifier, redirect) {
       const tokens = await exchange({
         client_id: clientId,
         client_secret: clientSecret,
@@ -121,70 +99,15 @@ export async function beginGoogle(
       });
       if (tokens.scope && !tokens.scope.split(" ").includes(SCOPE))
         throw new CloudError("Google did not grant read access to Drive.");
-      const adapter = await googleDrive(
-        tokens,
-        clientId,
-        clientSecret,
-        open,
-        exchange,
-      );
-      if (cancelled) {
-        adapter.close?.();
-        throw new CloudError("Connection cancelled.");
-      }
-      onConnected(adapter);
-      response.end("Google Drive connected. Return to Crux Garden Migrate.");
-    } catch (e) {
-      if (!cancelled) onFailed(e);
-      response.end(
-        "Connection was not completed. Return to Migrate and try again.",
-      );
-    } finally {
-      clearTimeout(timer);
-      server.close();
-      server.closeIdleConnections();
-    }
-  });
-  server.requestTimeout = 10000;
-  server.headersTimeout = 10000;
-  await new Promise<void>((resolve, reject) => {
-    server.once("error", reject);
-    server.listen(0, "127.0.0.1", resolve);
-  });
-  redirect = `http://127.0.0.1:${(server.address() as AddressInfo).port}/callback`;
-  const timer = setTimeout(() => {
-    cancelled = true;
-    server.close();
-    server.closeAllConnections();
-    onFailed(
-      new CloudError("Google connection timed out. Try connecting again."),
-    );
-  }, 5 * 60_000);
-  timer.unref();
-  const url = new URL("https://accounts.google.com/o/oauth2/v2/auth");
-  url.search = new URLSearchParams({
-    client_id: clientId,
-    redirect_uri: redirect,
-    response_type: "code",
-    scope: SCOPE,
-    access_type: "offline",
-    prompt: "consent",
-    state,
-    code_challenge: createHash("sha256").update(verifier).digest("base64url"),
-    code_challenge_method: "S256",
-  }).toString();
-  return {
-    url: url.href,
-    close() {
-      cancelled = true;
-      clearTimeout(timer);
-      server.close();
-      server.closeAllConnections();
+      return googleDrive(tokens, clientId, clientSecret, open, exchange);
     },
-  };
+    connected: onConnected,
+    failed: onFailed,
+  });
 }
+
 export async function googleDrive(
-  initial: GoogleTokens,
+  initial: OAuthTokens,
   clientId: string,
   clientSecret: string,
   open?: DownloadOpen,
