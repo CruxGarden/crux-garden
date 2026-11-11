@@ -106,6 +106,19 @@ test("Migrate opens empty, preserves a folder, changes Mood and retains history"
       "data-surface-style",
       "glass",
     );
+    await page
+      .getByText("Customize shared theme tokens", { exact: true })
+      .click();
+    await page.getByLabel("Find a token", { exact: true }).fill("logoSurface");
+    await page.getByLabel("logoSurface", { exact: true }).fill("#f1e6d2");
+    await page.getByLabel("logoSurface", { exact: true }).press("Tab");
+    await expect
+      .poll(() =>
+        page.evaluate(() =>
+          window.migrationAPI.request("info").then((info) => info.mood),
+        ),
+      )
+      .toMatchObject({ logoSurface: "#f1e6d2" });
     await app.close();
     app = await launch();
     page = await app.firstWindow();
@@ -119,6 +132,11 @@ test("Migrate opens empty, preserves a folder, changes Mood and retains history"
       "glass",
     );
     await page.getByRole("button", { name: "Migrate", exact: true }).click();
+    await expect(page.locator(".service-icon").first()).toHaveCSS(
+      "background-color",
+      "rgb(241, 230, 210)",
+    );
+
     await expect(
       page.getByRole("button", { name: /Dropbox · verified/ }),
     ).toBeVisible();
@@ -508,6 +526,72 @@ test("Downloads prepares a Dropbox link through the native folder picker without
     expect(
       await page.evaluate(
         () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
+  } finally {
+    await app.close();
+    await fs.rm(dir, { recursive: true, force: true });
+  }
+});
+
+test("cloud selection starts empty, exposes Google setup and retains native path authority", async () => {
+  const dir = await fs.realpath(
+    await fs.mkdtemp(path.join(os.tmpdir(), "migrate-cloud-desktop-")),
+  );
+  const app = await electron.launch({
+    executablePath: require("../../../tools/node_modules/electron"),
+    args: [path.resolve(__dirname, "..")],
+    env: {
+      ...process.env,
+      CRUX_MIGRATION_TEST_PROFILE: path.join(dir, "profile"),
+    },
+  });
+  try {
+    const page = await app.firstWindow();
+    await page
+      .getByRole("button", { name: "Cloud services", exact: true })
+      .click();
+    await expect(
+      page.getByRole("heading", { name: "Choose what to bring home" }),
+    ).toBeVisible();
+    await expect(
+      page.getByLabel("Bluesky handle", { exact: true }),
+    ).toHaveValue("");
+    await page
+      .getByRole("combobox", { name: "Service", exact: true })
+      .selectOption("Google Drive");
+    await page
+      .getByText("One-time Google connection setup", { exact: true })
+      .click();
+    await expect(page.getByText(/application type/)).toBeVisible();
+    const blocked = await page.evaluate(() =>
+      Promise.all(
+        ["cloudDestination", "cloudScanDirectory"].map((command) =>
+          window.migrationAPI.request(command, { id: "bad", path: "/" }).then(
+            () => false,
+            () => true,
+          ),
+        ),
+      ),
+    );
+    expect(blocked).toEqual([true, true]);
+    await page
+      .getByRole("combobox", { name: "Service", exact: true })
+      .selectOption("Amazon S3");
+    await page.getByLabel("Bucket", { exact: true }).fill("fixture-bucket");
+    await page
+      .getByLabel("AWS region", { exact: true })
+      .fill("http://localhost");
+    await page
+      .getByRole("button", { name: "Connect Amazon S3", exact: true })
+      .click();
+    await expect(page.getByRole("alert")).toContainText(
+      "commercial AWS region",
+    );
+    await page.setViewportSize({ width: 420, height: 850 });
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth + 1,
       ),
     ).toBe(true);
   } finally {

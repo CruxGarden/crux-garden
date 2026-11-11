@@ -1,3 +1,4 @@
+import { ServiceIcon } from "./ServiceIcon";
 import { useEffect, useState } from "react";
 import Panel from "@cruxgarden/garden-ui/components/ui/Panel";
 import Button from "@cruxgarden/garden-ui/components/ui/Button";
@@ -13,6 +14,7 @@ import type {
 import { MIGRATION_GUIDES, findGuide } from "@cruxgarden/migration-providers";
 import MigrationGuide from "./MigrationGuide";
 import Downloads from "./Downloads";
+import CloudServices from "./CloudServices";
 import "./migration.css";
 
 const size = (n: number) =>
@@ -32,13 +34,14 @@ export default function MigrationApp({
   appearance?: "standalone" | "embedded";
 }) {
   const [page, setPage] = useState<
-    "together" | "migration" | "mood" | "downloads"
+    "together" | "migration" | "mood" | "downloads" | "cloud"
   >("together");
   const [jobs, setJobs] = useState<MigrationJob[]>([]);
   const [selected, setSelected] = useState<string>();
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [ready, setReady] = useState(false);
+  const [hasCloud, setHasCloud] = useState(false);
   const [hasDownloads, setHasDownloads] = useState(false);
   const [mood, setMood] = useState<Record<string, string>>({});
   const [tokenFilter, setTokenFilter] = useState("");
@@ -73,6 +76,7 @@ export default function MigrationApp({
         const info = await client.request<MigrationInfo>("info");
         if (disposed) return;
         setMood(info.mood);
+        setHasCloud(!!info.capabilities?.cloudCollections);
         setHasDownloads(!!info.capabilities?.sharedFileDownloads);
         if (appearance === "standalone") applyMigrationMood(info.mood);
         await refresh();
@@ -120,6 +124,14 @@ export default function MigrationApp({
           <h1>Migrate</h1>
         </div>
         <nav aria-label="Migrate">
+          {hasCloud && (
+            <Button
+              variant={page === "cloud" ? "primary" : "ghost"}
+              onClick={() => setPage("cloud")}
+            >
+              Cloud services
+            </Button>
+          )}
           {hasDownloads && (
             <Button
               variant={page === "downloads" ? "primary" : "ghost"}
@@ -149,6 +161,20 @@ export default function MigrationApp({
         </nav>
       </header>
       <main>
+        {page === "cloud" && (
+          <CloudServices
+            client={client}
+            onImport={(job) => {
+              setJobs((previous) => [
+                ...previous.filter((j) => j.id !== job.id),
+                job,
+              ]);
+              setSelected(job.id);
+              setProvider(job.provider);
+              setPage("migration");
+            }}
+          />
+        )}
         {page === "downloads" && (
           <Downloads
             client={client}
@@ -227,7 +253,8 @@ export default function MigrationApp({
                 {!job ? (
                   <>
                     <p className="migration-eyebrow">
-                      31 export guides · available offline
+                      {MIGRATION_GUIDES.length} export guides · available
+                      offline
                     </p>
                     <h3>Where are your files today?</h3>
                     <p>
@@ -259,6 +286,7 @@ export default function MigrationApp({
                           aria-pressed={provider === g.name}
                           onClick={() => setProvider(g.name)}
                         >
+                          <ServiceIcon service={g.name} />
                           {g.name}
                         </Button>
                       ))}
@@ -267,7 +295,10 @@ export default function MigrationApp({
                       )}
                     </div>
                     <div className="migration-section-heading">
-                      <h3>{guide.name}</h3>
+                      <h3 className="service-title">
+                        <ServiceIcon service={guide.name} />
+                        {guide.name}
+                      </h3>
                       <Button
                         disabled={!ready || busy}
                         onClick={() => void act(newImport)}
@@ -287,7 +318,8 @@ export default function MigrationApp({
                   </>
                 ) : (
                   <>
-                    <p className="migration-eyebrow">
+                    <p className="migration-eyebrow service-title">
+                      <ServiceIcon service={job.provider} />
                       {job.provider} · {job.state}
                     </p>
                     <h3>A copy you can keep.</h3>
@@ -485,6 +517,7 @@ export default function MigrationApp({
                             variant={selected === j.id ? "primary" : "ghost"}
                             onClick={() => setSelected(j.id)}
                           >
+                            <ServiceIcon service={j.provider} />
                             {j.provider} · {j.state} ·{" "}
                             {new Date(j.created).toLocaleDateString()}
                           </Button>

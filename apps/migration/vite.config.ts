@@ -2,7 +2,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import path from "node:path";
-import { cpSync, copyFileSync } from "node:fs";
+import { cpSync, copyFileSync, readFileSync, writeFileSync } from "node:fs";
 const root = path.resolve(__dirname, "../..");
 export default defineConfig({
   root: __dirname,
@@ -36,6 +36,17 @@ export default defineConfig({
           { recursive: true },
         );
         copyFileSync(path.join(root, "LICENSE"), path.join(out, "LICENSE"));
+        writeFileSync(
+          path.join(out, "service-icons-NOTICES.txt"),
+          [
+            "docs/service-icons.md",
+            "docs/dashboard-icons-LICENSE.txt",
+            "docs/simple-icons-LICENSE.txt",
+            "packages/migration-ui/src/assets/services/sources.json",
+          ]
+            .map((file) => readFileSync(path.join(root, file), "utf8"))
+            .join("\n\n"),
+        );
         for (const name of ["react", "react-dom", "@cruxgarden/plasma-ui"])
           copyFileSync(
             path.join(root, "node_modules", name, "LICENSE"),

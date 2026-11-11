@@ -19,7 +19,8 @@ export function desktopClient(): MigrationClient {
     return {
       request: (command, args = {}) =>
         tauri.core.invoke("migration_request", { command, args }),
-      pick: (id, kind) => tauri.core.invoke("migration_pick", { id, kind }),
+      pick: (id, kind, context) =>
+        tauri.core.invoke("migration_pick", { id, kind, context }),
       reveal: (id) => tauri.core.invoke("migration_reveal", { id }),
     };
   throw new Error(

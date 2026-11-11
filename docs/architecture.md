@@ -14,7 +14,7 @@ The engine schedules one worker at a time. Workers stream bytes, preserve origin
 
 Use a small synthetic Dropbox folder or ZIP first, then a user-selected real export. Review is required before copying. Originals remain unchanged, output is verified, unfinished work can be paused and resumed, and job history/checklists survive restart. The HTTP integration must see the same state as the desktop UI. No personal account login or account deletion is required.
 
-31 existing guides and ZIP/TAR support are retained from the working preview. They do not expand the first acceptance target to 31 cloud integrations.
+The original 31 guides and ZIP/TAR support are retained from the working preview. They do not expand the first acceptance target to 31 cloud integrations.
 
 ## Choosing migration methods
 
@@ -46,7 +46,7 @@ The first shared-file transfer streams into partial files, persists checkpoints 
 
 ## Deliberate limits
 
-- The Dropbox shared-file connector is implemented and covered by network fixtures; one live PDF download/preservation has passed; broader Dropbox response qualification remains. No full-account OAuth, scheduling, credential storage, album/mail/message interpretation or completeness reconciliation yet.
+- The Dropbox shared-file connector is implemented and covered by network fixtures; one live PDF download/preservation has passed; broader Dropbox response qualification remains. Google Drive now has an in-memory OAuth connection, while Dropbox account OAuth remains future work. No durable credential vault, scheduling, album/mail/message interpretation or completeness reconciliation yet.
 - No public plugin loader or arbitrary execution endpoints.
 - Local HTTP token grants full migration operations for its profile; scoped per-client tokens and consent UI remain future work. Tokens are rotated on service restart, never embedded in renderer assets.
 - A process ownership file prevents two service entrypoints opening the same profile. After an unclean kill, verify that the PID in `service.lock` is gone before removing that stale lock. Automatic stale-lock recovery remains open.
@@ -61,3 +61,11 @@ Qualify more Dropbox responses and implement account authorization plus selected
 ## First direct-download connector
 
 See [Dropbox downloads](dropbox-downloads.md). Download jobs have separate records and states from preservation jobs. The provider module owns URL and network policy; the manager owns checkpoint persistence, prefix/readback hashing and exclusive file publication. Both use the same canonical SQLite owner and serialized service commands. Download I/O is asynchronous outside React; it does not require a renderer or a separate database.
+
+## Shared collection jobs and file inventory
+
+`cloud/jobs.ts` implements selection snapshots, recursive discovery, safe paths, durable per-file checkpoints, asynchronous streaming, retries through adapters, and read-back verification. `cloud/{bluesky,s3,google-drive}.ts` implement method-specific identity/listing/download rules. This increment resumes at file boundaries: interrupted files restart, completed files are rehashed. Existing Dropbox range-checkpoint behavior remains separate until a real common range/identity contract is proven.
+
+`cloud/fingerprints.ts` reads actual bytes and consults `migrate_fingerprints` through the existing API database owner. Indexes support SHA-256, MD5/size and source/version lookups. Completed cloud/Dropbox downloads and newly verified ordinary preservation outputs register locations. An explicit local-directory scan registers older files, then compares against remote source/version evidence or provider checksums. Matching names and sizes never establish a match. Missing/changed local copies fall back to download; copied local matches are rehashed again before publication. MD5 is used only where supplied by a provider; reports retain the algorithm. Local SHA-256 is always recorded. Content matches avoid repeat transfers, not independent export files on disk.
+
+No second database owner, filesystem deletions, automatic credential discovery, or arbitrary URL fetching is exposed. The native picker grants comparison-directory authority. In-memory connections require reconnect after Quit; the persisted manifest and job history contain source identities, selections and file fingerprints, never OAuth/AWS credentials. See [cloud service setup](cloud-services.md).

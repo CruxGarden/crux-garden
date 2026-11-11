@@ -160,6 +160,18 @@ if (!app.requestSingleInstanceLock()) {
     });
     ipcMain.handle("migration:request", async (event, command, args) => {
       trusted(event);
+      if (command === "cloudAuthorize") {
+        const result = await request(command, args);
+        const url = new URL(result.authorizationUrl);
+        if (
+          url.origin !== "https://accounts.google.com" ||
+          url.pathname !== "/o/oauth2/v2/auth"
+        )
+          throw new Error("Invalid authorization address.");
+        await shell.openExternal(url.href);
+        const { authorizationUrl, ...view } = result;
+        return view;
+      }
       if (command === "help")
         return shell.openExternal(await request("guideLink", args));
       if (
@@ -172,6 +184,15 @@ if (!app.requestSingleInstanceLock()) {
           "pause",
           "inspect",
           "checklist",
+          "cloudConnect",
+          "cloudStatus",
+          "cloudBrowse",
+          "cloudCreate",
+          "cloudStart",
+          "cloudPause",
+          "cloudImport",
+          "cloudJobs",
+          "cloudDisconnect",
           "downloads",
           "downloadCreate",
           "downloadStart",
@@ -183,12 +204,17 @@ if (!app.requestSingleInstanceLock()) {
         throw new Error("Operation unavailable in Migrate.");
       return request(command, args);
     });
-    ipcMain.handle("migration:pick", async (event, id, kind) => {
+    ipcMain.handle("migration:pick", async (event, id, kind, context) => {
       trusted(event);
       if (
-        !["source", "archive", "destination", "downloadDestination"].includes(
-          kind,
-        )
+        ![
+          "source",
+          "archive",
+          "destination",
+          "downloadDestination",
+          "cloudDestination",
+          "cloudScanDirectory",
+        ].includes(kind)
       )
         throw new Error("Invalid folder choice.");
       const chosen = await dialog.showOpenDialog(window, {
@@ -218,6 +244,10 @@ if (!app.requestSingleInstanceLock()) {
         await request(kind === "archive" ? "source" : kind, {
           id,
           path: chosen.filePaths[0],
+          connection:
+            typeof context?.connection === "string"
+              ? context.connection
+              : undefined,
         });
     });
     ipcMain.handle("migration:reveal", async (event, id) => {

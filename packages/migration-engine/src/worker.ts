@@ -187,6 +187,13 @@ async function run() {
       "The saved report does not match these files. Keep the report and start a new import.",
     );
   parentPort!.postMessage({
+    fingerprints: report.map((entry) => ({
+      path: join(filesRoot, entry.path),
+      bytes: entry.size,
+      sha256: entry.sha256,
+      md5: "",
+      checkedAt: receipt.verifiedAt,
+    })),
     files: report.length,
     bytes,
     state: "verified",

@@ -31,7 +31,7 @@ export interface MigrationJob {
 }
 export interface MigrationInfo {
   product: "migration";
-  capabilities?: { sharedFileDownloads: boolean };
+  capabilities?: { sharedFileDownloads: boolean; cloudCollections?: boolean };
   cruxCount: number;
   runtime: string;
   mood: Record<string, string>;
@@ -46,6 +46,16 @@ export type MigrationCommand =
   | "inspect"
   | "checklist"
   | "help"
+  | "cloudConnect"
+  | "cloudAuthorize"
+  | "cloudStatus"
+  | "cloudBrowse"
+  | "cloudCreate"
+  | "cloudStart"
+  | "cloudPause"
+  | "cloudImport"
+  | "cloudJobs"
+  | "cloudDisconnect"
   | "downloads"
   | "downloadCreate"
   | "downloadStart"
@@ -59,7 +69,14 @@ export interface MigrationClient {
   ): Promise<T>;
   pick(
     id: string,
-    kind: "source" | "archive" | "destination" | "downloadDestination",
+    kind:
+      | "source"
+      | "archive"
+      | "destination"
+      | "downloadDestination"
+      | "cloudDestination"
+      | "cloudScanDirectory",
+    context?: { connection?: string },
   ): Promise<void>;
   reveal(id: string): Promise<void>;
 }
@@ -81,3 +98,65 @@ export interface DownloadJob {
   sha256?: string;
   error?: string;
 }
+
+export type CloudProvider = "Bluesky" | "Amazon S3" | "Google Drive";
+export interface CloudEntry {
+  id: string;
+  name: string;
+  kind: "file" | "folder";
+  size?: number;
+}
+export interface CloudConnection {
+  id: string;
+  provider: CloudProvider;
+  label: string;
+  state: "connecting" | "connected" | "failed";
+  error?: string;
+}
+export interface CloudItem {
+  id: string;
+  path: string;
+  revision?: string;
+  size?: number;
+  checksum?: { algorithm: "sha256" | "md5"; hex: string };
+  metadata?: Record<string, unknown>;
+  completed?: { bytes: number; sha256: string; reused?: boolean };
+}
+export interface CloudJob {
+  id: string;
+  provider: CloudProvider;
+  identity: string;
+  label: string;
+  selection: CloudEntry[];
+  created: string;
+  state:
+    | "ready"
+    | "discovering"
+    | "scanning"
+    | "downloading"
+    | "paused"
+    | "failed"
+    | "downloaded";
+  folder?: string;
+  folderIdentity?: { device: string; inode: string };
+  planned: boolean;
+  reusedFiles?: number;
+  comparison?: {
+    folder: string;
+    scanned: number;
+    matching: number;
+    needsDownload: number;
+    uncertain: number;
+    checkedAt: string;
+  };
+  items: CloudItem[];
+  files: number;
+  bytes: number;
+  current?: string;
+  error?: string;
+  notes: string[];
+}
+export type CloudJobSummary = Omit<CloudJob, "items" | "folderIdentity"> & {
+  totalFiles: number;
+  knownBytes: number;
+};

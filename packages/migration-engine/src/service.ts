@@ -1,3 +1,6 @@
+import type { Fingerprint } from "./cloud/fingerprints";
+import { createCloudJobs, type CloudOptions } from "./cloud/jobs";
+import { message as cloudMessage } from "./cloud/common";
 import * as fs from "node:fs/promises";
 import { join } from "node:path";
 import { randomUUID } from "node:crypto";
@@ -10,15 +13,40 @@ import { openMigrationStore, type MigrationStore } from "./store";
 
 export async function createMigrationRuntime(
   profile: string,
-  options: { store?: MigrationStore; downloadOpen?: DownloadOpen } = {},
+  options: {
+    store?: MigrationStore;
+    downloadOpen?: DownloadOpen;
+    cloud?: CloudOptions;
+  } = {},
 ) {
   const store = options.store ?? (await openMigrationStore(profile));
+  const cloud =
+    store.loadCloudJobs && store.saveCloudJob
+      ? await createCloudJobs(
+          {
+            loadCloudJobs: () => store.loadCloudJobs!(),
+            saveCloudJob: (job) => store.saveCloudJob!(job),
+            fingerprints:
+              store.putFingerprint && store.findFingerprints
+                ? {
+                    putFingerprint: (f) => store.putFingerprint!(f),
+                    findFingerprints: (...args) =>
+                      store.findFingerprints!(...args),
+                  }
+                : undefined,
+          },
+          options.cloud,
+        )
+      : undefined;
   const downloads =
     store.loadDownloads && store.saveDownload
       ? await createDownloads(
           {
             loadDownloads: () => store.loadDownloads!(),
             saveDownload: (job) => store.saveDownload!(job),
+            putFingerprint: store.putFingerprint
+              ? (file) => store.putFingerprint!(file)
+              : undefined,
           },
           options.downloadOpen,
         )
@@ -49,6 +77,50 @@ export async function createMigrationRuntime(
       throw new Error("Pause this import before changing it.");
   };
   async function request(command: string, args: Record<string, unknown> = {}) {
+    if (command.startsWith("cloud")) {
+      await writes;
+      if (!cloud)
+        throw new Error("This host does not provide cloud job storage.");
+      try {
+        if (command === "cloudJobs") return cloud.list();
+        if (command === "cloudStatus") return cloud.status();
+        if (command === "cloudConnect" || command === "cloudAuthorize")
+          return await cloud.connect(args, command === "cloudAuthorize");
+        if (command === "cloudBrowse")
+          return await cloud.browse(args.connection, args.parent, args.cursor);
+        if (command === "cloudCreate")
+          return await cloud.create(args.connection, args.selected);
+        if (command === "cloudDestination")
+          return await cloud.destination(args.id, args.path);
+        if (command === "cloudScanDirectory") {
+          if (typeof args.path !== "string")
+            throw new Error("Choose a local folder.");
+          return await cloud.start(
+            args.id,
+            args.connection,
+            await fs.realpath(args.path),
+          );
+        }
+        if (command === "cloudStart")
+          return await cloud.start(args.id, args.connection);
+        if (command === "cloudPause") return await cloud.pause(args.id);
+        if (command === "cloudDisconnect")
+          return await cloud.disconnect(args.connection);
+        if (command === "cloudImport") {
+          const exported = cloud.get(args.id);
+          if (exported.state !== "downloaded" || !exported.folder)
+            throw new Error("Finish this download first.");
+          const job = (await request("create", {
+            provider: exported.provider,
+          })) as MigrationJob;
+          await request("source", { id: job.id, path: exported.folder });
+          return job;
+        }
+        throw new Error("Unknown cloud operation.");
+      } catch (e) {
+        throw new Error(cloudMessage(e));
+      }
+    }
     if (command.startsWith("download")) {
       if (!downloads)
         throw new Error("This host does not provide download storage.");
@@ -92,7 +164,10 @@ export async function createMigrationRuntime(
         runtime: process.version,
         cruxCount: await store.cruxCount(),
         mood: await store.getMood(),
-        capabilities: { sharedFileDownloads: !!downloads },
+        capabilities: {
+          sharedFileDownloads: !!downloads,
+          cloudCollections: !!cloud,
+        },
       };
     if (command === "mood") {
       if (
@@ -243,16 +318,26 @@ export async function createMigrationRuntime(
         workerData: { ...job, mode: inspecting ? "inspect" : "preserve" },
       });
       let terminalUpdate: Partial<MigrationJob> | undefined;
-      worker.on("message", (update: Partial<MigrationJob>) => {
-        // A terminal result is actionable only after the worker releases ownership.
-        if (
-          update.state &&
-          update.state !== "running" &&
-          update.state !== "inspecting"
-        ) {
-          terminalUpdate = update;
-        } else Object.assign(job, update);
-      });
+      worker.on(
+        "message",
+        (payload: Partial<MigrationJob> & { fingerprints?: Fingerprint[] }) => {
+          const { fingerprints, ...update } = payload;
+          if (fingerprints && store.putFingerprint) {
+            const batch = structuredClone(fingerprints);
+            writes = writes.then(async () => {
+              for (const file of batch) await store.putFingerprint!(file);
+            });
+          }
+          // A terminal result is actionable only after the worker releases ownership.
+          if (
+            update.state &&
+            update.state !== "running" &&
+            update.state !== "inspecting"
+          ) {
+            terminalUpdate = update;
+          } else Object.assign(job, update);
+        },
+      );
       worker.on("error", (error) => {
         terminalUpdate = {
           state: "failed",
@@ -274,6 +359,7 @@ export async function createMigrationRuntime(
     throw new Error("This operation is not available in Migration.");
   }
   async function close() {
+    await cloud?.close();
     await downloads?.close();
     if (worker) {
       const w = worker;

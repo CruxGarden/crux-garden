@@ -288,3 +288,39 @@ test("A non-resumable response can be explicitly restarted without appending old
     f.body,
   );
 });
+
+test("reopening a completed download without its removed temporary file keeps the service available", async (t) => {
+  const { spawnSync } = require("node:child_process");
+  const dir = await fs.realpath(
+    await fs.mkdtemp(path.join(os.tmpdir(), "migrate-completed-reopen-")),
+  );
+  t.after(() => fs.rm(dir, { recursive: true, force: true }));
+  const filename =
+    Array.from({ length: 12 }, (_, i) => `folder${i}`).join("/") + "/done.bin";
+  await fs.mkdir(path.dirname(path.join(dir, filename)), { recursive: true });
+  await fs.writeFile(path.join(dir, filename), "Already downloaded.");
+  // A completed job has no download.partial. Nested paths make filesystem
+  // validation asynchronous; no rejected probe may escape startup's handling.
+  const script = `
+    const { createMigrationRuntime } = require(${JSON.stringify(path.resolve(__dirname, "../dist/backend.cjs"))});
+    (async () => {
+      const runtime = await createMigrationRuntime(${JSON.stringify(dir)}, {store: {
+        async loadDownloads() { return [{ id:'complete', state:'downloaded', folder:${JSON.stringify(dir)}, filename:${JSON.stringify(filename)} }]; },
+        async saveDownload() {}, async loadJobs() {return [];}, async saveJob() {},
+        async getMood() {return {};}, async setMood() {}, async cruxCount() {return 0;}, async close() {}
+      }});
+      const jobs = await runtime.request('downloads');
+      if(jobs[0].state !== 'downloaded') throw new Error('Completed job was lost');
+      await runtime.close();
+    })().catch(error => { console.error(error); process.exitCode=1; });`;
+  const child = spawnSync(
+    process.execPath,
+    ["--unhandled-rejections=strict", "-e", script],
+    { encoding: "utf8", timeout: 10000 },
+  );
+  assert.equal(child.status, 0, child.stderr);
+  assert.equal(
+    await fs.readFile(path.join(dir, filename), "utf8"),
+    "Already downloaded.",
+  );
+});

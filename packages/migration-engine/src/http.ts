@@ -68,7 +68,23 @@ export async function startLocalApi(service: MigrationService) {
         result = await service.request("list");
       else if (request.method === "POST" && url.pathname === "/v1/jobs")
         result = await service.request("create", await body(request));
-      else if (url.pathname === "/v1/downloads" && request.method === "GET")
+      else if (url.pathname === "/v1/cloud/jobs" && request.method === "GET")
+        result = await service.request("cloudJobs");
+      else if (
+        url.pathname === "/v1/cloud/connections" &&
+        request.method === "GET"
+      )
+        result = await service.request("cloudStatus");
+      else if (
+        /^\/v1\/cloud\/(connect|authorize|browse|create|destination|scanDirectory|start|pause|import|disconnect)$/.test(
+          url.pathname,
+        ) &&
+        request.method === "POST"
+      ) {
+        const action = url.pathname.split("/").at(-1)!;
+        const command = "cloud" + action[0]!.toUpperCase() + action.slice(1);
+        result = await service.request(command, await body(request));
+      } else if (url.pathname === "/v1/downloads" && request.method === "GET")
         result = await service.request("downloads");
       else if (url.pathname === "/v1/downloads" && request.method === "POST")
         result = await service.request("downloadCreate", await body(request));

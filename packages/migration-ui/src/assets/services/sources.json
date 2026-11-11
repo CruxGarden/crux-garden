@@ -1,0 +1,226 @@
+{
+  "dashboardIconsCommit": "d767d7327db7f8ebd3715b552523f61889eea41c",
+  "services": {
+    "Dropbox": "dropbox",
+    "Google Drive": "google-drive",
+    "Google Photos": "google-photos",
+    "iCloud Photos": "icloud",
+    "Gmail": "gmail",
+    "Amazon S3": "s3",
+    "iCloud Drive": "icloud",
+    "OneDrive": "microsoft-onedrive",
+    "Facebook": "facebook",
+    "Instagram": "instagram",
+    "WhatsApp": "whatsapp",
+    "Notion": "notion",
+    "Evernote": "evernote",
+    "OneNote": "microsoft-onenote",
+    "Google Keep": "google-keep",
+    "Google Calendar": "google-calendar",
+    "Google Contacts": "google-contacts",
+    "Trello": "atlassian-trello",
+    "Asana": "asana",
+    "Todoist": "todoist",
+    "Airtable": "airtable",
+    "Slack": "slack",
+    "Discord": "discord",
+    "Telegram": "telegram",
+    "X": "x",
+    "Reddit": "reddit",
+    "YouTube": "youtube",
+    "WordPress": "wordpress",
+    "Medium": "medium",
+    "Bluesky": "bluesky",
+    "Apple Notes": "apple-notes",
+    "Flickr": "flickr"
+  },
+  "assets": [
+    {
+      "file": "airtable.svg",
+      "source": "https://raw.githubusercontent.com/homarr-labs/dashboard-icons/d767d7327db7f8ebd3715b552523f61889eea41c/svg/airtable.svg",
+      "sha256": "6f4737902d988649cd49ac2402823a43e51dcbdc3d0fe332684cd587a9e74276",
+      "bytes": 847
+    },
+    {
+      "file": "apple-notes.svg",
+      "source": "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_Notes_icon.svg",
+      "sha256": "8acc0fe24b5d15f11f2607634bc0e5db8e865db0b73cdcc1ab8a421774562639",
+      "bytes": 2273
+    },
+    {
+      "file": "asana.svg",
+      "source": "https://raw.githubusercontent.com/homarr-labs/dashboard-icons/d767d7327db7f8ebd3715b552523f61889eea41c/svg/asana.svg",
+      "sha256": "b01ccc9a6ec2b8c49c233fb8d57c90ee3a9d5440bc19977df5332b626ff23bb9",
+      "bytes": 920
+    },
+    {
+      "file": "atlassian-trello.svg",
+      "source": "https://raw.githubusercontent.com/homarr-labs/dashboard-icons/d767d7327db7f8ebd3715b552523f61889eea41c/svg/atlassian-trello.svg",
+      "sha256": "0dd554918f80082ec8b611c8e43aa2fe293d089f4b1029e39389b417f85acd00",
+      "bytes": 786
+    },
+    {
+      "file": "bluesky.svg",
+      "source": "https://raw.githubusercontent.com/homarr-labs/dashboard-icons/d767d7327db7f8ebd3715b552523f61889eea41c/svg/bluesky.svg",
+      "sha256": "0cfadae29283a01d2023f1a13fd9da77935921c6185d4eef0f52aa2d0147a14d",
+      "bytes": 525
+    },
+    {
+      "file": "discord.svg",
+      "source": "https://raw.githubusercontent.com/homarr-labs/dashboard-icons/d767d7327db7f8ebd3715b552523f61889eea41c/svg/discord.svg",
+      "sha256": "c04059c1d13d99239ebd0b7df807e8c3d2f46439bd18a70c5fd3a0631bd7b310",
+      "bytes": 779
+    },
+    {
+      "file": "dropbox.svg",
+      "source": "https://raw.githubusercontent.com/homarr-labs/dashboard-icons/d767d7327db7f8ebd3715b552523f61889eea41c/svg/dropbox.svg",
+      "sha256": "16fd819b4f0deac21770d225828f8e0789492f9209a0984a850169776778a43f",
+      "bytes": 417
+    },
+    {
+      "file": "evernote.svg",
+      "source": "https://raw.githubusercontent.com/homarr-labs/dashboard-icons/d767d7327db7f8ebd3715b552523f61889eea41c/svg/evernote.svg",
+      "sha256": "a16f8c37251811907647ef8b96071415ca585d4e71405f43715b293fc3e5cd43",
+      "bytes": 1600
+    },
+    {
+      "file": "facebook.svg",
+      "source": "https://raw.githubusercontent.com/homarr-labs/dashboard-icons/d767d7327db7f8ebd3715b552523f61889eea41c/svg/facebook.svg",
+      "sha256": "d2963ecd06de4e61d9cdae95b464d5055a289122c9726793f5a7485386f7fe66",
+      "bytes": 758
+    },
+    {
+      "file": "flickr.svg",
+      "source": "https://raw.githubusercontent.com/simple-icons/simple-icons/1bb2f6e6ea50f920de8d2f3d273ae48564a5eaee/icons/flickr.svg",
+      "sha256": "0bcea69f116f7eb2d0f8aa02b201ff07faec3088df0f8e67c69c0d66132ee312",
+      "bytes": 408,
+      "modification": "Split original subpaths to apply Flickr blue/pink brand colors; geometry retained."
+    },
+    {
+      "file": "gmail.svg",
+      "source": "https://raw.githubusercontent.com/homarr-labs/dashboard-icons/d767d7327db7f8ebd3715b552523f61889eea41c/svg/gmail.svg",
+      "sha256": "deb93af828d913122be262cdc07c5cab6b5609a8e82c885b7d841b735fae167e",
+      "bytes": 535
+    },
+    {
+      "file": "google-calendar.svg",
+      "source": "https://raw.githubusercontent.com/homarr-labs/dashboard-icons/d767d7327db7f8ebd3715b552523f61889eea41c/svg/google-calendar.svg",
+      "sha256": "57e5966e994167f18c72994af78693c1c9b7a3d332d73ccb7840593951a3949a",
+      "bytes": 1686
+    },
+    {
+      "file": "google-contacts.svg",
+      "source": "https://raw.githubusercontent.com/homarr-labs/dashboard-icons/d767d7327db7f8ebd3715b552523f61889eea41c/svg/google-contacts.svg",
+      "sha256": "3bac4e978450be6eb149fb106998144e4f1ff3a38466a8ee380bd50af130ffbb",
+      "bytes": 892
+    },
+    {
+      "file": "google-drive.svg",
+      "source": "https://raw.githubusercontent.com/homarr-labs/dashboard-icons/d767d7327db7f8ebd3715b552523f61889eea41c/svg/google-drive.svg",
+      "sha256": "963477d7e4a0b0d8865dd7aec8e27d8fd9c3a4b4f2e5b81f9df8581f9f2eca11",
+      "bytes": 800
+    },
+    {
+      "file": "google-keep.svg",
+      "source": "https://raw.githubusercontent.com/homarr-labs/dashboard-icons/d767d7327db7f8ebd3715b552523f61889eea41c/svg/google-keep.svg",
+      "sha256": "d33fa664096dda5c1095ad7b7e74b534c3269cab460c5474b73c5ec485bdae17",
+      "bytes": 499
+    },
+    {
+      "file": "google-photos.svg",
+      "source": "https://raw.githubusercontent.com/homarr-labs/dashboard-icons/d767d7327db7f8ebd3715b552523f61889eea41c/svg/google-photos.svg",
+      "sha256": "7ea54b41eab32c0b7c8ed613ae65341e5e9583962cecf190000c8656deff1a64",
+      "bytes": 633
+    },
+    {
+      "file": "icloud.svg",
+      "source": "https://raw.githubusercontent.com/homarr-labs/dashboard-icons/d767d7327db7f8ebd3715b552523f61889eea41c/svg/icloud.svg",
+      "sha256": "6a2b940eb85b4304bae3062a623ad074b3681f4e844fd883c678b27feebaae82",
+      "bytes": 991
+    },
+    {
+      "file": "instagram.svg",
+      "source": "https://raw.githubusercontent.com/homarr-labs/dashboard-icons/d767d7327db7f8ebd3715b552523f61889eea41c/svg/instagram.svg",
+      "sha256": "2c1ad008f5d7f2abd8f7aa1b7f1c7c87859efb0204aee8f5bc88d12567179550",
+      "bytes": 3285
+    },
+    {
+      "file": "medium.svg",
+      "source": "https://raw.githubusercontent.com/homarr-labs/dashboard-icons/d767d7327db7f8ebd3715b552523f61889eea41c/svg/medium.svg",
+      "sha256": "f2e6067f538486579dbcad376132766135d468dd40628046dfa107feb46e59da",
+      "bytes": 546
+    },
+    {
+      "file": "microsoft-onedrive.svg",
+      "source": "https://raw.githubusercontent.com/homarr-labs/dashboard-icons/d767d7327db7f8ebd3715b552523f61889eea41c/svg/microsoft-onedrive.svg",
+      "sha256": "197fb9f9c83c1e75c4887f6a243521a7703095623614f250b040484d481cbcb8",
+      "bytes": 8207
+    },
+    {
+      "file": "microsoft-onenote.svg",
+      "source": "https://raw.githubusercontent.com/homarr-labs/dashboard-icons/d767d7327db7f8ebd3715b552523f61889eea41c/svg/microsoft-onenote.svg",
+      "sha256": "d25453ced28601c3bbf87d4515a8d1c047bf8fb2b23efaa1bd57198406e181a1",
+      "bytes": 1663
+    },
+    {
+      "file": "notion.svg",
+      "source": "https://raw.githubusercontent.com/homarr-labs/dashboard-icons/d767d7327db7f8ebd3715b552523f61889eea41c/svg/notion.svg",
+      "sha256": "b98fea4bc3f3259c6907a40dae994c959c3240d7ee4b4afea144a555c638f6c2",
+      "bytes": 1141
+    },
+    {
+      "file": "reddit.svg",
+      "source": "https://raw.githubusercontent.com/homarr-labs/dashboard-icons/d767d7327db7f8ebd3715b552523f61889eea41c/svg/reddit.svg",
+      "sha256": "6af5a5941885fbe62ea15eca389b608ce06ea89d42ec43d1de827cfe82ef6880",
+      "bytes": 973
+    },
+    {
+      "file": "s3.svg",
+      "source": "https://raw.githubusercontent.com/homarr-labs/dashboard-icons/d767d7327db7f8ebd3715b552523f61889eea41c/svg/s3.svg",
+      "sha256": "668eea14118cab7d515858778068944950fa2ae018dd39ddf8e7310d139228b4",
+      "bytes": 3629
+    },
+    {
+      "file": "slack.svg",
+      "source": "https://raw.githubusercontent.com/homarr-labs/dashboard-icons/d767d7327db7f8ebd3715b552523f61889eea41c/svg/slack.svg",
+      "sha256": "62e556a75b94516fd8dcfa9c8ee4eae76268b4087ee927d91a5f2d3115d54118",
+      "bytes": 968
+    },
+    {
+      "file": "telegram.svg",
+      "source": "https://raw.githubusercontent.com/homarr-labs/dashboard-icons/d767d7327db7f8ebd3715b552523f61889eea41c/svg/telegram.svg",
+      "sha256": "29edf9cfe2d4c80eb0acd087312eaabba8f7b4c14a4651ccaab51c35b3bb608c",
+      "bytes": 1007
+    },
+    {
+      "file": "todoist.svg",
+      "source": "https://raw.githubusercontent.com/homarr-labs/dashboard-icons/d767d7327db7f8ebd3715b552523f61889eea41c/svg/todoist.svg",
+      "sha256": "973f89993d8c5c154edb79410f4953077c22f1e94f5507f4ac1ea6c83380e543",
+      "bytes": 1296
+    },
+    {
+      "file": "whatsapp.svg",
+      "source": "https://raw.githubusercontent.com/homarr-labs/dashboard-icons/d767d7327db7f8ebd3715b552523f61889eea41c/svg/whatsapp.svg",
+      "sha256": "629ff81469c1200a00c3ce70d829ae8faa4872fa4f786dad890d64966695fd42",
+      "bytes": 2061
+    },
+    {
+      "file": "wordpress.svg",
+      "source": "https://raw.githubusercontent.com/homarr-labs/dashboard-icons/d767d7327db7f8ebd3715b552523f61889eea41c/svg/wordpress.svg",
+      "sha256": "49dae7eb6d790fff860990cf5be51bd53c21d1e33e22c7a99f29583ab073b34a",
+      "bytes": 1120
+    },
+    {
+      "file": "x.svg",
+      "source": "https://raw.githubusercontent.com/homarr-labs/dashboard-icons/d767d7327db7f8ebd3715b552523f61889eea41c/svg/x.svg",
+      "sha256": "eef86bcbbd5cf2b889be343261c64561c7514e19b7c0dc32c937f0c43d477998",
+      "bytes": 231
+    },
+    {
+      "file": "youtube.svg",
+      "source": "https://raw.githubusercontent.com/homarr-labs/dashboard-icons/d767d7327db7f8ebd3715b552523f61889eea41c/svg/youtube.svg",
+      "sha256": "320ae220c53a6126da81aaf6803d8c813837bcaa95f39dcf5f75932335746673",
+      "bytes": 479
+    }
+  ]
+}

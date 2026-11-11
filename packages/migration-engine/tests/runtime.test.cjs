@@ -219,8 +219,8 @@ test("insufficient free space stops preservation before copying any bytes", asyn
 test("catalog limits provider creation, checklist fields and external references", async (t) => {
   const f = await fixture(t);
   const guides = require("../../migration-providers/src/guides.json");
-  assert.equal(guides.length, 31);
-  assert.equal(new Set(guides.map((g) => g.name)).size, 31);
+  assert.equal(guides.length, 32);
+  assert.equal(new Set(guides.map((g) => g.name)).size, 32);
   for (const guide of guides) {
     assert.ok(guide.steps.length >= 3, guide.name);
     assert.ok(guide.sources.length, guide.name);

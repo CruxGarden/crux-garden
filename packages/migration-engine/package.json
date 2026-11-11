@@ -5,8 +5,11 @@
   "description": "Headless migration jobs, preservation and verification",
   "license": "MIT",
   "dependencies": {
+    "@aws-sdk/client-s3": "3.1166.0",
     "@cruxgarden/local-api": "file:vendor/cruxgarden-local-api-0.0.0-unification.ra1435e5dc008.h2d03f470.tgz",
+    "@smithy/node-http-handler": "4.14.2",
     "better-sqlite3": "13.0.3",
+    "multiformats": "14.0.5",
     "tar-stream": "3.2.2",
     "yauzl": "3.4.0"
   },

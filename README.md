@@ -2,7 +2,7 @@
 
 Migrate is the first application here: a standalone desktop tool for bringing personal cloud exports onto storage you control. Its React interface and headless engine can later be hosted in Home, Lab, or Builder.
 
-The first vertical slice is a small Dropbox export: guide → select an existing folder or ZIP → choose destination → review → preserve and verify → reopen and inspect the saved result. The inherited preview also supports TAR/TAR.GZ and includes 31 offline provider guides; these are guidance, not automated cloud connectors.
+The first vertical slice is a small Dropbox export: guide → select an existing folder or ZIP → choose destination → review → preserve and verify → reopen and inspect the saved result. The inherited preview also supports TAR/TAR.GZ and includes 32 offline provider guides; these are guidance, not automated cloud connectors.
 
 ## Run
 
@@ -29,7 +29,15 @@ npm start
 
 ## Direct downloads
 
-The first connector accepts an existing Dropbox shared-file link. Downloads have saved checkpoints and pause/resume, then feed the usual review-and-preserve flow. Link contents stay in memory; after restarting, paste the same link to resume. Full-account sign-in and folder downloading are future work. See [Dropbox downloads](docs/dropbox-downloads.md) for supported links, integrity boundaries and validation limits.
+The first connector accepts an existing Dropbox shared-file link. Downloads have saved checkpoints and pause/resume, then feed the usual review-and-preserve flow. Link contents stay in memory; after restarting, paste the same link to resume. Dropbox account sign-in and folder downloading remain future work. See [Dropbox downloads](docs/dropbox-downloads.md) for supported links, integrity boundaries and validation limits.
+
+## Selected cloud migrations and local comparison
+
+**Cloud services** adds Bluesky public records/media, Amazon S3 bucket objects, and Google Drive files/folders. Browse and select the desired scope; nothing is selected by default. Google uses a user-configured Desktop OAuth client and read-only browser authorization. S3 accepts explicit read credentials, including temporary credentials. Connections stay in memory; jobs survive restart.
+
+Choose **Compare with local folder** before starting to fingerprint a local directory against the selected remote inventory. An indexed fingerprint catalog lives in the existing API-owned SQLite database. Verified local matches avoid repeat network transfers, including identical content under different names. Export copies are independent; this does not delete existing duplicates or deduplicate disk storage. Unsupported remote checksum evidence is reported as uncertain, not inferred from names/sizes.
+
+See [cloud methods, setup and limits](docs/cloud-services.md). Current account evidence: one live Bluesky public-record download; S3 and Google Drive are fixture-qualified pending user account setup.
 
 ## Background operation
 
@@ -42,3 +50,5 @@ Personal account inventories and real exports do not belong in this source repos
 ## Naming and saved state
 
 The standalone product is **Crux Garden Migrate**. The repository remains **CruxGarden/crux-garden** for the wider product family. Internal `migration-*` packages, transport names and application identifiers remain stable; they describe the migration domain. In particular, renaming the display name does not move the profile, reset history, change the local API contract, or rename already preserved output folders.
+
+Service choices use bundled SVG brand artwork for all 32 catalog services. See [icon sources and licenses](docs/service-icons.md).

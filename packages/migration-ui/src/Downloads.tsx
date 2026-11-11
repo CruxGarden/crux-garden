@@ -1,3 +1,4 @@
+import { ServiceIcon } from "./ServiceIcon";
 import { useEffect, useState } from "react";
 import type {
   DownloadJob,
@@ -56,7 +57,10 @@ export default function Downloads({
   return (
     <section aria-label="Dropbox downloads">
       <Panel padding="lg">
-        <h2>Download from Dropbox</h2>
+        <h2 className="service-title">
+          <ServiceIcon service="Dropbox" />
+          Download from Dropbox
+        </h2>
         <p>
           Use an existing shared link to one file that can be downloaded without
           signing in. Folder links and account browsing are not supported yet.
@@ -95,7 +99,10 @@ export default function Downloads({
       {jobs.length === 0 && <p>No downloads yet.</p>}
       {jobs.map((job) => (
         <Panel key={job.id} padding="lg" className="mt-6">
-          <h3>{job.filename}</h3>
+          <h3 className="service-title">
+            <ServiceIcon service="Dropbox" />
+            {job.filename}
+          </h3>
           <p>
             {job.state === "downloaded"
               ? "Downloaded — ready to review"

@@ -1,3 +1,4 @@
+import { fingerprint, type Fingerprint } from "./cloud/fingerprints";
 import * as fs from "node:fs/promises";
 import { constants } from "node:fs";
 import { join } from "node:path";
@@ -17,6 +18,7 @@ const emptyHash = createHash("sha256").digest("hex");
 export interface DownloadStore {
   loadDownloads(): Promise<DownloadJob[]>;
   saveDownload(job: DownloadJob): Promise<void>;
+  putFingerprint?(file: Fingerprint): Promise<void>;
 }
 export async function createDownloads(
   store: DownloadStore,
@@ -29,10 +31,11 @@ export async function createDownloads(
       // Recover a crash after recording completion but before removing the temp link.
       try {
         const partial = await checkedPath(j.folder, "download.partial");
-        const [a, b] = await Promise.all([
-          fs.lstat(partial),
-          fs.lstat(await checkedPath(j.folder, j.filename)),
-        ]);
+        // A completed transfer normally has no temporary file. Handle that
+        // probe before awaiting other path checks, avoiding an unhandled
+        // rejection while Promise.all's argument array is still being built.
+        const a = await fs.lstat(partial);
+        const b = await fs.lstat(await checkedPath(j.folder, j.filename));
         if (
           a.isFile() &&
           !a.isSymbolicLink() &&
@@ -244,6 +247,8 @@ export async function createDownloads(
         )
           throw new Error("A file already exists at the download destination.");
       }
+      if (store.putFingerprint)
+        await store.putFingerprint(await fingerprint(target, signal));
       job.state = "downloaded";
       job.sha256 = job.partialHash;
       job.error = undefined;

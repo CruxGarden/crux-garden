@@ -25,6 +25,8 @@ export const GARDEN_DARK = {
   border: "rgba(94, 112, 100, 0.28)",
   panel: "#141816",
   surface: "#121513",
+  // Neutral backing keeps original third-party brand artwork readable.
+  logoSurface: "#ffffff",
   error: "#e63946",
   warning: "#e6a030",
   success: "#4caf50",

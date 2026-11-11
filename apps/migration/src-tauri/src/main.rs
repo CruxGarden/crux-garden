@@ -100,6 +100,23 @@ async fn migration_request(
     command: String,
     args: Value,
 ) -> Result<Value, String> {
+    if command == "cloudAuthorize" {
+        let mut result = call(service.inner().clone(), command, args).await?;
+        let url = result
+            .get("authorizationUrl")
+            .and_then(Value::as_str)
+            .ok_or("Missing authorization address")?;
+        if !url.starts_with("https://accounts.google.com/o/oauth2/v2/auth?") {
+            return Err("Invalid authorization address".into());
+        }
+        app.opener()
+            .open_url(url, None::<&str>)
+            .map_err(|_| "Could not open authorization browser")?;
+        if let Some(object) = result.as_object_mut() {
+            object.remove("authorizationUrl");
+        }
+        return Ok(result);
+    }
     if command == "help" {
         let link = call(service.inner().clone(), "guideLink".into(), args).await?;
         let url = link.as_str().ok_or("Invalid guide reference")?;
@@ -117,6 +134,15 @@ async fn migration_request(
         "pause",
         "inspect",
         "checklist",
+        "cloudConnect",
+        "cloudStatus",
+        "cloudBrowse",
+        "cloudCreate",
+        "cloudStart",
+        "cloudPause",
+        "cloudImport",
+        "cloudJobs",
+        "cloudDisconnect",
         "downloads",
         "downloadCreate",
         "downloadStart",
@@ -136,11 +162,14 @@ async fn migration_pick(
     service: tauri::State<'_, Shared>,
     id: String,
     kind: String,
+    context: Option<Value>,
 ) -> Result<(), String> {
     if kind != "source"
         && kind != "destination"
         && kind != "archive"
         && kind != "downloadDestination"
+        && kind != "cloudDestination"
+        && kind != "cloudScanDirectory"
     {
         return Err("Invalid folder choice".into());
     }
@@ -166,7 +195,7 @@ async fn migration_pick(
             } else {
                 kind
             },
-            json!({ "id": id, "path": path }),
+            json!({ "id": id, "path": path, "connection": context.as_ref().and_then(|v| v.get("connection")).and_then(Value::as_str) }),
         )
         .await?;
     }

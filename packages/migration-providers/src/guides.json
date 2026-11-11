@@ -244,7 +244,7 @@
       {
         "id": "prepare",
         "label": "Choose a bucket and prefix",
-        "text": "Use an AWS account authorized to read the intended objects. Create an empty local folder for this snapshot. Migrate does not sign in to AWS or hold AWS credentials."
+        "text": "Use an AWS identity authorized to read the intended bucket and prefix. In Cloud services, connect with the bucket region and read-only credentials (temporary credentials are supported), browse and select only the objects or prefixes you want. Credentials remain in memory; reconnect after quitting. Local AWS CLI exports remain an alternative."
       },
       {
         "id": "download",
@@ -1068,6 +1068,37 @@
       {
         "title": "Medium export instructions",
         "url": "https://help.medium.com/hc/en-us/articles/115004745787-Export-your-account-data"
+      }
+    ]
+  },
+  {
+    "id": "bluesky",
+    "name": "Bluesky",
+    "category": "Social",
+    "reviewed": "2026-11-10",
+    "provisional": false,
+    "steps": [
+      {
+        "id": "public-export",
+        "label": "Choose public records and media",
+        "text": "Use Migrate’s Cloud services screen, connect with your handle, and select public records, media, or both. No password is needed. Private messages and preferences are not included."
+      },
+      {
+        "id": "verify-download",
+        "label": "Check the downloaded export",
+        "text": "Wait for Downloaded and checked. Keep migration-manifest.json with repository.car and the blobs directory. Review any failures; media CIDs must match before a file is accepted. An export captured over time may need another run if you post while it is downloading."
+      },
+      {
+        "id": "review-export",
+        "label": "Review and preserve",
+        "text": "Keep the CAR repository, media blobs and manifest together. Review the export and make a separately verified copy. This does not transfer your identity to another server."
+      }
+    ],
+    "checks": "Public records and blobs are captured over time, not as an atomic snapshot. Blob CIDs are verified. Keep the source account until you have reviewed the export.",
+    "sources": [
+      {
+        "title": "AT Protocol account migration",
+        "url": "https://atproto.com/guides/account-migration"
       }
     ]
   }

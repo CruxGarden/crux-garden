@@ -20,6 +20,23 @@ test("Migration embeds with an injected host client and preserves host appearanc
     surface: "solid",
   });
   await page.getByRole("button", { name: "Bring files home" }).click();
+  const icons = page.locator(".migration-provider-list .service-icon img");
+  await expect(icons).toHaveCount(32);
+  await expect
+    .poll(() =>
+      icons.evaluateAll((images) =>
+        images.every((image) => image.complete && image.naturalWidth > 0),
+      ),
+    )
+    .toBe(true);
+  await page.screenshot({
+    path: require("node:path").resolve(
+      __dirname,
+      "../../test-results/migrate-service-icons.png",
+    ),
+    fullPage: true,
+  });
+
   await page
     .getByRole("button", { name: "Start Dropbox import", exact: true })
     .click();

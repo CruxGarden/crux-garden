@@ -25,6 +25,7 @@
 }
 .migration-header nav {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.5rem;
 }
 .migration-area h1 {
@@ -41,6 +42,7 @@
   margin-bottom: 1rem;
 }
 .migration-area p {
+  overflow-wrap: anywhere;
   margin-bottom: 1.25rem;
   line-height: 1.6;
 }
@@ -143,6 +145,8 @@
 }
 .migration-area input,
 .migration-area select {
+  min-width: 0;
+  max-width: 100%;
   background: var(--input);
   color: var(--input-text);
   border: 1px solid var(--input-border);
@@ -188,6 +192,13 @@
   margin: 1.25rem 0 2rem;
   padding: 0.3rem;
 }
+/* Fixed icon slots and a shared leading inset keep each grid column aligned. */
+.migration-provider-list > button {
+  justify-content: flex-start;
+  text-align: left;
+  padding-inline: 0.75rem;
+  gap: 0.65rem;
+}
 .migration-area .migration-checklist-label {
   flex-direction: row;
   align-items: center;
@@ -232,4 +243,56 @@
 }
 .migration-area progress::-moz-progress-bar {
   background: var(--accent);
+}
+
+.cloud-entries {
+  list-style: none;
+  padding: 0;
+}
+.cloud-entries li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-block: 0.75rem;
+  flex-wrap: wrap;
+}
+.migration-area .cloud-choice {
+  flex-direction: row;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-block: 0.75rem;
+  overflow-wrap: anywhere;
+}
+.cloud-choice input {
+  flex: none;
+  width: auto;
+}
+
+.service-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 2rem;
+  width: 2rem;
+  height: 2rem;
+  padding: 0.25rem;
+  background: var(--logo-surface);
+  border-radius: var(--radius-sm);
+}
+.service-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.service-title,
+.service-picker {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+.service-picker select {
+  flex: 1;
 }
