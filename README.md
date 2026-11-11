@@ -64,6 +64,6 @@ The optional Photos host action and resource-selection UI are fixture-tested but
 
 Gmail exports now support a bounded background MBOX inventory after preservation: raw label/header previews, provisional counts, fingerprint validation and separate reports. [Method choice, setup and limitations](docs/gmail-methods.md). Takeout requests/downloads remain manual. A selected Gmail account connector now uses read-only Google authorization, paginated messages/labels and shared verified downloads; real-account registration/acceptance remains pending.
 
-Instagram and observed older Facebook numbered-post media reference review share the preserved-export worker; see [Meta export methods](docs/meta-export-methods.md) for scope and manual download limits.
+Instagram numbered-post and posts.json Media-label references plus observed older Facebook numbered-post media reference review share the preserved-export worker; see [Meta export methods](docs/meta-export-methods.md) for scope and manual download limits.
 
 X archive photo/MP4-reference review streams supported archive wrappers as inert JSON; see [X methods and limits](docs/x-archive-methods.md).

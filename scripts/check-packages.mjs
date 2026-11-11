@@ -312,8 +312,10 @@ for (const app of [
     );
     const socialSource = path.join(fixture, "social-source");
     const {
-      entries,
+      entries: numberedEntries,
+      labeledEntries,
     } = require("../packages/migration-engine/tests/instagram-fixture.cjs");
+    const entries = { ...numberedEntries, ...labeledEntries };
     for (const [name, bytes] of Object.entries(entries)) {
       await mkdir(path.dirname(path.join(socialSource, name)), {
         recursive: true,
@@ -339,7 +341,7 @@ for (const app of [
       "complete",
       socialResult.photoReview.error,
     );
-    assert.equal(socialResult.photoReview.counts.matched, 1);
+    assert.equal(socialResult.photoReview.counts.matched, 2);
     for (const [name, bytes] of Object.entries(entries))
       assert.equal(
         await readFile(path.join(socialResult.output, "files", name), "utf8"),
@@ -434,7 +436,7 @@ for (const app of [
     assert.equal(
       (await request("list")).find((j) => j.id === social.id).photoReview.counts
         .matched,
-      1,
+      2,
     );
     assert.deepEqual(
       (await request("list")).find((j) => j.id === selectedJob.id).sourceFiles,

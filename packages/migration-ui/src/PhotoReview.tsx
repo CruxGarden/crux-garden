@@ -64,7 +64,7 @@ export default function PhotoReview({
                   ? "This version recognizes data/tweets.js, data/tweet.js and numbered parts with matching archive wrappers."
                   : job.provider === "Facebook"
                     ? "This version recognizes the older posts/your_posts_N.json layout only."
-                    : "This version recognizes your_instagram_activity/media/posts_N.json only.")}
+                    : "This version recognizes your_instagram_activity/media/posts_N.json and posts.json Media labels.")}
             </p>
           )}
           <p className="migration-footnote">
