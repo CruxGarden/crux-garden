@@ -149,9 +149,11 @@ export type CloudProvider =
   | "Bluesky"
   | "Amazon S3"
   | "Google Drive"
-  | "Dropbox";
+  | "Dropbox"
+  | "iCloud Photos";
 export interface CloudEntry {
   id: string;
+  revision?: string;
   name: string;
   kind: "file" | "folder";
   size?: number;
@@ -165,6 +167,7 @@ export interface CloudConnection {
 }
 export interface CloudItem {
   id: string;
+  reusePolicy?: "checksum-only";
   path: string;
   revision?: string;
   size?: number;
@@ -209,4 +212,5 @@ export interface CloudJob {
 export type CloudJobSummary = Omit<CloudJob, "items" | "folderIdentity"> & {
   totalFiles: number;
   knownBytes: number;
+  unknownFiles: number;
 };

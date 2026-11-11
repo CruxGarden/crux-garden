@@ -90,6 +90,14 @@ for (const app of [
   try {
     launch();
     assert.equal((await request("info")).cruxCount, 0);
+    await assert.rejects(
+      request("cloudConnect", {
+        provider: "iCloud Photos",
+        photosFactory: true,
+        networkAllowed: true,
+      }),
+      /supported service/,
+    );
     const source = path.join(fixture, "source");
     const destination = path.join(fixture, "destination");
     await mkdir(source);

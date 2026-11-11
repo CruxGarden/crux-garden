@@ -6,6 +6,7 @@ import path from "node:path";
 const root = fileURLToPath(new URL("..", import.meta.url));
 const engine = path.join(root, "packages/migration-engine");
 const output = path.join(root, "apps/migration/runtime-dist");
+await rm(path.join(engine, "dist"), { recursive: true, force: true });
 await build({
   entryPoints: [
     "backend",

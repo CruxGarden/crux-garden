@@ -70,7 +70,8 @@ export async function existingCopy(
   item: CloudItem,
   signal: AbortSignal,
 ) {
-  if (!store) return undefined;
+  if (!store || (item.reusePolicy === "checksum-only" && !item.checksum))
+    return undefined;
   const candidates = await store.findFingerprints(
     sourceKey(job, item),
     item.revision,

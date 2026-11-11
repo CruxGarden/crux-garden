@@ -82,9 +82,9 @@ final class FixtureSource: Source {
     }
     func read(_ resource: ResourceView, network: Bool, chunk: @escaping (Data) throws -> Void) throws {
         if failure == "needsNetwork" && !network { throw BridgeError("network_required") }
-        if failure == "stall" { Thread.sleep(forTimeInterval: 10) }
+        if failure == "stall" || (failure == "stallPaired" && resource.type == 9) { Thread.sleep(forTimeInterval: 10) }
         try chunk(Data("fixture-role-\(resource.type):".utf8))
-        if failure == "partial" { throw BridgeError("resource_failed") }
+        if failure == "partial" || (failure == "partialPaired" && resource.type == 9) { throw BridgeError("resource_failed") }
         try chunk(Data(repeating: 42, count: 150_000))
         if failure == "changedAfter" { version += 1 }
     }

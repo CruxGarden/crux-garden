@@ -27,7 +27,7 @@ export interface CloudAdapter {
   ): Promise<{ body: Readable; size?: number }>;
   checksum?(item: CloudItem, signal: AbortSignal): Promise<void>;
   afterRead?(item: CloudItem, signal: AbortSignal): Promise<void>;
-  close?(): void;
+  close?(): void | Promise<void>;
 }
 export const message = (e: unknown) =>
   e instanceof CloudError

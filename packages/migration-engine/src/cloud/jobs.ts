@@ -29,6 +29,8 @@ import { beginGoogle } from "./google-drive";
 import type { TokenExchange } from "./oauth";
 import type { DownloadOpen } from "../network";
 export interface CloudOptions {
+  // Trusted host injection only. Production hosts do not register Photos yet.
+  photosFactory?: (signal: AbortSignal) => Promise<CloudAdapter>;
   open?: DownloadOpen;
   s3Factory?: S3Factory;
   tokenExchange?: TokenExchange;
@@ -85,7 +87,12 @@ export async function createCloudJobs(
           ? "downloading"
           : j.state,
       totalFiles: items.length,
-      knownBytes: items.reduce((n, v) => n + (v.size ?? 0), 0),
+      knownBytes: items.reduce(
+        (n, v) => n + (v.completed?.bytes ?? v.size ?? 0),
+        0,
+      ),
+      unknownFiles: items.filter((v) => v.size === undefined && !v.completed)
+        .length,
     };
   };
   const jobFor = (id: unknown) => {
@@ -439,6 +446,7 @@ export async function createCloudJobs(
         );
       const provider = input.provider;
       if (
+        !(provider === "iCloud Photos" && options.photosFactory) &&
         !["Bluesky", "Amazon S3", "Google Drive", "Dropbox"].includes(
           String(provider),
         )
@@ -460,6 +468,17 @@ export async function createCloudJobs(
       };
       connections.set(c.view.id, c);
       try {
+        if (provider === "iCloud Photos") {
+          const adapter = await options.photosFactory!(
+            AbortSignal.timeout(60_000),
+          );
+          if (adapter.provider !== "iCloud Photos") {
+            await adapter.close?.();
+            throw new CloudError("Invalid Photos host adapter.");
+          }
+          connected(adapter);
+          return structuredClone(c.view);
+        }
         if (
           (provider === "Google Drive" || provider === "Dropbox") &&
           !options.adapterFactory
@@ -626,7 +645,7 @@ export async function createCloudJobs(
       const c = typeof id === "string" && connections.get(id);
       if (c) {
         c.cancel?.();
-        c.adapter?.close?.();
+        await c.adapter?.close?.();
         connections.delete(c.view.id);
       }
     },
@@ -637,7 +656,7 @@ export async function createCloudJobs(
       }
       for (const c of connections.values()) {
         c.cancel?.();
-        c.adapter?.close?.();
+        await c.adapter?.close?.();
       }
       connections.clear();
     },

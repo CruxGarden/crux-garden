@@ -4,6 +4,7 @@ import * as fs from "node:fs/promises";
 import { createMigrationRuntime } from "./service";
 import { startLocalApi } from "./http";
 export { createMigrationRuntime } from "./service";
+export { photosAdapter } from "./cloud/photos";
 export type { MigrationStore } from "./store";
 
 if (require.main === module) {
