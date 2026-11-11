@@ -53,7 +53,10 @@ async function run() {
         throw new Error(
           "Sidecar differs from the preservation receipt. Verify this import before reviewing again.",
         );
-      const parsed = adapter.parse(file, JSON.parse(bytes.toString("utf8")));
+      const value = adapter.decode
+        ? adapter.decode(file, bytes.toString("utf8"))
+        : JSON.parse(bytes.toString("utf8"));
+      const parsed = adapter.parse(file, value);
       relationships += parsed.reduce(
         (sum, r) =>
           sum +

@@ -382,8 +382,50 @@ for (const app of [
         await readFile(path.join(facebookResult.output, "files", name), "utf8"),
         bytes,
       );
+    const xArchiveSource = path.join(fixture, "xArchive-source");
+    const {
+      entries: xArchiveEntries,
+    } = require("../packages/migration-engine/tests/x-fixture.cjs");
+    for (const [name, bytes] of Object.entries(xArchiveEntries)) {
+      await mkdir(path.dirname(path.join(xArchiveSource, name)), {
+        recursive: true,
+      });
+      await writeFile(path.join(xArchiveSource, name), bytes);
+    }
+    const xArchive = await request("create", { provider: "X" });
+    await request("source", { id: xArchive.id, path: xArchiveSource });
+    await request("destination", { id: xArchive.id, path: destination });
+    await request("inspect", { id: xArchive.id });
+    await settle(xArchive.id);
+    await request("start", { id: xArchive.id });
+    assert.equal((await settle(xArchive.id)).state, "verified");
+    await request("photoReview", { id: xArchive.id });
+    let xArchiveResult;
+    for (let i = 0; i < 500; i++) {
+      xArchiveResult = (await request("list")).find(
+        (j) => j.id === xArchive.id,
+      );
+      if (xArchiveResult.photoReview.state !== "running") break;
+      await new Promise((r) => setTimeout(r, 20));
+    }
+    assert.equal(
+      xArchiveResult.photoReview.state,
+      "complete",
+      xArchiveResult.photoReview.error,
+    );
+    assert.equal(xArchiveResult.photoReview.counts.matched, 1);
+    for (const [name, bytes] of Object.entries(xArchiveEntries))
+      assert.equal(
+        await readFile(path.join(xArchiveResult.output, "files", name), "utf8"),
+        bytes,
+      );
     await close();
     launch();
+    assert.equal(
+      (await request("list")).find((j) => j.id === xArchive.id).photoReview
+        .counts.matched,
+      1,
+    );
     assert.equal(
       (await request("list")).find((j) => j.id === facebook.id).photoReview
         .counts.matched,
@@ -417,7 +459,7 @@ for (const app of [
     );
     await close();
     console.log(
-      `${app}: packaged API, native SQLite, zero Cruxes, selected files/folder/ZIP/TAR.GZ and multiple-part preservation, Flickr/Google Photos/Instagram/Facebook metadata and Gmail inventory review, verification and restart passed`,
+      `${app}: packaged API, native SQLite, zero Cruxes, selected files/folder/ZIP/TAR.GZ and multiple-part preservation, Flickr/Google Photos/Instagram/Facebook/X metadata and Gmail inventory review, verification and restart passed`,
     );
   } finally {
     if (child && child.exitCode === null) {

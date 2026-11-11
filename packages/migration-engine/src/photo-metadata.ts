@@ -137,3 +137,13 @@ export const flickrMetadata = {
     });
   },
 };
+
+export interface MetadataAdapter {
+  version: string;
+  mediaFiles: PreservedFile[];
+  accepts(path: string): boolean;
+  decode?(file: PreservedFile, text: string): unknown;
+  parse(file: PreservedFile, value: unknown): PhotoRecord[];
+  finalize(records: PhotoRecord[]): void;
+  limitations: string[];
+}

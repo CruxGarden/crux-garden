@@ -10,7 +10,7 @@ export default function PhotoReview({
   busy: boolean;
   run: (command: "photoReview" | "pause") => void;
 }) {
-  const social = ["Instagram", "Facebook"].includes(job.provider);
+  const social = ["Instagram", "Facebook", "X"].includes(job.provider);
   const review = job.photoReview;
   const running = review?.state === "running";
   return (
@@ -51,7 +51,7 @@ export default function PhotoReview({
           </p>
           <p>
             {social
-              ? "Only supported numbered post lists are interpreted. Other files stay preserved."
+              ? "Only supported post data is interpreted. Other files stay preserved."
               : `${review.unassociatedMedia} recognized media files have no photo record.`}{" "}
             Counts cover only the selected export parts.
           </p>
@@ -60,9 +60,11 @@ export default function PhotoReview({
               No supported {job.provider} sidecars found. Include the full-data
               metadata export alongside your media parts.{" "}
               {social &&
-                (job.provider === "Facebook"
-                  ? "This version recognizes the older posts/your_posts_N.json layout only."
-                  : "This version recognizes your_instagram_activity/media/posts_N.json only.")}
+                (job.provider === "X"
+                  ? "This version recognizes data/tweets.js, data/tweet.js and numbered parts with matching archive wrappers."
+                  : job.provider === "Facebook"
+                    ? "This version recognizes the older posts/your_posts_N.json layout only."
+                    : "This version recognizes your_instagram_activity/media/posts_N.json only.")}
             </p>
           )}
           <p className="migration-footnote">
@@ -70,7 +72,9 @@ export default function PhotoReview({
             {job.provider === "Flickr"
               ? "by Flickr ID"
               : social
-                ? "by literal exported local paths"
+                ? job.provider === "X"
+                  ? "by exact post IDs and observed archive photo names"
+                  : "by literal exported local paths"
                 : "by Takeout names and exported folders"}
             . Media bytes have not been checked again; use Verify again for
             that.{" "}
@@ -113,7 +117,7 @@ export default function PhotoReview({
           <p className="migration-footnote">
             Full review saved beside your preservation report: {review.report}.
             Open files and report to see every record. Unknown fields and full
-            text remain in the original JSON files.
+            text remain in the original export files.
           </p>
         </>
       )}

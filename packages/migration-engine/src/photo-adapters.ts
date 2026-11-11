@@ -1,10 +1,12 @@
 import {
   flickrMetadata,
   type PhotoRecord,
+  type MetadataAdapter,
   type PreservedFile,
 } from "./photo-metadata";
 import { googlePhotoMetadata } from "./google-photo-metadata";
 
+import { xMetadata } from "./x-metadata";
 import { facebookMetadata } from "./facebook-metadata";
 import { instagramMetadata } from "./instagram-metadata";
 
@@ -13,12 +15,14 @@ export const PHOTO_REVIEW_PROVIDERS = [
   "Google Photos",
   "Instagram",
   "Facebook",
+  "X",
 ];
 export function photoAdapter(
   provider: string,
   files: PreservedFile[],
   sourceKind: unknown,
-) {
+): MetadataAdapter {
+  if (provider === "X") return xMetadata(files, sourceKind);
   if (provider === "Facebook") return facebookMetadata(files, sourceKind);
   if (provider === "Instagram") return instagramMetadata(files, sourceKind);
   if (provider === "Google Photos")

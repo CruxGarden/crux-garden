@@ -956,6 +956,11 @@
         "id": "step-3",
         "label": "Check the download",
         "text": "Download the result and keep both its data files and Your archive viewer. X documents account, post, direct-message, relationship, and media information among its archive categories. X archive instructions and scope."
+      },
+      {
+        "id": "local-review",
+        "label": "Review preserved photo references",
+        "text": "After preservation, Review export media checks supported tweet data files against selected local photo files. Archive scripts are parsed as data and never executed. Videos and unsupported formats remain visible or uninterpreted; export requests and downloads are manual."
       }
     ],
     "checks": "Sample an old post, a reply chain, a quoted post, a long post if present, an image, a video, and a DM attachment. Inspect whether media is actual local content. Relationship lists and liked/bookmarked references should remain distinct from copies of other people's posts. Do not claim that every referenced or deleted post is recoverable.",
