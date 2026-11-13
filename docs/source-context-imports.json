@@ -6,19 +6,19 @@
       "sourceFilename": "g915_local_ai_agent_handoff.md",
       "sourceSha256": "eb836594f86105489fe9348572180458957894ba8ab1970b112713176e10c154",
       "destination": "docs/projects/lifecycle/references/g915-local-ai-reported-context.md",
-      "transformation": "Added context/authority notice; normalized trailing Markdown hard-break spaces to backslashes; source prose retained."
+      "transformation": "Added context/authority notice; normalized trailing Markdown hard-break spaces to backslashes; source prose retained. Subsequently updated Assistant/Migrate terminology and added a naming notice at user request; sourceSha256 records the original import."
     },
     {
       "sourceFilename": "crux_garden_home_comprehensive_agent_brief.md",
       "sourceSha256": "dbbd7da611c2ebf1ba958e38ffd5fc2243ef0d04828ae98e3a3bff07e197b157",
       "destination": "docs/projects/home/references/comprehensive-vision-as-supplied.md",
-      "transformation": "Added context/authority notice; normalized trailing Markdown hard-break spaces to backslashes; source prose retained."
+      "transformation": "Added context/authority notice; normalized trailing Markdown hard-break spaces to backslashes; source prose retained. Subsequently updated Assistant/Migrate terminology and added a naming notice at user request; sourceSha256 records the original import."
     },
     {
       "sourceFilename": "crux_garden_home_visual_refinement.md",
       "sourceSha256": "503cab511dc7c3751fc1fabea4bf127dff2bde2f2a659d68c1d4396d984cf226",
       "destination": "docs/projects/home/references/visual-refinement-as-supplied.md",
-      "transformation": "Added context/authority notice; normalized trailing Markdown hard-break spaces to backslashes; source prose retained."
+      "transformation": "Added context/authority notice; normalized trailing Markdown hard-break spaces to backslashes; source prose retained. Subsequently updated Assistant/Migrate terminology and added a naming notice at user request; sourceSha256 records the original import."
     }
   ]
 }

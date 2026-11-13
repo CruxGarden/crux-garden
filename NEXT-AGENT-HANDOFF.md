@@ -12,7 +12,9 @@ Updated November 12, 2026. Read [AGENTS.md](AGENTS.md), the [documentation index
 - No agent currently owns implementation on Omarchy. The continuation reminder remains deleted. Transfer/commit authorization does not restart unattended development or approve every system change in the plan.
 
 - Lifecycle correction: hardware sleep/wake operated through a controller or remote, like a console, is the initial purpose. Service management is supporting scope. Read the corrected [Lifecycle plan](docs/projects/lifecycle/README.md); the detailed earlier conversation remains unrecovered.
-- The [complete original Home handoff bundle](docs/references/README.md), including three documents, thirteen mockups and its README, is preserved with a SHA-256 manifest.
+- The [complete original Home handoff bundle](docs/references/README.md), including three documents, thirteen mockups and its README, is preserved with a SHA-256 manifest; subsequent user-requested terminology edits are recorded there.
+
+- Current names: **Assistant** for the personal agent and **Crux Garden Migrate** (formerly Migration) for the tool. Internal `migration` paths/packages remain unchanged.
 
 ## Handoffs
 

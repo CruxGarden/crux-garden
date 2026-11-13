@@ -3,18 +3,24 @@
   "files": [
     {
       "path": "Documents/crux_garden_home_comprehensive_agent_brief.md",
-      "bytes": 24567,
-      "sha256": "dbbd7da611c2ebf1ba958e38ffd5fc2243ef0d04828ae98e3a3bff07e197b157"
+      "bytes": 24975,
+      "sha256": "1d5410e082ce1e92f80f155c35496e8458de3032d017cdf33a709d13a842e174",
+      "originalSha256": "dbbd7da611c2ebf1ba958e38ffd5fc2243ef0d04828ae98e3a3bff07e197b157",
+      "originalBytes": 24567
     },
     {
       "path": "Documents/crux_garden_home_visual_refinement.md",
-      "bytes": 2904,
-      "sha256": "503cab511dc7c3751fc1fabea4bf127dff2bde2f2a659d68c1d4396d984cf226"
+      "bytes": 3282,
+      "sha256": "2362f4732da69c69ef8bbe9fbfaf0f764608260387866648b74e66f454e638ef",
+      "originalSha256": "503cab511dc7c3751fc1fabea4bf127dff2bde2f2a659d68c1d4396d984cf226",
+      "originalBytes": 2904
     },
     {
       "path": "Documents/g915_local_ai_agent_handoff.md",
-      "bytes": 10659,
-      "sha256": "eb836594f86105489fe9348572180458957894ba8ab1970b112713176e10c154"
+      "bytes": 11032,
+      "sha256": "3b0a3946cd8e04365e005be81d220365effdaefd622f62ea15d4bc7b399655ad",
+      "originalSha256": "eb836594f86105489fe9348572180458957894ba8ab1970b112713176e10c154",
+      "originalBytes": 10659
     },
     {
       "path": "Mockups/01 \u00b7 A Scattered Digital Life.png",
@@ -86,5 +92,6 @@
       "bytes": 403,
       "sha256": "a8284833ae63c5fd97c12e3fce3ff751eb4e5ea46ebbbcd096adab92ddf67195"
     }
-  ]
+  ],
+  "revision": "2026-11-12: user-requested Assistant and Migrate naming update in documents; original import hashes retained; PNG bytes unchanged."
 }

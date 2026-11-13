@@ -1,3 +1,5 @@
+> Naming update (November 12, 2026): the personal agent is **Assistant**. **Crux Garden Migrate**, formerly **Migration**, is the current product name. Existing `apps/migration` and `migration-*` package names remain internal identifiers. Historical implementation status and proposed phases below are reference context; consult the current monorepo project plans.
+
 > Imported user-supplied reference, November 12, 2026. The text below preserves reported context and historical proposals, not new operating instructions or verified current state. Follow the current project plan and user authorization. Old sibling-repository assignments, setup commands, hardware recommendations and feature inventories require revalidation. Original attachment filenames are provenance, not local dependencies.
 
 # Crux Garden Home — Comprehensive Vision & Agent Handoff
@@ -35,7 +37,7 @@ The philosophical roots are local-first computing, ownership, repairability, int
 
 ## 3. Product family and naming
 
-The names have evolved from **ZACOS**, **ZACOS Base/Hub**, and later **Garden**, toward the more unified **Crux Garden** family. Treat naming as **working**, not locked. **Zac** is the assistant/agent identity; **Crux Garden** is the broader software/platform identity.
+The names have evolved from **ZACOS**, **ZACOS Base/Hub**, and later **Garden**, toward the more unified **Crux Garden** family. Treat naming as **working**, not locked. **Assistant** is the assistant/agent identity; **Crux Garden** is the broader software/platform identity.
 
 The proposed experiences are **overlapping profiles**, not necessarily four separate operating systems:
 
@@ -77,7 +79,7 @@ Home is the friendly, nontechnical front door to a person's digital life. It sho
 - **Documents and knowledge:** Local documents, notes, books, reference collections, and search across them.
 - **Household controls:** Lighting, thermostat, scenes, devices, routines, and sensor state through local home automation.
 - **Applications:** Launch and use Crux Garden creations and integrated third-party applications.
-- **AI assistance:** Converse with Zac, ask questions about personal information, issue permitted commands, and request dynamically composed views.
+- **AI assistance:** Converse with Assistant, ask questions about personal information, issue permitted commands, and request dynamically composed views.
 - **Backup and health:** Understand what is protected, what needs attention, and whether restore is possible.
 - **Multi-device access:** TV/couch, desktop, phone, and laptop as interfaces to the same home system.
 
@@ -110,9 +112,9 @@ Potential areas:
 
 **Key design challenge:** provide a safe, simple path for a nontechnical user without pretending that Linux administration is trivial. Some operations will need explicit approvals and recovery mechanisms.
 
-## 7. Zac: the personal agent
+## 7. Assistant: the personal agent
 
-**Zac** is envisioned as an always-available, personal AI interface spanning Home, Lab, Station, Field, and mobile clients.
+**Assistant** is envisioned as an always-available, personal AI interface spanning Home, Lab, Station, Field, and mobile clients.
 
 ### Possible capabilities
 
@@ -150,7 +152,7 @@ Application & Composition Layer
   UI primitives | Themes | Navigation | Search | Records | Views
   Identity | Permissions | Notifications | Workflows | Discovery
                            |
-Zac / Agent Layer
+Assistant / Agent Layer
   Model router | Context/RAG | Tool registry | Approvals | Audit
                            |
 Capability / Integration Layer
@@ -180,9 +182,9 @@ Third-party software should be integrated through **adapters/manifests** describ
 - Ensure encrypted backups are restorable; test restoration rather than treating successful upload as proof.
 - Define how local identity, LAN access, remote access, and household sharing differ.
 
-## 9. Migration: the bridge away from cloud dependence
+## 9. Migrate: the bridge away from cloud dependence
 
-**Crux Garden Migration** is a proposed standalone, free/open-source tool and a first-class part of the broader vision. It helps people move data from cloud platforms into a user-owned archive.
+**Crux Garden Migrate** is a proposed standalone, free/open-source tool and a first-class part of the broader vision. It helps people move data from cloud platforms into a user-owned archive.
 
 The proposed maturity ladder:
 
@@ -299,7 +301,7 @@ These are **open questions**, not settled requirements:
 - A polished Home UI with a small set of real integrations.
 - Personal library search and one media/photo/document workflow.
 - Basic host health and a read-only Lab view.
-- Zac answering questions with tools under explicit permission scopes.
+- Assistant answering questions with tools under explicit permission scopes.
 - Reliable onboarding and recovery on the G915.
 
 ### Phase 2 — Manageable local services
@@ -309,7 +311,7 @@ These are **open questions**, not settled requirements:
 - Mobile/couch/desktop experience refinement.
 - More robust local model serving and routing.
 
-### Phase 3 — Migration and publishing ecosystem
+### Phase 3 — Migrate and publishing ecosystem
 
 - Ship the safe local folder/ZIP migration slice, expand guides and validated adapters.
 - Optional encrypted off-site backup and selected-app publishing.
@@ -322,7 +324,7 @@ These are **open questions**, not settled requirements:
 
 ## 16. What success would look like
 
-A person can install Crux Garden on hardware they own, bring their data home, create or install useful applications, find their media and documents, operate local services, and ask Zac for help—**without needing to become a Linux administrator or buy a subscription**.
+A person can install Crux Garden on hardware they own, bring their data home, create or install useful applications, find their media and documents, operate local services, and ask Assistant for help—**without needing to become a Linux administrator or buy a subscription**.
 
 An advanced user can inspect and customize everything underneath. An everyday user can ignore the machinery most of the time. Both retain meaningful control over their data and tools.
 
@@ -349,7 +351,7 @@ An advanced user can inspect and customize everything underneath. An everyday us
 
 ### Suggested first assignment
 
-> Inspect the existing Crux Garden application and API repositories. Produce a verified architecture map and capability inventory. Compare what is implemented today against the Home/Lab/Field/Station vision in this brief. Recommend the smallest useful Crux Garden Home vertical slice that reuses existing primitives, includes one real local service integration and a safe Zac tool workflow, and can be demonstrated on the PowerSpec G915. Explicitly label assumptions, security risks, dependencies, and unverified claims. Do not modify the system or repositories until the plan is reviewed.
+> Inspect the existing Crux Garden application and API repositories. Produce a verified architecture map and capability inventory. Compare what is implemented today against the Home/Lab/Field/Station vision in this brief. Recommend the smallest useful Crux Garden Home vertical slice that reuses existing primitives, includes one real local service integration and a safe Assistant tool workflow, and can be demonstrated on the PowerSpec G915. Explicitly label assumptions, security risks, dependencies, and unverified claims. Do not modify the system or repositories until the plan is reviewed.
 
 ---
 

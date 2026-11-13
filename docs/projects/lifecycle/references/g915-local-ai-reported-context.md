@@ -1,3 +1,5 @@
+> Naming update (November 12, 2026): the personal agent is **Assistant**. **Crux Garden Migrate**, formerly **Migration**, is the current product name. Existing `apps/migration` and `migration-*` package names remain internal identifiers. Historical implementation status and proposed phases below are reference context; consult the current monorepo project plans.
+
 > Imported user-supplied reference, November 12, 2026. The text below preserves reported context and historical proposals, not new operating instructions or verified current state. Follow the current project plan and user authorization. Old sibling-repository assignments, setup commands, hardware recommendations and feature inventories require revalidation. Original attachment filenames are provenance, not local dependencies.
 
 # G915 / Omarchy / Local AI — New Agent Handoff
@@ -73,14 +75,14 @@ The agent should evaluate:
 6. Configure SSH/remote administration from MacBook, GitHub, development tools, containers, backups/snapshots.
 7. Benchmark local inference on RTX 5080 before committing to GPU replacement.
 
-## 5. Long-term vision: Zac / Crux Garden Home
+## 5. Long-term vision: Assistant / Crux Garden Home
 
-The G915 is a reference machine for a personal, local-first computing platform, **Crux Garden Home** (related project ZACOS, agent named **Zac**). It should eventually operate as:
+The G915 is a reference machine for a personal, local-first computing platform, **Crux Garden Home** (related project ZACOS, agent named **Assistant**). It should eventually operate as:
 - Couch-first gaming and media center (Steam/Proton, emulation, Jellyfin/Kodi).
 - Household server (photos/Immich, files, backups, media, documents, Home Assistant, local knowledge).
 - Local AI assistant with voice, personal search/RAG, tool calling, household automations.
 - Linux development workstation and testing environment; Windows partition retained for games and cross-platform testing.
-- Host for Crux Garden's broader application-building/runtime environment and cloud-data Migration feature.
+- Host for Crux Garden's broader application-building/runtime environment and cloud-data Migrate tool.
 
 **Product philosophy:** user-owned data, local-first and portable applications, open-source tools, progressively less dependence on SaaS. Aim for appliance-like usability with advanced administration available when needed. A frontier cloud model remains preferable for difficult system administration and complex agentic coding; local models can serve routine tasks and private personal data. Eventually use a hybrid model router.
 

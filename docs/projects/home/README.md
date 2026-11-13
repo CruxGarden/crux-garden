@@ -41,7 +41,7 @@ Proposed acceptance:
 
 ## Decisions still needed
 
-Home host/entry and distribution shape; first journey/persona; library indexing/storage contract; household identity/sharing; local versus remote access; Zac tool permissions and local/cloud disclosure. The [Lifecycle plan](../lifecycle/README.md) must settle any new managed-service requirements before introducing a host daemon.
+Home host/entry and distribution shape; first journey/persona; library indexing/storage contract; household identity/sharing; local versus remote access; Assistant tool permissions and local/cloud disclosure. The [Lifecycle plan](../lifecycle/README.md) must settle any new managed-service requirements before introducing a host daemon.
 
 ## Context imported, not active instructions
 

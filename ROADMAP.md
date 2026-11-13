@@ -22,7 +22,7 @@ Updated November 12, 2026. Scope: **Home, Migrate, Lifecycle**. Only this reposi
 
 Photos native permission/source binding; Google/Dropbox account registration and applicable live tests; real Flickr/Takeout/Meta/X exports; large-mailbox scale; modern Facebook variants and X query/HLS references; complete Messages export; Linux/Windows distribution, signing and updates. No account or hardware action is implied by listing a gap.
 
-Home's future household identity, network access, remote sharing, backup/restore, optional publishing and Zac capability model require explicit contracts. Lab/Field/Station and hardware are context, not extra active projects. Toadstool remains stopped.
+Home's future household identity, network access, remote sharing, backup/restore, optional publishing and Assistant capability model require explicit contracts. Lab/Field/Station and hardware are context, not extra active projects. Toadstool remains stopped.
 
 ## Decisions
 

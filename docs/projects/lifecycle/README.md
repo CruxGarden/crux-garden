@@ -30,7 +30,7 @@ The [ordered Omarchy setup plan](omarchy-setup.md) covers SSH, backups, developm
 
 Support the hardware sleep/wake experience by making ownership and lifetime of local applications/services explicit: what is installed, configured, running, healthy, stopping, failed or recoverable; who may act; and how state/data survive restart or updates. Home should consume meaningful capability/status information without owning OS process administration.
 
-Lifecycle is distinct from Zac (a conversational/tool user), Migrate (durable migration jobs/content), and the Home UI. It must not become a second migration database or an unrestricted shell endpoint.
+Lifecycle is distinct from Assistant (a conversational/tool user), Migrate (durable migration jobs/content), and the Home UI. It must not become a second migration database or an unrestricted shell endpoint.
 
 ## Existing evidence to reuse
 
@@ -46,7 +46,7 @@ Relevant sources: `apps/migration/electron/main.cjs`, `apps/migration/src-tauri/
 | Migration progress, receipts, SQLite, fingerprints | Existing Migrate Node/local API owner |
 | Process admission, start/stop and shutdown coordination | Host/Lifecycle boundary, exact implementation to be decided |
 | External service health/install/update details | Thin, separately qualified adapters |
-| Model-generated requests | Zac as a scoped caller, never automatic authority |
+| Model-generated requests | Assistant as a scoped caller, never automatic authority |
 | Secrets and elevated operations | Host-controlled mechanism; design not yet selected |
 
 No service manifest schema, transport, runtime language, container engine, privilege model or persistence database is approved by this page. Avoid creating generic plugin machinery before a real slice needs it.

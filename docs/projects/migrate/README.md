@@ -1,6 +1,6 @@
 # Migrate
 
-**State:** implemented standalone application; local-comparison code is included as a checkpoint awaiting final native/package qualification. Display name **Crux Garden Migrate**; package/app paths retain `migration` for stability. Updated November 12, 2026.
+**State:** implemented standalone application; local-comparison code is included as a checkpoint awaiting final native/package qualification. Display name **Crux Garden Migrate**, formerly **Migration**; package/app paths retain `migration` for stability. Updated November 12, 2026.
 
 ## Purpose and boundary
 

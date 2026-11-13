@@ -33,9 +33,9 @@ Photos/videos; documents/notes/books; owned music/movies; third-party applicatio
 
 A useful first release need not implement all of these. Show actual data and actionable states. A matching hash is not proof of backup independence; an upload is not proof of restore; an offline badge must reflect real dependency availability.
 
-## Zac
+## Assistant
 
-Zac is a proposed personal assistant capability spanning these experiences: contextual search, permitted actions, creation, teaching and possibly speech. It is not the sole navigation model or the process supervisor. Local models are a desired option; cloud escalation must disclose the data leaving the device and honor user choices.
+Assistant is a proposed personal assistant capability spanning these experiences: contextual search, permitted actions, creation, teaching and possibly speech. It is not the sole navigation model or the process supervisor. Local models are a desired option; cloud escalation must disclose the data leaving the device and honor user choices.
 
 Keep models replaceable. Tool contracts, scopes, user context and audit records should not depend on one model vendor. Retrieved documents and external content are untrusted data, not instructions. Separate read-only diagnostics, reversible changes and sensitive/destructive actions; authority belongs to validated host capabilities, not arbitrary model-generated shell commands.
 
@@ -43,7 +43,7 @@ Keep models replaceable. Tool contracts, scopes, user context and audit records 
 
 1. Home and other experiences consume shared components and client contracts.
 2. Composition, navigation, identity, permissions and workflows connect useful tasks.
-3. Optional Zac orchestration uses explicit tools and approvals.
+3. Optional Assistant orchestration uses explicit tools and approvals.
 4. Provider/service adapters expose bounded capabilities.
 5. Lifecycle owns approved host/service operations and observable process state.
 6. Existing operating systems and hardware provide the underlying platform.
