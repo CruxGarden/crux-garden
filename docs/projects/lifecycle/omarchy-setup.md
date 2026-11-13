@@ -2,6 +2,8 @@
 
 Updated November 12, 2026. **Planning handoff, not an executed setup script.** This is the practical order for making the existing Omarchy machine reliable, remotely accessible and ready for Crux Garden development and Home use. No machine inspection or configuration change was performed from the MacBook for this document.
 
+Lifecycle starts with console-style hardware sleep/wake using a controller or remote; see the [product plan and proposed first slice](README.md#starting-point-a-console-like-computer). The setup sequence below provides prerequisites, but controller pairing alone does not qualify wake-from-sleep. Qualify the physical sleep/wake path after recovery and access foundations, before expanding into AI and general service management.
+
 The user explicitly wants SSH, backups, development setup, controller Bluetooth and the SDR/HDR issues included. The [reported machine context](references/g915-local-ai-reported-context.md) preserves prior observations; recheck them before acting. GPU shopping and general AI research are later, independent decisions.
 
 ## Order and completion gates

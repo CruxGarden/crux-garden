@@ -1,0 +1,90 @@
+{
+  "source": "Crux_Garden_Home_Agent_Handoff_Refined",
+  "files": [
+    {
+      "path": "Documents/crux_garden_home_comprehensive_agent_brief.md",
+      "bytes": 24567,
+      "sha256": "dbbd7da611c2ebf1ba958e38ffd5fc2243ef0d04828ae98e3a3bff07e197b157"
+    },
+    {
+      "path": "Documents/crux_garden_home_visual_refinement.md",
+      "bytes": 2904,
+      "sha256": "503cab511dc7c3751fc1fabea4bf127dff2bde2f2a659d68c1d4396d984cf226"
+    },
+    {
+      "path": "Documents/g915_local_ai_agent_handoff.md",
+      "bytes": 10659,
+      "sha256": "eb836594f86105489fe9348572180458957894ba8ab1970b112713176e10c154"
+    },
+    {
+      "path": "Mockups/01 \u00b7 A Scattered Digital Life.png",
+      "bytes": 1131276,
+      "sha256": "0041491d4b9e305e63e248d2f269e946c31b123ce8d31a1f1287b2275ddeb0af"
+    },
+    {
+      "path": "Mockups/02 \u00b7 Bringing It Home.png",
+      "bytes": 1213001,
+      "sha256": "db353a51897ac5e4b6686fe183f50ee6be86d29a3aa43778fd60eb2b6fedd9f1"
+    },
+    {
+      "path": "Mockups/03 \u00b7 Crux Garden Revealed.png",
+      "bytes": 1070849,
+      "sha256": "17434be7ee909cf87fa220a6faf8310205227f0b5e682cc7fa385dc2729cd91c"
+    },
+    {
+      "path": "Mockups/04 \u00b7 Home.png",
+      "bytes": 903194,
+      "sha256": "82cc5bbf5dfadd8888b3741c1af8206281df4deb1b455213c1a4b7f2f2d354ec"
+    },
+    {
+      "path": "Mockups/05 \u00b7 Lab.png",
+      "bytes": 1011625,
+      "sha256": "c2b23f40908e4fa63f4ba672859ac431213fbe7a3c84ba50deffc0be788efe27"
+    },
+    {
+      "path": "Mockups/06 \u00b7 Field.png",
+      "bytes": 899263,
+      "sha256": "dd0d844136eead1304b8d74da89520be8aa0771e138a629d2fe28c74870c58c9"
+    },
+    {
+      "path": "Mockups/07 \u00b7 Station.png",
+      "bytes": 925741,
+      "sha256": "f405edd3b0b6867ce6d6eda8305fe58fd476616921433a722eb627f61c4d1d2a"
+    },
+    {
+      "path": "Mockups/08 \u00b7 Make It Yours.png",
+      "bytes": 944718,
+      "sha256": "6be1c6e1bd11baf1ba007a551a74286ee616e606f82fb08250ad9fd912c9feb6"
+    },
+    {
+      "path": "Mockups/09 \u00b7 Own, Protect, Share.png",
+      "bytes": 870745,
+      "sha256": "595149539c21d9773b09244dfccfca71928349311092c7ad353a7c9bb22a77c6"
+    },
+    {
+      "path": "Mockups/10 \u00b7 A Future You Can Hold.png",
+      "bytes": 1296716,
+      "sha256": "7640684b070216137413243eaca368823e39b81645713c5343a0e6ee7761da6c"
+    },
+    {
+      "path": "Mockups/11 \u00b7 Closing.png",
+      "bytes": 1370777,
+      "sha256": "894a0614cae9e14dc7795d0a6704069a34243e8e3233fb2ab344bf7a69424974"
+    },
+    {
+      "path": "Mockups/12 \u00b7 Home \u2014 Leaner Exploration.png",
+      "bytes": 1691179,
+      "sha256": "547eadbbc239b645734c6de1f053e3568f05bf65557dc703d159f679569c2dab"
+    },
+    {
+      "path": "Mockups/Brief & visual identity.png",
+      "bytes": 1616029,
+      "sha256": "1a0371ce32e54d51c9a3c255174dd2ccbcc32fbad36557ee1fdcadaac56267fa"
+    },
+    {
+      "path": "README.md",
+      "bytes": 403,
+      "sha256": "a8284833ae63c5fd97c12e3fce3ff751eb4e5ea46ebbbcd096adab92ddf67195"
+    }
+  ]
+}

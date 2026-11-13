@@ -11,6 +11,8 @@ Authorization: the user requested the plan and its commit. Confirm current execu
 
 Make the existing machine recoverable, accessible over SSH, ready to build the monorepo, and usable with Bluetooth controller and correct display behavior. Local AI and Home integrations follow that foundation.
 
+The initial Lifecycle product goal is console-style hardware sleep/wake through a controller or remote. Qualify that path after recovery/access prerequisites; Bluetooth pairing alone does not establish wake support. See the [corrected Lifecycle plan](../projects/lifecycle/README.md).
+
 ## Stage ledger
 
 | Stage | State | Evidence / next action |
@@ -21,6 +23,7 @@ Make the existing machine recoverable, accessible over SSH, ready to build the m
 | GitHub + monorepo + development | Not checked on Omarchy | Receive exact commit, install local dependencies, run applicable checks |
 | Backup schedule + update/recovery | Unknown | Build on successful manual restore; agree retention/availability |
 | DualSense Bluetooth | Pending | USB reportedly worked; test pairing and repeated reconnect paths |
+| Console-style sleep/wake | Unqualified | Scope one physical controller/remote trigger, supported sleep state and repeatable resume/recovery checks |
 | SDR color | Unresolved report | Reproduce oversaturation under controlled conditions |
 | HDR and VRR | Unqualified | Confirm versions and actual end-to-end behavior separately |
 | Existing-GPU AI baseline | Pending | Representative tasks before any replacement decision |

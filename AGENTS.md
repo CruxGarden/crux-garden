@@ -12,7 +12,7 @@ Applies throughout this repository. This monorepo is the only repository shared 
 
 - **Home:** planned everyday experience using the shared Garden UI, Mood and host-injected clients. Visual concepts are references, not implemented features.
 - **Migrate:** implemented standalone React/Tauri application; Electron is the comparison/test host. Internal `migration-*` names remain stable. Do not bundle Builder, Cruxes or personal data.
-- **Lifecycle:** planned host/service lifecycle boundary. Existing Migrate tray/process behavior is evidence, not a general installed service manager.
+- **Lifecycle:** console-style hardware sleep/wake with a controller or remote is the starting point; host/service coordination supports it. Existing Migrate tray/process behavior is evidence, not a general installed service manager.
 - Node owns Migrate jobs, SQLite and fingerprints through the existing local API. Workers do not open a second database. React does not own filesystem, credentials or native permissions. Keep reusable workflows and thin provider adapters.
 - Moods own appearance. Use shared editable semantic tokens for color, typography, surfaces, borders, focus and motion. Do not hardcode a separate Home theme or copy an entire shell to add a feature.
 - Preserve originals and explicit selection; recheck current content before reuse. Metadata references are not content fingerprints or proof of export completeness.

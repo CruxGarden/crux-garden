@@ -11,3 +11,7 @@ Project plans and code live together in this monorepo. `apps/` contains runnable
 - [Current state](../NEXT-AGENT-HANDOFF.md), [roadmap](../ROADMAP.md), [architecture](architecture.md), [local API](local-api.md) and [verification history](verification.md).
 
 The imported user briefs are reference context; current project plans, code and task authorization govern execution. No credentials, private host addresses or personal data exports are required to read or build this repository.
+
+## Original supplied reference bundle
+
+[Complete Home handoff and mockups](references/README.md), with original filenames, bytes and a file-hash manifest.

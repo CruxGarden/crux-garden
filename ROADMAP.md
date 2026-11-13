@@ -6,7 +6,7 @@ Updated November 12, 2026. Scope: **Home, Migrate, Lifecycle**. Only this reposi
 | --- | --- | --- | --- |
 | [Home](docs/projects/home/README.md) | Shared Garden UI and embeddable Migrate UI exist; Home designs supplied | Review one library-focused Home journey and its host contract | Plan only; implementation not started |
 | [Migrate](docs/projects/migrate/README.md) | Existing tool plus transferred local-comparison code checkpoint | Complete comparison review/package qualification in an agreed task | Consolidation/commit authorized; no unattended continuation |
-| [Lifecycle](docs/projects/lifecycle/README.md) | Migrate process/tray/quit behavior exists | Define ownership/state contract and one fixture-backed lifecycle slice | Plan only; no host installation or daemon authorized |
+| [Lifecycle](docs/projects/lifecycle/README.md) | Console-style hardware sleep/wake is the confirmed starting point; only Migrate process/tray behavior exists | Scope one controller/remote sleep/wake path on Omarchy; qualify hardware before implementation | Plan only; no host installation or daemon authorized |
 | [Agent workflow](docs/agents/workflow.md) | Shared context and comparison source available in this checkpoint | First Omarchy checkout and platform baseline report | Transfer authorized; remote execution pending |
 | [Omarchy setup](docs/projects/lifecycle/omarchy-setup.md) | Ordered SSH/backup/development/Bluetooth/display/AI plan | Live baseline, recovery and initial backup before changes | Plan recorded; host execution scope must be agreed |
 
