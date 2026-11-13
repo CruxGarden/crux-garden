@@ -160,3 +160,6 @@ test-results/
 .DS_Store
 .env
 *.zip
+
+# Optional machine-local agent scratch; shared handoffs belong in docs/handoffs
+.agent-local/

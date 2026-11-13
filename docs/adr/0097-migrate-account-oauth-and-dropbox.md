@@ -1,0 +1,17 @@
+# ADR 0097 — Shared account authorization and selected Dropbox files
+
+Accepted 2026-11-10 under Daniel's authorization to automate selected migrations using reusable workflows and the best available methods.
+
+Add Dropbox account downloads as a thin adapter over the selected collection engine. It owns account/home namespace identity, read-only listing and pagination, revision-bound content requests and provider checksum metadata. Shared jobs own review, transfer, pause/reconnect, local comparison, verified reuse and preservation. Retain existing shared links and downloaded exports as useful alternatives.
+
+Extract the installed-app loopback PKCE lifecycle into one module used by Google and Dropbox. State, one-use callback, timeout and cancellation are shared; provider endpoint, scopes and redirect registration rules remain provider configuration. Google keeps an ephemeral callback. Dropbox uses exactly http://127.0.0.1:53683/callback/dropbox because its redirect must match registration. An occupied port is an actionable error, never silently changed to an unregistered redirect. System browsers handle consent. Tokens remain in memory; reconnect after Quit. Reject bundled client secrets, arbitrary redirect URLs and copy-pasted long-lived account tokens as the primary experience.
+
+Extend the existing public-IP-pinned HTTPS transport with an internal POST option for Dropbox RPC/token/content calls, preserving bounded metadata, TLS validation, timeouts and redacted errors. No renderer-provided endpoint, header or body capability is introduced. Native authorization URL allowlists include only the constructed Google/Dropbox endpoints.
+
+Initial Dropbox scope is the user's home namespace and mounted folders reachable there. Team roots, unmounted shares, cloud-document export, comments, permissions and history are not implied. Unsupported documents stop discovery. Downloads bind file ID/revision/size and available Dropbox content hash; output metadata is checked before publication. Source metadata is rechecked around transfers/reuse. Keep per-file recovery; range checkpoints require separate revision/continuity proof. Provider range support is not evidence of implemented range recovery.
+
+Fixtures and native/browser acceptance precede real-account qualification. No Dropbox registration exists yet; setup instructions specify scopes, exact callback and app key. No source deletions, account sharing changes, main merge or release are authorized by this increment. See docs/dropbox-account-method.md and docs/verification.md for evidence and limitations.
+
+## Gmail account adapter — November 10, 2026
+
+Extend shared Google authorization/token sessions for a separate Gmail read-only scope. Explicit message/label selection reuses collection jobs. One immutable Gmail message ID yields one raw EML file regardless of overlapping selected labels. Provider IDs, history/internal-date and label mappings are separate manifest metadata, not modifications to RFC bytes. Freeze and check metadata revisions around RAW retrieval; do not use them as a substitute for a provider content checksum. Same-job retry rehashes completed outputs; cross-job metadata-only reuse is disabled. The profile address conservatively binds source identity; renamed accounts require a new selection. Full Takeout remains the broader account/settings preservation alternative. Initial bounds and current qualification live in docs/gmail-methods.md.

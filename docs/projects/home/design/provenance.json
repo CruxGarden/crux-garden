@@ -1,0 +1,84 @@
+{
+  "source": "User-supplied Crux Garden Home refined handoff bundle, November 12, 2026",
+  "note": "Original PNG bytes preserved. Illustrative concepts, not live product/account data. Portable names replace source filenames.",
+  "files": [
+    {
+      "file": "01-a-scattered-digital-life.png",
+      "sourceFilename": "01 · A Scattered Digital Life.png",
+      "sha256": "0041491d4b9e305e63e248d2f269e946c31b123ce8d31a1f1287b2275ddeb0af",
+      "bytes": 1131276
+    },
+    {
+      "file": "02-bringing-it-home.png",
+      "sourceFilename": "02 · Bringing It Home.png",
+      "sha256": "db353a51897ac5e4b6686fe183f50ee6be86d29a3aa43778fd60eb2b6fedd9f1",
+      "bytes": 1213001
+    },
+    {
+      "file": "03-crux-garden-revealed.png",
+      "sourceFilename": "03 · Crux Garden Revealed.png",
+      "sha256": "17434be7ee909cf87fa220a6faf8310205227f0b5e682cc7fa385dc2729cd91c",
+      "bytes": 1070849
+    },
+    {
+      "file": "04-home.png",
+      "sourceFilename": "04 · Home.png",
+      "sha256": "82cc5bbf5dfadd8888b3741c1af8206281df4deb1b455213c1a4b7f2f2d354ec",
+      "bytes": 903194
+    },
+    {
+      "file": "05-lab.png",
+      "sourceFilename": "05 · Lab.png",
+      "sha256": "c2b23f40908e4fa63f4ba672859ac431213fbe7a3c84ba50deffc0be788efe27",
+      "bytes": 1011625
+    },
+    {
+      "file": "06-field.png",
+      "sourceFilename": "06 · Field.png",
+      "sha256": "dd0d844136eead1304b8d74da89520be8aa0771e138a629d2fe28c74870c58c9",
+      "bytes": 899263
+    },
+    {
+      "file": "07-station.png",
+      "sourceFilename": "07 · Station.png",
+      "sha256": "f405edd3b0b6867ce6d6eda8305fe58fd476616921433a722eb627f61c4d1d2a",
+      "bytes": 925741
+    },
+    {
+      "file": "08-make-it-yours.png",
+      "sourceFilename": "08 · Make It Yours.png",
+      "sha256": "6be1c6e1bd11baf1ba007a551a74286ee616e606f82fb08250ad9fd912c9feb6",
+      "bytes": 944718
+    },
+    {
+      "file": "09-own-protect-share.png",
+      "sourceFilename": "09 · Own, Protect, Share.png",
+      "sha256": "595149539c21d9773b09244dfccfca71928349311092c7ad353a7c9bb22a77c6",
+      "bytes": 870745
+    },
+    {
+      "file": "10-a-future-you-can-hold.png",
+      "sourceFilename": "10 · A Future You Can Hold.png",
+      "sha256": "7640684b070216137413243eaca368823e39b81645713c5343a0e6ee7761da6c",
+      "bytes": 1296716
+    },
+    {
+      "file": "11-closing.png",
+      "sourceFilename": "11 · Closing.png",
+      "sha256": "894a0614cae9e14dc7795d0a6704069a34243e8e3233fb2ab344bf7a69424974",
+      "bytes": 1370777
+    },
+    {
+      "file": "12-home-leaner-exploration.png",
+      "sourceFilename": "12 · Home — Leaner Exploration.png",
+      "sha256": "547eadbbc239b645734c6de1f053e3568f05bf65557dc703d159f679569c2dab",
+      "bytes": 1691179
+    },
+    {
+      "file": "00-brief-visual-identity.png",
+      "sourceFilename": "Brief & visual identity.png",
+      "sha256": "1a0371ce32e54d51c9a3c255174dd2ccbcc32fbad36557ee1fdcadaac56267fa",
+      "bytes": 1616029
+    }
+  ]
+}

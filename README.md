@@ -1,5 +1,7 @@
 # Crux Garden monorepo
 
+Shared project plans now live here: **[Home](docs/projects/home/README.md)**, **[Migrate](docs/projects/migrate/README.md)** and **[Lifecycle](docs/projects/lifecycle/README.md)**. This is the only repository required by the current MacBook/Omarchy workflow. Start with [agent instructions](AGENTS.md), [current state](NEXT-AGENT-HANDOFF.md), [roadmap](ROADMAP.md) and [cross-machine handoffs](docs/agents/workflow.md). Home and general Lifecycle are plans; Migrate is the existing implementation.
+
 Migrate is the first application here: a standalone desktop tool for bringing personal cloud exports onto storage you control. Its React interface and headless engine can later be hosted in Home, Lab, or Builder.
 
 The first vertical slice is a small Dropbox export: guide → select an existing folder or ZIP → choose destination → review → preserve and verify → reopen and inspect the saved result. The inherited preview also supports TAR/TAR.GZ and includes 32 offline provider guides; these are guidance, not automated cloud connectors.
