@@ -45,4 +45,4 @@ Home host/entry and distribution shape; first journey/persona; library indexing/
 
 ## Context imported, not active instructions
 
-The November 12 refined Home bundle supplies vision and design context. This repository contains a curated synthesis and the original visual files, without private hardware/user setup notes. Older suggestions to inspect sibling app/API repositories or start Migrate again with ZIP intake have been superseded by the current standalone-monorepo implementation. The brief's illustrative assignments do not resume stopped tasks.
+The November 12 refined Home bundle supplies vision and design context. This repository contains a curated synthesis, the original visual files and [the supplied vision as historical context](references/comprehensive-vision-as-supplied.md). The requested machine setup context now lives under [Lifecycle](../lifecycle/omarchy-setup.md). Older suggestions to inspect sibling app/API repositories or start Migrate again with ZIP intake have been superseded by the current standalone-monorepo implementation. The brief's illustrative assignments do not resume stopped tasks.

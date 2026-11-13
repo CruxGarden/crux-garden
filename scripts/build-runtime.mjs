@@ -13,6 +13,7 @@ await build({
     "worker",
     "photo-review-worker",
     "mail-review-worker",
+    "local-comparison-worker",
     "photos-bridge",
     "http",
   ].map((name) => path.join(engine, "src", name + ".ts")),

@@ -137,6 +137,7 @@ async fn migration_request(
         "inspect",
         "photoReview",
         "mailReview",
+        "localCompare",
         "checklist",
         "cloudConnect",
         "cloudStatus",

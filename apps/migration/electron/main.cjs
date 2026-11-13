@@ -189,6 +189,7 @@ if (!app.requestSingleInstanceLock()) {
           "inspect",
           "photoReview",
           "mailReview",
+          "localCompare",
           "checklist",
           "cloudConnect",
           "cloudStatus",

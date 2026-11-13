@@ -1,6 +1,6 @@
 # Migrate
 
-**State:** implemented standalone application; current local-comparison increment is paused and not committed. Display name **Crux Garden Migrate**; package/app paths retain `migration` for stability. Updated November 12, 2026.
+**State:** implemented standalone application; local-comparison code is included as a checkpoint awaiting final native/package qualification. Display name **Crux Garden Migrate**; package/app paths retain `migration` for stability. Updated November 12, 2026.
 
 ## Purpose and boundary
 
@@ -14,9 +14,9 @@ Committed baseline e4eaaaf includes folder/ZIP/TAR/multiple-part and explicit do
 
 A catalog guide is not an automated connector. Provider export requests/downloads remain manual where the actual connector is absent. Live Dropbox shared-file and Bluesky public-record evidence is narrower than complete-account qualification. Production PhotoKit remains disabled despite internal fixture coverage. Account registration, real exports and scale limits remain explicit in [verification](../../verification.md).
 
-## Next paused increment
+## Transferred comparison checkpoint
 
-[Selected local comparison handoff](../../handoffs/migrate-local-comparison.md): ordinary explicit-file imports gain a read-only duplicate summary using existing indexed fingerprints and current-byte checks. The design is tracked here; the unfinished implementation still exists only in the MacBook working tree. A remote clone does not contain it until an explicit code checkpoint is pushed. Do not restart work without a resume instruction.
+[Selected local comparison handoff](../../handoffs/migrate-local-comparison.md): ordinary explicit-file imports gain a read-only duplicate summary using existing indexed fingerprints and current-byte checks. The design, implementation and tests are included together in this transfer checkpoint. Engine/browser/Electron checks pass; final Tauri/package and visual acceptance remain pending. Continue under an agreed task scope; no recurring continuation has been enabled.
 
 ## Home and Lifecycle integration
 

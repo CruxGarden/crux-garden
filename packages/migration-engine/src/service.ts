@@ -55,7 +55,7 @@ export async function createMigrationRuntime(
       : undefined;
   const jobs = new Map<string, MigrationJob>();
   for (const job of await store.loadJobs()) {
-    for (const key of ["photoReview", "mailReview"] as const)
+    for (const key of ["photoReview", "mailReview", "localComparison"] as const)
       if (job[key]?.state === "running")
         job[key] = {
           state: "paused",
@@ -83,7 +83,8 @@ export async function createMigrationRuntime(
   const idle = (job: MigrationJob) => {
     if (
       job.photoReview?.state === "running" ||
-      job.mailReview?.state === "running"
+      job.mailReview?.state === "running" ||
+      job.localComparison?.state === "running"
     )
       throw new Error("Pause the review before changing this import.");
     if (job.state === "running" || job.state === "inspecting")
@@ -183,6 +184,7 @@ export async function createMigrationRuntime(
           photoMetadata: true,
           mailInventory: true,
           localFileSelection: true,
+          localComparison: !!store.findFingerprints,
           photoMetadataProviders: PHOTO_REVIEW_PROVIDERS,
         },
       };
@@ -241,6 +243,77 @@ export async function createMigrationRuntime(
       return job;
     }
     const job = get(args.id);
+    if (command === "localCompare") {
+      idle(job);
+      if (worker) throw new Error("Pause the current operation first.");
+      if (!store.findFingerprints)
+        throw new Error("This host has no fingerprint catalog.");
+      if (
+        job.output ||
+        job.sourceKind !== "file-set" ||
+        !job.source ||
+        !job.sourceFiles?.length
+      )
+        throw new Error(
+          "Choose explicit files before preservation to compare existing copies.",
+        );
+      job.localComparison = {
+        state: "running",
+        checked: 0,
+        total: job.sourceFiles.length,
+      };
+      await save(job);
+      activeId = job.id;
+      const comparisonWorker = new Worker(
+        join(__dirname, "local-comparison-worker.cjs"),
+        {
+          workerData: { source: job.source, selected: job.sourceFiles },
+          resourceLimits: { maxOldGenerationSizeMb: 64 },
+        },
+      );
+      worker = comparisonWorker;
+      let result: MigrationJob["localComparison"];
+      comparisonWorker.on("message", (update) => {
+        if (update.type === "candidates") {
+          // The worker only receives bounded hints; it must rehash before trusting them.
+          void writes
+            .then(() =>
+              store.findFingerprints!(
+                "",
+                undefined,
+                { algorithm: "sha256", hex: update.sha256 },
+                update.bytes,
+              ),
+            )
+            .then((files) =>
+              comparisonWorker.postMessage({
+                type: "candidates",
+                files: files.slice(0, 20),
+              }),
+            )
+            .catch(() =>
+              comparisonWorker.postMessage({ type: "candidates", error: true }),
+            );
+        } else if (update.state === "running") job.localComparison = update;
+        else result = update;
+      });
+      comparisonWorker.on("error", () => {
+        result = {
+          state: "failed",
+          error: "Comparison worker stopped. Retry with a smaller selection.",
+        };
+      });
+      comparisonWorker.on("exit", () => {
+        job.localComparison = result || {
+          state: "failed",
+          error: "Comparison stopped. You can retry.",
+        };
+        worker = undefined;
+        activeId = undefined;
+        void save(job).catch(console.error);
+      });
+      return null;
+    }
     if (command === "photoReview" || command === "mailReview") {
       idle(job);
       if (worker) throw new Error("Pause the current operation first.");
@@ -356,6 +429,7 @@ export async function createMigrationRuntime(
       job.sourceArchives = filesOnly ? undefined : names.sort();
       job.sourceFiles = filesOnly ? names.sort() : undefined;
       job.inspection = undefined;
+      job.localComparison = undefined;
       await save(job);
       return null;
     }
@@ -388,6 +462,7 @@ export async function createMigrationRuntime(
             : "tar";
       } else job.destination = folder;
       job.inspection = undefined;
+      job.localComparison = undefined;
       if (
         job.source &&
         job.destination &&

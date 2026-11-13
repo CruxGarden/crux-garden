@@ -1,25 +1,27 @@
 # Start here — current monorepo state
 
-Updated November 12, 2026. Read [AGENTS.md](AGENTS.md), then the [project index](docs/projects/README.md) and relevant task handoff. Only this repository needs to be cloned; no sibling repository, Mac-specific output directory or conversation is a setup dependency.
+Updated November 12, 2026. Read [AGENTS.md](AGENTS.md), the [documentation index](docs/README.md), then the relevant project/task handoff. Only this repository is required; no sibling clone or conversation is a setup dependency.
 
 ## Current state
 
-- Repository: `CruxGarden/crux-garden`. Current shared development line: `codex/migration-foundation`; main has not been merged or released. Obtain the exact transfer SHA from the sender and verify it using the [workflow](docs/agents/workflow.md).
-- Latest completed **application** checkpoint before this documentation setup: `e4eaaaffa6f8fcdd4554de182cb78f8dfc988a3f` (Messages selected-copy guidance). Documentation commits after it do not include the local comparison implementation.
-- **Migrate work is stopped.** Local comparison source/test changes remain uncommitted on the MacBook. The continuation reminder was deleted. No agent should recreate it or resume that task from this document alone.
-- **Home** and **Lifecycle** are documented projects, not new implemented applications/services. The supplied Home narrative and visual references are included; obsolete suggested first assignments do not override the current Migrate state.
-- Current action is establishing portable shared project documentation and handoffs. Omarchy access, clone and test execution have not been performed here.
+- Repository: `CruxGarden/crux-garden`, shared development branch `codex/migration-foundation`. Main has not been merged or released. Verify the exact pushed SHA in the transfer receipt before taking ownership.
+- The user authorized consolidating and committing all relevant Home/Migrate/Lifecycle code and context. **The previously local-only Migrate comparison implementation is included in this checkpoint**, together with its tests and design. It is no longer missing from a clone of this checkpoint.
+- Application baseline before comparison was `e4eaaaffa6f8fcdd4554de182cb78f8dfc988a3f`. The documentation foundation was `b0fa6cd9f0c6c90c5bbdd1cbe247f1866340e8cb`. This checkpoint has passing engine/browser/Electron checks but final comparison Tauri/package/visual qualification remains pending; no new preview package or release is claimed.
+- Home's earlier migration-focused preview already became Migrate. Current maintained code is in `apps/migration` and shared packages. The broader Home UI and general Lifecycle host manager are still plans. See the [source audit/map](docs/projects/source-map.md), not folder names alone.
+- The [ordered Omarchy setup plan](docs/projects/lifecycle/omarchy-setup.md) covers baseline/recovery → backup → SSH → development → routine maintenance → Bluetooth controller → SDR/HDR/VRR → local AI → chosen Home services. Prior machine reports are preserved as unverified context. No Omarchy command or system change has been executed here.
+- No agent currently owns implementation on Omarchy. The continuation reminder remains deleted. Transfer/commit authorization does not restart unattended development or approve every system change in the plan.
 
 ## Handoffs
 
-| Task | State | Owner / location | Next action |
-| --- | --- | --- | --- |
-| [Local file comparison](docs/handoffs/migrate-local-comparison.md) | Paused; code not yet transferred | MacBook working tree; no active writer | Explicit resume, checkpoint the code, then complete qualification |
-| Home first journey | Planning | Unassigned | Use the [Home project](docs/projects/home/README.md) to propose one scoped journey |
-| Lifecycle contract | Planning | Unassigned | Use the [Lifecycle project](docs/projects/lifecycle/README.md) to define ownership/recovery |
+| Task | State | Next action |
+| --- | --- | --- |
+| [Local file comparison](docs/handoffs/migrate-local-comparison.md) | Code checkpoint available; qualification incomplete | Verify received commit; agree next scoped review/package work |
+| [Omarchy setup](docs/handoffs/omarchy-setup.md) | Ordered plan ready; execution unverified | Start with live baseline and recovery/backup inventory within agreed scope |
+| Home first journey | Planning | Review [Home project](docs/projects/home/README.md) |
+| Lifecycle contract | Planning | Review [Lifecycle project](docs/projects/lifecycle/README.md); distinct from workstation setup |
 
-## Evidence and constraints
+## Validation at this checkpoint
 
-Committed Migrate checkpoint e4eaaaf records 199 engine checks, 17 Electron journeys, 18 browser journeys and macOS Tauri/package checks. The newer local comparison tree passed 205 engine checks, 17 Electron journeys and 18 browser journeys before stopping; final comparison Tauri/package and visual acceptance are not complete. Those newer checks do not describe the code an Omarchy clone receives. See the task handoff and [verification history](docs/verification.md).
+`npm run verify`: 205 checks pass. Browser embedding: 18 journeys pass. Electron desktop: 17 journeys pass after removing inherited `ELECTRON_RUN_AS_NODE=1` from the test command; the initial VS Code-environment attempt failed before application launch. No source change was needed for that environment issue. See [verification history](docs/verification.md) and [comparison handoff](docs/handoffs/migrate-local-comparison.md).
 
-Production Photos remains disabled; real-account and maximum-scale checks remain pending as documented per provider. Preserve originals, personal data and unrelated local changes. Toadstool remains stopped. No merge to main, public release or host administration is part of this setup.
+Production Photos remains disabled; live account/export, scale and Linux distribution gaps remain as documented. Preserve originals and unrelated work. Toadstool stays stopped. No main merge, release, driver, boot, partition, account or host administration action is included in this consolidation.

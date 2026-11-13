@@ -108,7 +108,7 @@ export async function startLocalApi(service: MigrationService) {
         });
       } else {
         const match =
-          /^\/v1\/jobs\/([a-zA-Z0-9-]+)\/(source|archiveSet|fileSet|destination|inspect|start|pause|checklist|photoReview|mailReview)$/.exec(
+          /^\/v1\/jobs\/([a-zA-Z0-9-]+)\/(source|archiveSet|fileSet|destination|inspect|start|pause|checklist|photoReview|mailReview|localCompare)$/.exec(
             url.pathname,
           );
         if (request.method !== "POST" || !match) {

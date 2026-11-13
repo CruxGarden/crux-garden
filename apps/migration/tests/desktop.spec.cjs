@@ -1027,6 +1027,14 @@ for (const provider of ["iCloud Photos", "iCloud Messages"]) {
         .getByRole("button", { name: "Choose destination", exact: true })
         .click();
       await page
+        .getByRole("button", { name: "Check for existing copies", exact: true })
+        .click();
+      await expect(
+        page.getByText("Matching files: 0 · No verified match found: 3", {
+          exact: true,
+        }),
+      ).toBeVisible();
+      await page
         .getByRole("button", { name: "Review files", exact: true })
         .click();
       await expect(

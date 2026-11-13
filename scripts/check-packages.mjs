@@ -275,6 +275,17 @@ for (const app of [
       paths: [path.join(takeoutSource, "photo.jpg")],
     });
     await request("destination", { id: selectedJob.id, path: destination });
+    await request("localCompare", { id: selectedJob.id });
+    let compared;
+    for (let i = 0; i < 150; i++) {
+      compared = (await request("list")).find(
+        (j) => j.id === selectedJob.id,
+      ).localComparison;
+      if (compared?.state !== "running") break;
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+    assert.equal(compared.state, "complete", compared.error);
+    assert.equal(compared.counts.matched, 1);
     await request("inspect", { id: selectedJob.id });
     assert.equal((await settle(selectedJob.id)).inspection.files, 1);
     await request("start", { id: selectedJob.id });
@@ -464,6 +475,11 @@ for (const app of [
       );
     await close();
     launch();
+    assert.equal(
+      (await request("list")).find((j) => j.id === selectedJob.id)
+        .localComparison.counts.matched,
+      1,
+    );
     assert.equal(
       (await request("list")).find((j) => j.id === xArchive.id).photoReview
         .counts.matched,

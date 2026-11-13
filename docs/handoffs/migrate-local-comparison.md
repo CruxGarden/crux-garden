@@ -1,55 +1,52 @@
 # Migrate — selected local-file comparison
 
 Updated: November 12, 2026 (America/New_York)
-Status: **paused by user**
-Owner: MacBook working tree; no active writer
-Receiver: unassigned
+Status: **ready-for-transfer as an implementation checkpoint; final qualification incomplete**
+Owner: MacBook consolidation finished; receiving agent unassigned
 Branch: `codex/migration-foundation`
-Last completed application commit: `e4eaaaffa6f8fcdd4554de182cb78f8dfc988a3f`
-Code availability: **implementation is local-only and uncommitted on MacBook**. This documentation commit transfers its design and status, not the implementation. An Omarchy clone must not assume the new API/UI exists.
-Authorization: documentation transfer is authorized. The user stopped development; the continuation reminder was deleted. Explicit resume is required before continuing implementation or scheduling it.
+Previous completed application baseline: `e4eaaaffa6f8fcdd4554de182cb78f8dfc988a3f`
+Code availability: **all comparison source/test changes described below are included in this commit**. Use the full pushed SHA in the transfer receipt. No local-only patch or sibling repository is required.
+Authorization: the user requested relevant code/docs consolidation and commit after the earlier stop. This checkpoint transfers existing work; it does not enable unattended development, restore the deleted reminder or authorize unrelated host changes. Agree the next task before continuing.
 
-## Objective
+## Objective and implementation
 
-Let users compare explicitly selected local files against known content before preservation. Rehash catalog candidates, show current matches and stale/unreadable locations, and preserve every selected file regardless of comparison. No deletion, merging, skipped copies or automatic storage deduplication.
+Explicit selected-file imports can compare against indexed content before preservation. The worker hashes selected bytes, asks the API owner for at most 20 SHA-256/size candidates, rehashes their current contents, excludes the source path and checks source identity again before publishing. No worker SQLite access; one shared worker lifecycle. Optional job state survives restart; changing selection clears the summary; pause/restart discards partial results. Source errors/budget exhaustion fail the whole observation. Every selected file is still copied by preservation.
 
-See [design and bounds](../local-comparison.md), [ADR0095](../adr/0095-migrate-collections-and-content-inventory.md), and [Migrate project](../projects/migrate/README.md).
+See [design](../local-comparison.md), [ADR0095](../adr/0095-migrate-collections-and-content-inventory.md), [API](../local-api.md) and [Migrate project](../projects/migrate/README.md). A matching path may be a hard link, and the dated bounded summary is not proof of independent backup or global absence of duplicates.
 
-## Local implementation at pause
+## Included code
 
-The existing Node service owns one comparison worker and the API-owned fingerprint catalog. The worker hashes explicit selected files, requests at most 20 SHA-256/size candidates per source, rehashes candidates, excludes the source path and checks source identity again before publishing. No worker SQLite access. Results are optional job state; selection changes clear them. Pause/restart discards partial results. The UI exposes a dated summary, 50-row preview and limits. A matching path is not proof of independent backup.
+- `packages/migration-engine/src/local-comparison.ts`: bounded read-only comparison workflow.
+- `packages/migration-engine/src/local-comparison-worker.ts`: cancellable worker/catalog request protocol; no database owner.
+- `packages/migration-engine/src/cloud/fingerprints.ts`: optional strict path/identity and read-budget hooks.
+- Engine `service.ts`/`http.ts`: capability, dispatch, lifecycle and persisted summary; contracts in `packages/migration-contracts/src/index.ts`.
+- `packages/migration-ui/src/LocalComparison.tsx` and `MigrationApp.tsx`: optional comparison controls, explicit limits and current-byte result preview.
+- Native allowlists, runtime build entry, package check, engine regression fixtures and selected-file browser/desktop journeys.
 
-Untracked new code at pause: `packages/migration-engine/src/local-comparison.ts`, `local-comparison-worker.ts`, `packages/migration-engine/tests/local-comparison.test.cjs`, `packages/migration-ui/src/LocalComparison.tsx` (the second engine filename is in the same src directory).
+## Validation for this transfer
 
-Modified tracked code at pause: contracts; engine `cloud/fingerprints.ts`, `service.ts`, `http.ts`; UI `MigrationApp.tsx`; both desktop host allowlists; runtime build entry list; package checks; selected-file browser and desktop journeys. Inspect the MacBook diff before checkpointing; no source patch is embedded in this handoff.
+All fixtures are isolated/synthetic on macOS Apple Silicon. These checks were rerun for the source being committed, not inferred from the earlier handoff.
 
-## Verification observed before stop
+| Check | Result | Limits |
+| --- | --- | --- |
+| `npm run verify` | 205 pass, no skips | Typecheck, boundary, UI/runtime build and engine/API tests |
+| `npm run test:embedding` | 18 pass, 18.5 sec | Injected client, selection, saved summary and restart |
+| `env -u ELECTRON_RUN_AS_NODE npm run test:desktop` | 17 pass, 1.1 min | Initial plain command failed at launch due to VS Code's inherited Node-mode variable; corrected environment passes |
+| Final Tauri build/package/restart | Not run for comparison | Existing distributable remains at e4eaaaf; package check source is included but not yet qualified for this change |
+| Visual acceptance | Not complete | Layout assertions are not a full visual review |
+| Omarchy/Linux and maximum-scale/personal data | Not run | No claim of qualification |
 
-These logs were read during documentation setup; no application checks were rerun for this documentation change. All results below describe the **uncommitted MacBook tree**, not the committed application baseline.
+The six new engine tests cover renamed equal bytes, stale/missing catalog paths, source exclusion, symlinks, source changes, selection/read/candidate/preview bounds, cancellation, catalog failure, authenticated HTTP dispatch, worker ownership, restart and summary invalidation. Limits: 500 explicit files, 16 GiB/file, 64 GiB combined reads, 20 candidates/file, 50 preview rows.
 
-| Check | Platform | Result | Limits |
-| --- | --- | --- | --- |
-| `npm run verify` | macOS Apple Silicon | 205 checks passed | Includes typecheck/boundary/build and six new comparison checks; synthetic fixtures |
-| `npm run test:desktop` | macOS Electron | 17 journeys passed, 1.3 min | Electron is not the final Tauri UI |
-| `npm run test:embedding` | macOS Chromium | 18 journeys passed, 29.8 sec | Injected client and saved comparison summary |
-| Final Tauri build/package/restart for this change | macOS | Not run | Existing distributable remains at e4eaaaf |
-| Visual acceptance of comparison UI | macOS | Not complete | Browser layout assertions alone are not visual acceptance |
-| Omarchy / Linux | Linux | Not run | No platform or package claim |
+## Exact next steps
 
-Comparison checks cover renamed equal bytes, changed/missing candidates, source exclusion, symlinks, source changes, selection/read/candidate/preview budgets, cancellation, catalog failure, authenticated HTTP dispatch, worker ownership, persisted restart and summary invalidation. Maximum-scale and personal-data acceptance remain unqualified.
+1. Verify the received commit and read current source. Review hashing/path/identity, worker error/cancellation lifetime, and UI busy/disabled-state behavior; a fixture pass is not exhaustive proof.
+2. In an agreed MacBook task, finish Tauri build and packaged-worker/restart acceptance, then inspect the comparison UI. Never rebuild runtime-dist during acceptance runs. Update validation and artifacts only after those checks.
+3. In an agreed Omarchy task, establish platform baseline and report unsupported build/test assumptions separately. Use the ordered setup plan for any machine prerequisites rather than changing the system opportunistically.
+4. Fix findings with focused regressions; commit/push verified changes and update this handoff. Do not merge main or publish a release automatically.
 
-## Next steps when resumed
-
-1. On MacBook inspect current changes; preserve other tasks. Review comparison lifecycle, hashing/path checks, budget/cancellation behavior and UI disabled states. Check design against code rather than treating passing fixtures as proof of completeness.
-2. Create an explicit WIP code+handoff checkpoint if transferring to Omarchy before completion; push and send the exact SHA. Change code availability in this file only once those files are actually included. Until then do not recreate the missing implementation on the receiving machine.
-3. Finish appropriate checks, Tauri build and packaged-worker/restart acceptance on MacBook; inspect the resulting UI. Never rebuild runtime-dist while acceptance runs.
-4. Assess Linux support in a separately scoped branch/task; preserve the macOS baseline and record unsupported tests/configuration honestly.
-5. Update API docs, verification, current-state index and verified artifacts as appropriate. Commit/push coherent work; do not merge main or release.
-
-## Boundaries
-
-16 GiB/file, 64 GiB combined reads, 500 selected files and 20 candidates/file; summaries are bounded and point-in-time. Folder expansion and disk cleanup are not part of this slice. Production Photos remains disabled; no real account or library should be used as a readiness check. Existing provider-account/format/scale gaps remain separate.
+Folder expansion, automatic cleanup and disk deduplication are outside this slice. Production Photos remains disabled and existing account/format/scale gaps remain separate. No user library/account access is a readiness test.
 
 ## Suggested skills
 
-No required external skill. Use a disciplined diagnosis workflow if a reproducible failure appears; the repository's tests and decisions are the portable source of truth.
+No external skill is required to pick up the work. A disciplined diagnosis workflow is useful if a reproducible failure appears; source, tests and decisions here are the portable evidence.

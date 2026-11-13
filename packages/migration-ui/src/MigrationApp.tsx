@@ -17,6 +17,7 @@ import Downloads from "./Downloads";
 import CloudServices from "./CloudServices";
 import PhotoReview from "./PhotoReview";
 import MailReview from "./MailReview";
+import LocalComparison from "./LocalComparison";
 import "./migration.css";
 
 const size = (n: number) =>
@@ -47,6 +48,7 @@ export default function MigrationApp({
   const [hasDownloads, setHasDownloads] = useState(false);
   const [hasFileSelection, setHasFileSelection] = useState(false);
   const [mailInventory, setMailInventory] = useState(false);
+  const [hasLocalComparison, setHasLocalComparison] = useState(false);
   const [photoProviders, setPhotoProviders] = useState<string[]>([]);
   const [mood, setMood] = useState<Record<string, string>>({});
   const [tokenFilter, setTokenFilter] = useState("");
@@ -85,6 +87,7 @@ export default function MigrationApp({
         setHasDownloads(!!info.capabilities?.sharedFileDownloads);
         setHasFileSelection(!!info.capabilities?.localFileSelection);
         setMailInventory(!!info.capabilities?.mailInventory);
+        setHasLocalComparison(!!info.capabilities?.localComparison);
         setPhotoProviders(
           info.capabilities?.photoMetadataProviders ||
             (info.capabilities?.photoMetadata ? ["Flickr"] : []),
@@ -475,6 +478,19 @@ export default function MigrationApp({
                         Choose destination
                       </Button>
                     </div>
+                    {hasLocalComparison &&
+                      job.sourceKind === "file-set" &&
+                      (!job.output || job.localComparison) && (
+                        <LocalComparison
+                          job={job}
+                          busy={busy}
+                          run={(command) =>
+                            void act(() =>
+                              client.request(command, { id: job.id }),
+                            )
+                          }
+                        />
+                      )}
                     {!job.output && (
                       <div className="migration-choice">
                         <span>

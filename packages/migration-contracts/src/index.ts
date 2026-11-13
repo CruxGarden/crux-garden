@@ -25,6 +25,7 @@ export interface MigrationJob {
   checklist?: Record<string, boolean>;
   photoReview?: PhotoReview;
   mailReview?: MailReview;
+  localComparison?: LocalComparison;
   inspection?: {
     files: number;
     bytes: number;
@@ -102,12 +103,28 @@ export interface MailReview {
     }>;
   }>;
 }
+export interface LocalComparison {
+  state: "running" | "complete" | "failed" | "paused";
+  checked?: number;
+  total?: number;
+  checkedAt?: string;
+  bytesRead?: number;
+  error?: string;
+  counts?: {
+    matched: number;
+    notFound: number;
+    unavailableCandidates: number;
+    candidatesChecked: number;
+  };
+  preview?: Array<{ path: string; match?: string }>;
+}
 export interface MigrationInfo {
   product: "migration";
   capabilities?: {
     sharedFileDownloads: boolean;
     cloudCollections?: boolean;
     localFileSelection?: boolean;
+    localComparison?: boolean;
     photoMetadata?: boolean;
     mailInventory?: boolean;
     photoMetadataProviders?: string[];
@@ -126,6 +143,7 @@ export type MigrationCommand =
   | "inspect"
   | "photoReview"
   | "mailReview"
+  | "localCompare"
   | "checklist"
   | "help"
   | "cloudConnect"

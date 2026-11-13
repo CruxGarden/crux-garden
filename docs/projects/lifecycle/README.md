@@ -2,6 +2,10 @@
 
 **State:** proposed project/contract, not an implemented general host agent or daemon. Updated November 12, 2026. This project name comes from the user's request to organize Home, migration and lifecycle together; the scope below is a working definition for review.
 
+## Workstation setup track
+
+The [ordered Omarchy setup plan](omarchy-setup.md) covers SSH, backups, development tools, controller Bluetooth, SDR/HDR/VRR, then local AI and services. Its [handoff](../../handoffs/omarchy-setup.md) records actual stage status. Configuring this machine is distinct from implementing a reusable Lifecycle product; neither has been executed by adding these plans.
+
 ## Purpose
 
 Make ownership and lifetime of local applications/services explicit: what is installed, configured, running, healthy, stopping, failed or recoverable; who may act; and how state/data survive restart or updates. Home should consume meaningful capability/status information without owning OS process administration.

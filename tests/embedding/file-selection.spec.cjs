@@ -87,6 +87,14 @@ for (const provider of ["iCloud Drive", "iCloud Messages"]) {
         .getByRole("button", { name: "Choose destination", exact: true })
         .click();
       await page
+        .getByRole("button", { name: "Check for existing copies", exact: true })
+        .click();
+      await expect(
+        page.getByText("Matching files: 0 · No verified match found: 3", {
+          exact: true,
+        }),
+      ).toBeVisible();
+      await page
         .getByRole("button", { name: "Review files", exact: true })
         .click();
       await expect(
@@ -101,6 +109,7 @@ for (const provider of ["iCloud Drive", "iCloud Messages"]) {
         }),
       ).toBeVisible();
       const [job] = await runtime.request("list");
+      expect(job.localComparison.counts.notFound).toBe(3);
       expect((await fs.readdir(path.join(job.output, "files"))).sort()).toEqual(
         names.sort(),
       );
@@ -143,6 +152,11 @@ for (const provider of ["iCloud Drive", "iCloud Messages"]) {
         .click();
       await expect(
         page.getByText("3 files selected", { exact: true }),
+      ).toBeVisible();
+      await expect(
+        page.getByText("Matching files: 0 · No verified match found: 3", {
+          exact: true,
+        }),
       ).toBeVisible();
       if (provider === "iCloud Messages") {
         await expect(page.getByText(/^Manual copies only\./)).toBeVisible();

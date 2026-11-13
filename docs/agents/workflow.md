@@ -91,3 +91,7 @@ Finish builds before starting acceptance tests. Never rebuild `runtime-dist` und
 Track project plans, ADRs, agent instructions, curated design references, handoffs, fixtures and source. Keep local transcripts, credentials, runtime databases, personal inventories/exports, logs, build packages, screenshots from personal accounts and local machine paths out. `.agent-local/` is an ignored optional scratch directory; `.env.example` may describe variable names, never credentials. Ignore rules are convenience, not a secret detector; review staged content.
 
 Machine access/SSH addresses and credentials are local configuration, not handoff content. This setup does not establish SSH control or automatic synchronization. Portable command/result summaries live in Git; attach sanitized large logs/build artifacts through approved artifact storage when actually needed.
+
+## VS Code Electron launch environment
+
+An inherited `ELECTRON_RUN_AS_NODE=1` can make the Electron executable reject `--remote-debugging-port` before the app opens. Check this specific variable if that error occurs; on the MacBook transfer run, `env -u ELECTRON_RUN_AS_NODE npm run test:desktop` restored the 17 passing journeys without a source change. This removes the variable for one command, not from the user's global environment.

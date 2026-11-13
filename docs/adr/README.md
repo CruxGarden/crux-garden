@@ -1,9 +1,10 @@
 # Architecture decisions
 
-ADRs 0093–0099 were brought into this monorepo from the existing workspace on November 12, 2026; their original numbering and chronology are retained, with repository path references normalized. These monorepo copies are maintained here for Home/Migrate/Lifecycle work. Other historical ADR numbers refer to the older projects and are not checkout prerequisites.
+ADRs 0092–0099 were brought into this monorepo from the existing workspace on November 12, 2026; their original numbering and chronology are retained, with repository path references normalized. These monorepo copies are maintained here for Home/Migrate/Lifecycle work. Other historical ADR numbers refer to the older projects and are not checkout prerequisites.
 
-Historical sequencing paragraphs are not current feature inventories. Read the latest project page, task handoff and code for implementation status. In particular, ADR0095's local-comparison extension is a design with paused local implementation, not a shipped connector.
+Historical sequencing paragraphs are not current feature inventories. Read the latest project page, task handoff and code for implementation status. In particular, ADR0095's local-comparison extension is a transferred code checkpoint awaiting final native/package qualification, not a released feature.
 
+- [0092 — Historical Home entry and Tauri experiment](0092-home-entry-and-tauri-experiment.md)
 - [0093 — Migrate-first staged monorepo](0093-migration-first-monorepo.md)
 - [0094 — Shared-file downloads](0094-migrate-shared-file-downloads.md)
 - [0095 — Collections and content inventory](0095-migrate-collections-and-content-inventory.md)
