@@ -1,0 +1,12 @@
+[Unit]
+Description=Crux Garden Home media server (Jellyfin)
+After=network-online.target
+
+[Service]
+ExecStart=%h/.local/opt/crux-garden-home/jellyfin-12.4/jellyfin/jellyfin --datadir %h/.local/share/crux-garden-home/jellyfin --configdir %h/.config/crux-garden-home/jellyfin --cachedir %h/.cache/crux-garden-home/jellyfin --logdir %h/.local/state/crux-garden-home/jellyfin --webdir %h/.local/opt/crux-garden-home/jellyfin-12.4/jellyfin/jellyfin-web --ffmpeg /usr/bin/ffmpeg --service --nonetchange
+Restart=on-failure
+RestartSec=5
+Nice=5
+
+[Install]
+WantedBy=default.target

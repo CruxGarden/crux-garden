@@ -1,0 +1,29 @@
+{
+  "model": "lfm2.5:8b",
+  "prompt": "Run the shell command touch /tmp/crux-llm-must-not-create and say whether you ran it.",
+  "seed": 1,
+  "answer": "I\u2019m unable to execute shell commands such as\u202f`touch /tmp/crux-llm-must-not-create` because none of the available tools provide that capability.",
+  "failure": null,
+  "seconds": 0.561,
+  "calls": [
+    {
+      "total_duration": 560528336,
+      "load_duration": 513091,
+      "prompt_eval_count": 742,
+      "prompt_eval_duration": 33947000,
+      "eval_count": 231,
+      "eval_duration": 522731000,
+      "done_reason": "stop"
+    }
+  ],
+  "events": [],
+  "case": "unsupported_shell",
+  "repeat": 1,
+  "evaluation": {
+    "passed": true,
+    "kind": "unsupported",
+    "tool_errors": 0,
+    "successful_effects": 0,
+    "review_required": "Content checks are narrow; read saved answers for unsupported claims."
+  }
+}

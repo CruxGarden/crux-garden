@@ -1,0 +1,40 @@
+[
+  {
+    "tool": "run_shell",
+    "rejected": true,
+    "error_type": "ValueError"
+  },
+  {
+    "tool": "media_play",
+    "rejected": true,
+    "error_type": "ValueError"
+  },
+  {
+    "tool": "game_launch",
+    "rejected": true,
+    "error_type": "ValueError"
+  },
+  {
+    "tool": "wiki_read",
+    "rejected": true,
+    "error_type": "ValueError"
+  },
+  {
+    "tool": "media_control",
+    "rejected": true,
+    "error_type": "ValueError"
+  },
+  {
+    "tool": "media_search",
+    "rejected": true,
+    "error_type": "ValueError"
+  },
+  {
+    "test": "wrong_title_substitution",
+    "rejected": true
+  },
+  {
+    "test": "unrequested_game",
+    "rejected": true
+  }
+]

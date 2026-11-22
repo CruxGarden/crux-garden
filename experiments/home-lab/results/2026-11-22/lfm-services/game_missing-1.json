@@ -1,0 +1,101 @@
+{
+  "model": "lfm2.5:8b",
+  "prompt": "Launch Super Mario Odyssey from my installed games.",
+  "seed": 1,
+  "answer": "Super Mario Odyssey could not be found among your installed games.",
+  "failure": null,
+  "seconds": 1.239,
+  "calls": [
+    {
+      "total_duration": 267142830,
+      "load_duration": 445641,
+      "prompt_eval_count": 729,
+      "prompt_eval_duration": 33485999,
+      "eval_count": 101,
+      "eval_duration": 231082000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 360288544,
+      "load_duration": 870172,
+      "prompt_eval_count": 786,
+      "prompt_eval_duration": 13120000,
+      "eval_count": 152,
+      "eval_duration": 344155000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 283413169,
+      "load_duration": 494281,
+      "prompt_eval_count": 883,
+      "prompt_eval_duration": 14721000,
+      "eval_count": 122,
+      "eval_duration": 265567000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 326204810,
+      "load_duration": 528881,
+      "prompt_eval_count": 940,
+      "prompt_eval_duration": 13561000,
+      "eval_count": 135,
+      "eval_duration": 309636000,
+      "done_reason": "stop"
+    }
+  ],
+  "events": [
+    {
+      "tool": "wiki_search",
+      "arguments": {
+        "query": "Super Mario Odyssey"
+      },
+      "result": {
+        "ok": false,
+        "error_type": "URLError",
+        "error": "Local service request failed"
+      },
+      "seconds": 0.0
+    },
+    {
+      "tool": "game_list",
+      "arguments": {},
+      "result": {
+        "ok": true,
+        "games": [
+          {
+            "game_id": "crux-nes",
+            "title": "Crux Checker NES",
+            "core": "nestopia"
+          },
+          {
+            "game_id": "crux-gb",
+            "title": "Crux Checker Game Boy",
+            "core": "mgba"
+          }
+        ]
+      },
+      "seconds": 0.0
+    },
+    {
+      "tool": "wiki_search",
+      "arguments": {
+        "query": "Super Mario Odyssey"
+      },
+      "result": {
+        "ok": false,
+        "error_type": "URLError",
+        "error": "Local service request failed"
+      },
+      "seconds": 0.0
+    }
+  ],
+  "case": "game_missing",
+  "repeat": 1,
+  "evaluation": {
+    "passed": true,
+    "kind": "missing_game",
+    "tool_errors": 2,
+    "successful_effects": 0,
+    "review_required": "Content checks are narrow; read saved answers for unsupported claims."
+  }
+}

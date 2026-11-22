@@ -1,0 +1,22 @@
+[
+  {
+    "file": "media/Crux Garden Calibration.mp4",
+    "bytes": 3311686,
+    "sha256": "306a90bc9e9245196832268ee25ff6b6d54cc6991025028ac707887780b6134f"
+  },
+  {
+    "file": "media/Crux Garden Color Bars.mp4",
+    "bytes": 316003,
+    "sha256": "767de8c925b25f6b4b4507d8a5c72665569d411d9046cf9b1f9f4634973a03e7"
+  },
+  {
+    "file": "games/crux-checker.gb",
+    "bytes": 32768,
+    "sha256": "b4ca98d609613e38dea1ed26191942296f06dadd7db49458a253de9f4b1f3809"
+  },
+  {
+    "file": "games/crux-checker.nes",
+    "bytes": 24592,
+    "sha256": "7486e838fa6423c37113c1fd0dc0697f061c6d8c827a6d002fbbaba5fc7adc6d"
+  }
+]

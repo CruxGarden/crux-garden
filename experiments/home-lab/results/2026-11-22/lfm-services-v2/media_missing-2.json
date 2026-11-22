@@ -1,0 +1,110 @@
+{
+  "model": "lfm2.5:8b",
+  "prompt": "Play the movie The Purple Astronaut of Crux 2099 from my media library.",
+  "seed": 2,
+  "answer": "Sorry, I couldn't locate a movie titled \u201cThe Purple Astronaut of Crux\u202f2099\u201d (or any similar title) in your media library.",
+  "failure": null,
+  "seconds": 1.383,
+  "calls": [
+    {
+      "total_duration": 299188994,
+      "load_duration": 781012,
+      "prompt_eval_count": 784,
+      "prompt_eval_duration": 35139000,
+      "eval_count": 116,
+      "eval_duration": 261260000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 242808926,
+      "load_duration": 511851,
+      "prompt_eval_count": 833,
+      "prompt_eval_duration": 12850000,
+      "eval_count": 101,
+      "eval_duration": 227187000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 301503587,
+      "load_duration": 451171,
+      "prompt_eval_count": 876,
+      "prompt_eval_duration": 12244000,
+      "eval_count": 126,
+      "eval_duration": 286498000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 266126486,
+      "load_duration": 467511,
+      "prompt_eval_count": 918,
+      "prompt_eval_duration": 11895000,
+      "eval_count": 112,
+      "eval_duration": 251200000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 222571261,
+      "load_duration": 402780,
+      "prompt_eval_count": 959,
+      "prompt_eval_duration": 12248000,
+      "eval_count": 91,
+      "eval_duration": 207143000,
+      "done_reason": "stop"
+    }
+  ],
+  "events": [
+    {
+      "tool": "media_search",
+      "arguments": {
+        "query": "The Purple Astronaut of Crux 2099"
+      },
+      "result": {
+        "ok": true,
+        "results": []
+      },
+      "seconds": 0.012
+    },
+    {
+      "tool": "media_search",
+      "arguments": {
+        "query": "Purple Astronaut"
+      },
+      "result": {
+        "ok": true,
+        "results": []
+      },
+      "seconds": 0.012
+    },
+    {
+      "tool": "media_search",
+      "arguments": {
+        "query": "Astronaut"
+      },
+      "result": {
+        "ok": true,
+        "results": []
+      },
+      "seconds": 0.012
+    },
+    {
+      "tool": "media_search",
+      "arguments": {
+        "query": "Purple"
+      },
+      "result": {
+        "ok": true,
+        "results": []
+      },
+      "seconds": 0.011
+    }
+  ],
+  "case": "media_missing",
+  "repeat": 2,
+  "evaluation": {
+    "passed": false,
+    "kind": "missing_media",
+    "tool_errors": 0,
+    "successful_effects": 0,
+    "review_required": "Content checks are narrow; read saved answers for unsupported claims."
+  }
+}

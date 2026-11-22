@@ -1,0 +1,51 @@
+{
+  "model": "qwen3.5:9b",
+  "prompt": "Find and play Crux Garden Calibration from Jellyfin.",
+  "seed": 3,
+  "answer": "I apologize, but I'm unable to search Jellyfin for \"Crux Garden Calibration\" as the local service request failed. The media search function is not currently accessible.\n\nIf you'd like to try a different approach or have another request, please let me know!",
+  "failure": null,
+  "seconds": 0.823,
+  "calls": [
+    {
+      "total_duration": 357035344,
+      "load_duration": 476351,
+      "prompt_eval_count": 996,
+      "prompt_eval_duration": 132273000,
+      "eval_count": 29,
+      "eval_duration": 221116000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 464315886,
+      "load_duration": 525391,
+      "prompt_eval_count": 1060,
+      "prompt_eval_duration": 33345000,
+      "eval_count": 55,
+      "eval_duration": 427034000,
+      "done_reason": "stop"
+    }
+  ],
+  "events": [
+    {
+      "tool": "media_search",
+      "arguments": {
+        "query": "Crux Garden Calibration"
+      },
+      "result": {
+        "ok": false,
+        "error_type": "URLError",
+        "error": "Local service request failed"
+      },
+      "seconds": 0.0
+    }
+  ],
+  "case": "media_unavailable",
+  "repeat": 3,
+  "evaluation": {
+    "passed": true,
+    "kind": "unavailable",
+    "tool_errors": 1,
+    "successful_effects": 0,
+    "review_required": "Content checks are narrow; read saved answers for unsupported claims."
+  }
+}

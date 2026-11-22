@@ -1,0 +1,144 @@
+{
+  "model": "lfm2.5:8b",
+  "prompt": "Launch the available Crux Checker Game Boy game, pause it, resume it, then stop it.",
+  "seed": 1,
+  "answer": "The Crux Checker Game Boy game has been launched, paused, resumed, and then stopped successfully.",
+  "failure": null,
+  "seconds": 2.389,
+  "calls": [
+    {
+      "total_duration": 331281690,
+      "load_duration": 487971,
+      "prompt_eval_count": 740,
+      "prompt_eval_duration": 34244000,
+      "eval_count": 131,
+      "eval_duration": 294152000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 227381346,
+      "load_duration": 925862,
+      "prompt_eval_count": 837,
+      "prompt_eval_duration": 15064000,
+      "eval_count": 94,
+      "eval_duration": 208706000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 45913146,
+      "load_duration": 748172,
+      "prompt_eval_count": 928,
+      "prompt_eval_duration": 16635000,
+      "eval_count": 11,
+      "eval_duration": 25420000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 45675516,
+      "load_duration": 526791,
+      "prompt_eval_count": 1002,
+      "prompt_eval_duration": 13585000,
+      "eval_count": 12,
+      "eval_duration": 28842000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 45487485,
+      "load_duration": 769412,
+      "prompt_eval_count": 1077,
+      "prompt_eval_duration": 15369000,
+      "eval_count": 11,
+      "eval_duration": 26245000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 225269641,
+      "load_duration": 713951,
+      "prompt_eval_count": 1128,
+      "prompt_eval_duration": 12334000,
+      "eval_count": 91,
+      "eval_duration": 208932000,
+      "done_reason": "stop"
+    }
+  ],
+  "events": [
+    {
+      "tool": "game_list",
+      "arguments": {},
+      "result": {
+        "ok": true,
+        "games": [
+          {
+            "game_id": "crux-nes",
+            "title": "Crux Checker NES",
+            "core": "nestopia"
+          },
+          {
+            "game_id": "crux-gb",
+            "title": "Crux Checker Game Boy",
+            "core": "mgba"
+          }
+        ]
+      },
+      "seconds": 0.0
+    },
+    {
+      "tool": "game_launch",
+      "arguments": {
+        "game_id": "crux-gb"
+      },
+      "result": {
+        "ok": true,
+        "game_id": "crux-gb",
+        "state": "playing",
+        "observed_status": "GET_STATUS PLAYING game_boy_advance,crux-checker,crc32=ab50a613"
+      },
+      "seconds": 1.001
+    },
+    {
+      "tool": "game_control",
+      "arguments": {
+        "action": "pause"
+      },
+      "result": {
+        "ok": true,
+        "state": "paused",
+        "observed_status": "GET_STATUS PAUSED game_boy_advance,crux-checker,crc32=ab50a613"
+      },
+      "seconds": 0.16
+    },
+    {
+      "tool": "game_control",
+      "arguments": {
+        "action": "resume"
+      },
+      "result": {
+        "ok": true,
+        "state": "playing",
+        "observed_status": "GET_STATUS PLAYING game_boy_advance,crux-checker,crc32=ab50a613"
+      },
+      "seconds": 0.154
+    },
+    {
+      "tool": "game_control",
+      "arguments": {
+        "action": "stop"
+      },
+      "result": {
+        "ok": true,
+        "state": "stopped",
+        "exit_code": 0
+      },
+      "seconds": 0.15
+    }
+  ],
+  "case": "gb_cycle",
+  "repeat": 1,
+  "evaluation": {
+    "passed": true,
+    "kind": "game_cycle",
+    "tool_errors": 0,
+    "successful_effects": 1,
+    "review_required": "Content checks are narrow; read saved answers for unsupported claims."
+  }
+}

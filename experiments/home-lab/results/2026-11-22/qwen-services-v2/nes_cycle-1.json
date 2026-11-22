@@ -1,0 +1,144 @@
+{
+  "model": "qwen3.5:9b",
+  "prompt": "List my available games, launch Crux Checker NES, pause it, resume it, then stop it. Report the observed outcomes.",
+  "seed": 1,
+  "answer": "All actions completed successfully:\n\n1. **Launched**: Crux Checker NES started and is playing (observed status: `PLAYING nes,crux-checker,crc32=aa4b881d`)\n2. **Paused**: Game paused successfully (observed status: `PAUSED nes,crux-checker,crc32=aa4b881d`)\n3. **Resumed**: Game resumed and is playing again (observed status: `PLAYING nes,crux-checker,crc32=aa4b881d`)\n4. **Stopped**: Game stopped successfully with exit code 0 (observed status: `STOPPED`)",
+  "failure": null,
+  "seconds": 4.588,
+  "calls": [
+    {
+      "total_duration": 258583195,
+      "load_duration": 501121,
+      "prompt_eval_count": 1060,
+      "prompt_eval_duration": 140692000,
+      "eval_count": 15,
+      "eval_duration": 113290000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 607885910,
+      "load_duration": 466601,
+      "prompt_eval_count": 1150,
+      "prompt_eval_duration": 37155000,
+      "eval_count": 72,
+      "eval_duration": 565956000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 365807833,
+      "load_duration": 577681,
+      "prompt_eval_count": 1285,
+      "prompt_eval_duration": 51247000,
+      "eval_count": 35,
+      "eval_duration": 309746000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 319124311,
+      "load_duration": 630411,
+      "prompt_eval_count": 1373,
+      "prompt_eval_duration": 38228000,
+      "eval_count": 35,
+      "eval_duration": 275538000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 361028755,
+      "load_duration": 539201,
+      "prompt_eval_count": 1461,
+      "prompt_eval_duration": 43049000,
+      "eval_count": 35,
+      "eval_duration": 313418000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 1195017810,
+      "load_duration": 703311,
+      "prompt_eval_count": 1527,
+      "prompt_eval_duration": 35690000,
+      "eval_count": 147,
+      "eval_duration": 1153830000,
+      "done_reason": "stop"
+    }
+  ],
+  "events": [
+    {
+      "tool": "game_list",
+      "arguments": {},
+      "result": {
+        "ok": true,
+        "games": [
+          {
+            "game_id": "crux-nes",
+            "title": "Crux Checker NES",
+            "core": "nestopia"
+          },
+          {
+            "game_id": "crux-gb",
+            "title": "Crux Checker Game Boy",
+            "core": "mgba"
+          }
+        ]
+      },
+      "seconds": 0.0
+    },
+    {
+      "tool": "game_launch",
+      "arguments": {
+        "game_id": "crux-nes"
+      },
+      "result": {
+        "ok": true,
+        "game_id": "crux-nes",
+        "state": "playing",
+        "observed_status": "GET_STATUS PLAYING nes,crux-checker,crc32=aa4b881d"
+      },
+      "seconds": 1.001
+    },
+    {
+      "tool": "game_control",
+      "arguments": {
+        "action": "pause"
+      },
+      "result": {
+        "ok": true,
+        "state": "paused",
+        "observed_status": "GET_STATUS PAUSED nes,crux-checker,crc32=aa4b881d"
+      },
+      "seconds": 0.161
+    },
+    {
+      "tool": "game_control",
+      "arguments": {
+        "action": "resume"
+      },
+      "result": {
+        "ok": true,
+        "state": "playing",
+        "observed_status": "GET_STATUS PLAYING nes,crux-checker,crc32=aa4b881d"
+      },
+      "seconds": 0.164
+    },
+    {
+      "tool": "game_control",
+      "arguments": {
+        "action": "stop"
+      },
+      "result": {
+        "ok": true,
+        "state": "stopped",
+        "exit_code": 0
+      },
+      "seconds": 0.15
+    }
+  ],
+  "case": "nes_cycle",
+  "repeat": 1,
+  "evaluation": {
+    "passed": true,
+    "kind": "game_cycle",
+    "tool_errors": 0,
+    "successful_effects": 1,
+    "review_required": "Content checks are narrow; read saved answers for unsupported claims."
+  }
+}

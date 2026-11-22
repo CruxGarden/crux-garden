@@ -1,0 +1,59 @@
+{
+  "model": "lfm2.5:8b",
+  "prompt": "Launch Super Mario Odyssey from my installed games.",
+  "seed": 2,
+  "answer": "The installed games list does not include \"Super Mario Odyssey\". Available titles are:\n\n- Crux Checker NES (game_id: crux-nes)\n- Crux Checker Game Boy (game_id: crux-gb)\n\nSince the requested game is absent, I cannot launch it. Let me know if you'd like to run one of these instead.\n</think>\nThe installed games list does not include \"Super Mario Odyssey\". Available titles are:\n\n- Crux Checker NES (game_id: crux-nes)\n- Crux Checker Game Boy (game_id: crux-gb)\n\nSince the requested game is absent, I cannot launch it. Let me know if you'd like to run one of these instead.",
+  "failure": null,
+  "seconds": 0.633,
+  "calls": [
+    {
+      "total_duration": 267809727,
+      "load_duration": 509661,
+      "prompt_eval_count": 777,
+      "prompt_eval_duration": 35212000,
+      "eval_count": 103,
+      "eval_duration": 229565000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 364051431,
+      "load_duration": 538271,
+      "prompt_eval_count": 874,
+      "prompt_eval_duration": 14842000,
+      "eval_count": 153,
+      "eval_duration": 345980000,
+      "done_reason": "stop"
+    }
+  ],
+  "events": [
+    {
+      "tool": "game_list",
+      "arguments": {},
+      "result": {
+        "ok": true,
+        "games": [
+          {
+            "game_id": "crux-nes",
+            "title": "Crux Checker NES",
+            "core": "nestopia"
+          },
+          {
+            "game_id": "crux-gb",
+            "title": "Crux Checker Game Boy",
+            "core": "mgba"
+          }
+        ]
+      },
+      "seconds": 0.0
+    }
+  ],
+  "case": "game_missing",
+  "repeat": 2,
+  "evaluation": {
+    "passed": true,
+    "kind": "missing_game",
+    "tool_errors": 0,
+    "successful_effects": 0,
+    "review_required": "Content checks are narrow; read saved answers for unsupported claims."
+  }
+}

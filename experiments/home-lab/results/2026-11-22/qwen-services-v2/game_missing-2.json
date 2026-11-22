@@ -1,0 +1,59 @@
+{
+  "model": "qwen3.5:9b",
+  "prompt": "Launch Super Mario Odyssey from my installed games.",
+  "seed": 2,
+  "answer": "I don't see \"Super Mario Odyssey\" in your installed games list. The available games are:\n- Crux Checker NES (nestopia core)\n- Crux Checker Game Boy (mgba core)\n\nSuper Mario Odyssey is not currently installed on your system. Would you like me to help you with anything else, or would you prefer to play one of the available games instead?",
+  "failure": null,
+  "seconds": 0.915,
+  "calls": [
+    {
+      "total_duration": 254983535,
+      "load_duration": 490901,
+      "prompt_eval_count": 1043,
+      "prompt_eval_duration": 141131000,
+      "eval_count": 15,
+      "eval_duration": 109883000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 658799819,
+      "load_duration": 500191,
+      "prompt_eval_count": 1133,
+      "prompt_eval_duration": 37570000,
+      "eval_count": 80,
+      "eval_duration": 617452000,
+      "done_reason": "stop"
+    }
+  ],
+  "events": [
+    {
+      "tool": "game_list",
+      "arguments": {},
+      "result": {
+        "ok": true,
+        "games": [
+          {
+            "game_id": "crux-nes",
+            "title": "Crux Checker NES",
+            "core": "nestopia"
+          },
+          {
+            "game_id": "crux-gb",
+            "title": "Crux Checker Game Boy",
+            "core": "mgba"
+          }
+        ]
+      },
+      "seconds": 0.0
+    }
+  ],
+  "case": "game_missing",
+  "repeat": 2,
+  "evaluation": {
+    "passed": true,
+    "kind": "missing_game",
+    "tool_errors": 0,
+    "successful_effects": 0,
+    "review_required": "Content checks are narrow; read saved answers for unsupported claims."
+  }
+}

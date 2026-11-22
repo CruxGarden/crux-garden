@@ -1,0 +1,12 @@
+[Unit]
+Description=Crux Garden Home offline Wikipedia (Kiwix)
+ConditionPathExists=%h/.local/share/crux-garden-home/kiwix/wikipedia_en_all_maxi_2026-08.zim.verified.json
+
+[Service]
+ExecStart=%h/.local/opt/crux-garden-home/kiwix-3.8.2/kiwix-tools_linux-x86_64-musl-3.8.2/kiwix-serve --address=127.0.0.1 --port=8081 --threads=4 %h/.local/share/crux-garden-home/kiwix/wikipedia_en_all_maxi_2026-08.zim
+Restart=on-failure
+RestartSec=5
+Nice=5
+
+[Install]
+WantedBy=default.target

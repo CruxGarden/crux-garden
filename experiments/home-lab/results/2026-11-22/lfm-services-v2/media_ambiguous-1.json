@@ -1,0 +1,90 @@
+{
+  "model": "lfm2.5:8b",
+  "prompt": "Play Crux Garden from my video library.",
+  "seed": 1,
+  "answer": "I found two items related to \"Crux Garden\" in your video library:  \n1. **Crux Garden Calibration** (30 seconds)  \n2. **Crux Garden Color Bars** (30 seconds)  \n\nWhich one would you like to play?",
+  "failure": null,
+  "seconds": 4.292,
+  "calls": [
+    {
+      "total_duration": 347429280,
+      "load_duration": 484481,
+      "prompt_eval_count": 775,
+      "prompt_eval_duration": 35391000,
+      "eval_count": 133,
+      "eval_duration": 309549000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 289188610,
+      "load_duration": 551642,
+      "prompt_eval_count": 916,
+      "prompt_eval_duration": 16280000,
+      "eval_count": 118,
+      "eval_duration": 269825000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 3641265916,
+      "load_duration": 624111,
+      "prompt_eval_count": 1013,
+      "prompt_eval_duration": 14891000,
+      "eval_count": 1577,
+      "eval_duration": 3622743000,
+      "done_reason": "stop"
+    }
+  ],
+  "events": [
+    {
+      "tool": "media_search",
+      "arguments": {
+        "query": "Crux Garden"
+      },
+      "result": {
+        "ok": true,
+        "results": [
+          {
+            "item_id": "4c1387eb0e3565a8f8da4e93fc0a2f50",
+            "title": "Crux Garden Calibration",
+            "duration_seconds": 30.0
+          },
+          {
+            "item_id": "2d7f8a97133e303707312e1562d2b2e6",
+            "title": "Crux Garden Color Bars",
+            "duration_seconds": 30.0
+          }
+        ]
+      },
+      "seconds": 0.012
+    },
+    {
+      "tool": "game_list",
+      "arguments": {},
+      "result": {
+        "ok": true,
+        "games": [
+          {
+            "game_id": "crux-nes",
+            "title": "Crux Checker NES",
+            "core": "nestopia"
+          },
+          {
+            "game_id": "crux-gb",
+            "title": "Crux Checker Game Boy",
+            "core": "mgba"
+          }
+        ]
+      },
+      "seconds": 0.0
+    }
+  ],
+  "case": "media_ambiguous",
+  "repeat": 1,
+  "evaluation": {
+    "passed": true,
+    "kind": "ambiguous_media",
+    "tool_errors": 0,
+    "successful_effects": 0,
+    "review_required": "Content checks are narrow; read saved answers for unsupported claims."
+  }
+}

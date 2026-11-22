@@ -1,0 +1,147 @@
+{
+  "model": "lfm2.5:8b",
+  "prompt": "Find Crux Garden Calibration, play it, pause it, then resume it and stop it. Report whether each action succeeded.",
+  "seed": 2,
+  "answer": "Play: success; pause: success; resume: success; stop: success.",
+  "failure": null,
+  "seconds": 3.659,
+  "calls": [
+    {
+      "total_duration": 364408737,
+      "load_duration": 429110,
+      "prompt_eval_count": 744,
+      "prompt_eval_duration": 33642000,
+      "eval_count": 146,
+      "eval_duration": 328262000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 580729819,
+      "load_duration": 542301,
+      "prompt_eval_count": 839,
+      "prompt_eval_duration": 15544000,
+      "eval_count": 246,
+      "eval_duration": 561597000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 253719301,
+      "load_duration": 850992,
+      "prompt_eval_count": 1004,
+      "prompt_eval_duration": 18127000,
+      "eval_count": 101,
+      "eval_duration": 231340000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 156328790,
+      "load_duration": 595621,
+      "prompt_eval_count": 1069,
+      "prompt_eval_duration": 13419000,
+      "eval_count": 63,
+      "eval_duration": 139484000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 372981552,
+      "load_duration": 645821,
+      "prompt_eval_count": 1134,
+      "prompt_eval_duration": 13982000,
+      "eval_count": 154,
+      "eval_duration": 355534000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 213862487,
+      "load_duration": 758932,
+      "prompt_eval_count": 1185,
+      "prompt_eval_duration": 13065000,
+      "eval_count": 87,
+      "eval_duration": 196756000,
+      "done_reason": "stop"
+    }
+  ],
+  "events": [
+    {
+      "tool": "media_search",
+      "arguments": {
+        "query": "Crux Garden Calibration"
+      },
+      "result": {
+        "ok": true,
+        "results": [
+          {
+            "item_id": "4c1387eb0e3565a8f8da4e93fc0a2f50",
+            "title": "Crux Garden Calibration",
+            "duration_seconds": 30.0
+          }
+        ]
+      },
+      "seconds": 0.012
+    },
+    {
+      "tool": "media_play",
+      "arguments": {
+        "item_id": "4c1387eb0e3565a8f8da4e93fc0a2f50"
+      },
+      "result": {
+        "ok": true,
+        "item_id": "4c1387eb0e3565a8f8da4e93fc0a2f50",
+        "state": "playing",
+        "observed_time_seconds": 0.3,
+        "time_advanced": true,
+        "video_codec": "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
+        "audio_codec": "AAC (Advanced Audio Coding)",
+        "muted_for_test": true
+      },
+      "seconds": 0.987
+    },
+    {
+      "tool": "media_control",
+      "arguments": {
+        "action": "pause"
+      },
+      "result": {
+        "ok": true,
+        "state": "paused",
+        "time_seconds": 0.566667,
+        "time_delta": 0.0
+      },
+      "seconds": 0.251
+    },
+    {
+      "tool": "media_control",
+      "arguments": {
+        "action": "resume"
+      },
+      "result": {
+        "ok": true,
+        "state": "playing",
+        "time_seconds": 0.8,
+        "time_delta": 0.233
+      },
+      "seconds": 0.251
+    },
+    {
+      "tool": "media_control",
+      "arguments": {
+        "action": "stop"
+      },
+      "result": {
+        "ok": true,
+        "state": "stopped",
+        "exit_code": 0
+      },
+      "seconds": 0.214
+    }
+  ],
+  "case": "routing_unspecified",
+  "repeat": 2,
+  "evaluation": {
+    "passed": true,
+    "kind": "media_cycle",
+    "tool_errors": 0,
+    "successful_effects": 1,
+    "review_required": "Content checks are narrow; read saved answers for unsupported claims."
+  }
+}

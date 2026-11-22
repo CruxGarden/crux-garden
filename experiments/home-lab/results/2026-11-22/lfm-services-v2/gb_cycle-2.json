@@ -1,0 +1,164 @@
+{
+  "model": "lfm2.5:8b",
+  "prompt": "Launch the available Crux Checker Game Boy game, pause it, resume it, then stop it.",
+  "seed": 2,
+  "answer": "The Crux Checker Game Boy game has been launched, paused, resumed, and then stopped as requested.",
+  "failure": null,
+  "seconds": 7.504,
+  "calls": [
+    {
+      "total_duration": 363755052,
+      "load_duration": 447431,
+      "prompt_eval_count": 788,
+      "prompt_eval_duration": 35369000,
+      "eval_count": 145,
+      "eval_duration": 325829000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 257801291,
+      "load_duration": 501391,
+      "prompt_eval_count": 885,
+      "prompt_eval_duration": 14499000,
+      "eval_count": 104,
+      "eval_duration": 240240000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 46437499,
+      "load_duration": 601681,
+      "prompt_eval_count": 976,
+      "prompt_eval_duration": 17102000,
+      "eval_count": 11,
+      "eval_duration": 25997000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 2942608366,
+      "load_duration": 461081,
+      "prompt_eval_count": 1020,
+      "prompt_eval_duration": 12657000,
+      "eval_count": 1202,
+      "eval_duration": 2926928000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 1828537531,
+      "load_duration": 570521,
+      "prompt_eval_count": 1094,
+      "prompt_eval_duration": 13969000,
+      "eval_count": 791,
+      "eval_duration": 1809454000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 341103002,
+      "load_duration": 639191,
+      "prompt_eval_count": 1169,
+      "prompt_eval_duration": 15127000,
+      "eval_count": 130,
+      "eval_duration": 321425000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 254358774,
+      "load_duration": 741191,
+      "prompt_eval_count": 1220,
+      "prompt_eval_duration": 12874000,
+      "eval_count": 104,
+      "eval_duration": 237518000,
+      "done_reason": "stop"
+    }
+  ],
+  "events": [
+    {
+      "tool": "game_list",
+      "arguments": {},
+      "result": {
+        "ok": true,
+        "games": [
+          {
+            "game_id": "crux-nes",
+            "title": "Crux Checker NES",
+            "core": "nestopia"
+          },
+          {
+            "game_id": "crux-gb",
+            "title": "Crux Checker Game Boy",
+            "core": "mgba"
+          }
+        ]
+      },
+      "seconds": 0.0
+    },
+    {
+      "tool": "game_launch",
+      "arguments": {
+        "game_id": "crux-gb"
+      },
+      "result": {
+        "ok": true,
+        "game_id": "crux-gb",
+        "state": "playing",
+        "observed_status": "GET_STATUS PLAYING game_boy_advance,crux-checker,crc32=ab50a613"
+      },
+      "seconds": 1.001
+    },
+    {
+      "tool": "media_control",
+      "arguments": {
+        "action": "pause"
+      },
+      "result": {
+        "ok": false,
+        "state": "stopped"
+      },
+      "seconds": 0.0
+    },
+    {
+      "tool": "game_control",
+      "arguments": {
+        "action": "pause"
+      },
+      "result": {
+        "ok": true,
+        "state": "paused",
+        "observed_status": "GET_STATUS PAUSED game_boy_advance,crux-checker,crc32=ab50a613"
+      },
+      "seconds": 0.16
+    },
+    {
+      "tool": "game_control",
+      "arguments": {
+        "action": "resume"
+      },
+      "result": {
+        "ok": true,
+        "state": "playing",
+        "observed_status": "GET_STATUS PLAYING game_boy_advance,crux-checker,crc32=ab50a613"
+      },
+      "seconds": 0.154
+    },
+    {
+      "tool": "game_control",
+      "arguments": {
+        "action": "stop"
+      },
+      "result": {
+        "ok": true,
+        "state": "stopped",
+        "exit_code": 0
+      },
+      "seconds": 0.15
+    }
+  ],
+  "case": "gb_cycle",
+  "repeat": 2,
+  "evaluation": {
+    "passed": true,
+    "kind": "game_cycle",
+    "tool_errors": 1,
+    "successful_effects": 1,
+    "review_required": "Content checks are narrow; read saved answers for unsupported claims."
+  }
+}

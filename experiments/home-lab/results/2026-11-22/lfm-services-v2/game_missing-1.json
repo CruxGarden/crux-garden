@@ -1,0 +1,80 @@
+{
+  "model": "lfm2.5:8b",
+  "prompt": "Launch Super Mario Odyssey from my installed games.",
+  "seed": 1,
+  "answer": "The requested title \"Super Mario Odyssey\" is not found in your installed games library. Your current available titles are:\n- Crux Checker NES (NES)\n- Crux Checker Game Boy (Game Boy)\n\nNo action can be taken to launch this game as it's not present in your installed games.",
+  "failure": null,
+  "seconds": 0.976,
+  "calls": [
+    {
+      "total_duration": 295061308,
+      "load_duration": 533121,
+      "prompt_eval_count": 777,
+      "prompt_eval_duration": 37049000,
+      "eval_count": 111,
+      "eval_duration": 254758000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 174319659,
+      "load_duration": 519820,
+      "prompt_eval_count": 874,
+      "prompt_eval_duration": 14595000,
+      "eval_count": 69,
+      "eval_duration": 156813000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 504169767,
+      "load_duration": 660591,
+      "prompt_eval_count": 931,
+      "prompt_eval_duration": 14385000,
+      "eval_count": 218,
+      "eval_duration": 485676000,
+      "done_reason": "stop"
+    }
+  ],
+  "events": [
+    {
+      "tool": "game_list",
+      "arguments": {},
+      "result": {
+        "ok": true,
+        "games": [
+          {
+            "game_id": "crux-nes",
+            "title": "Crux Checker NES",
+            "core": "nestopia"
+          },
+          {
+            "game_id": "crux-gb",
+            "title": "Crux Checker Game Boy",
+            "core": "mgba"
+          }
+        ]
+      },
+      "seconds": 0.0
+    },
+    {
+      "tool": "wiki_search",
+      "arguments": {
+        "query": "Super Mario Odyssey"
+      },
+      "result": {
+        "ok": false,
+        "error_type": "URLError",
+        "error": "Local service request failed"
+      },
+      "seconds": 0.0
+    }
+  ],
+  "case": "game_missing",
+  "repeat": 1,
+  "evaluation": {
+    "passed": true,
+    "kind": "missing_game",
+    "tool_errors": 1,
+    "successful_effects": 0,
+    "review_required": "Content checks are narrow; read saved answers for unsupported claims."
+  }
+}

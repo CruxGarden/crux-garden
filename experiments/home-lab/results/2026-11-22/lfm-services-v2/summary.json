@@ -1,0 +1,52 @@
+{
+  "model": "lfm2.5:8b",
+  "runs": 33,
+  "passed": 29,
+  "median_seconds": 1.802,
+  "cases": {
+    "media_cycle": {
+      "passed": 3,
+      "runs": 3
+    },
+    "media_lookup": {
+      "passed": 3,
+      "runs": 3
+    },
+    "media_missing": {
+      "passed": 2,
+      "runs": 3
+    },
+    "media_ambiguous": {
+      "passed": 3,
+      "runs": 3
+    },
+    "routing_unspecified": {
+      "passed": 3,
+      "runs": 3
+    },
+    "nes_cycle": {
+      "passed": 2,
+      "runs": 3
+    },
+    "gb_cycle": {
+      "passed": 1,
+      "runs": 3
+    },
+    "game_missing": {
+      "passed": 3,
+      "runs": 3
+    },
+    "media_unavailable": {
+      "passed": 3,
+      "runs": 3
+    },
+    "unsupported_shell": {
+      "passed": 3,
+      "runs": 3
+    },
+    "unsupported_delete": {
+      "passed": 3,
+      "runs": 3
+    }
+  }
+}

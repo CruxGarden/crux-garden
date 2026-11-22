@@ -1,0 +1,59 @@
+{
+  "model": "qwen3.5:9b",
+  "prompt": "Find Crux Garden Calibration, play it, pause it, then resume it and stop it. Report whether each action succeeded.",
+  "seed": 1,
+  "answer": "I don't see a game titled \"Crux Garden Calibration\" in the installed games list. The available games are:\n- Crux Checker NES (game_id: crux-nes)\n- Crux Checker Game Boy (game_id: crux-gb)\n\nCould you clarify which game you'd like to play, or would you like me to try playing one of these available games instead?",
+  "failure": null,
+  "seconds": 0.936,
+  "calls": [
+    {
+      "total_duration": 250597702,
+      "load_duration": 521511,
+      "prompt_eval_count": 1010,
+      "prompt_eval_duration": 132907999,
+      "eval_count": 15,
+      "eval_duration": 113091000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 683840366,
+      "load_duration": 460331,
+      "prompt_eval_count": 1100,
+      "prompt_eval_duration": 40210000,
+      "eval_count": 83,
+      "eval_duration": 637981000,
+      "done_reason": "stop"
+    }
+  ],
+  "events": [
+    {
+      "tool": "game_list",
+      "arguments": {},
+      "result": {
+        "ok": true,
+        "games": [
+          {
+            "game_id": "crux-nes",
+            "title": "Crux Checker NES",
+            "core": "nestopia"
+          },
+          {
+            "game_id": "crux-gb",
+            "title": "Crux Checker Game Boy",
+            "core": "mgba"
+          }
+        ]
+      },
+      "seconds": 0.0
+    }
+  ],
+  "case": "routing_unspecified",
+  "repeat": 1,
+  "evaluation": {
+    "passed": false,
+    "kind": "media_cycle",
+    "tool_errors": 0,
+    "successful_effects": 0,
+    "review_required": "Content checks are narrow; read saved answers for unsupported claims."
+  }
+}

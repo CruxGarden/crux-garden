@@ -1,0 +1,61 @@
+{
+  "model": "lfm2.5:8b",
+  "prompt": "Play Crux Garden from my video library.",
+  "seed": 3,
+  "answer": "I found two videos matching \u201cCrux Garden\u201d in your library:\n\n- Crux Garden Calibration (item ID\u202f4c1387eb0e3565a8f8da4e93fc0a2f50)  \n- Crux Garden Color Bars (item ID\u202f2d7f8a97133e303707312e1562d2b2e6)\n\nWhich one would you like to play?",
+  "failure": null,
+  "seconds": 0.963,
+  "calls": [
+    {
+      "total_duration": 351715987,
+      "load_duration": 464041,
+      "prompt_eval_count": 727,
+      "prompt_eval_duration": 33424000,
+      "eval_count": 140,
+      "eval_duration": 315660000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 599168963,
+      "load_duration": 536461,
+      "prompt_eval_count": 868,
+      "prompt_eval_duration": 16320000,
+      "eval_count": 258,
+      "eval_duration": 579665000,
+      "done_reason": "stop"
+    }
+  ],
+  "events": [
+    {
+      "tool": "media_search",
+      "arguments": {
+        "query": "Crux Garden"
+      },
+      "result": {
+        "ok": true,
+        "results": [
+          {
+            "item_id": "4c1387eb0e3565a8f8da4e93fc0a2f50",
+            "title": "Crux Garden Calibration",
+            "duration_seconds": 30.0
+          },
+          {
+            "item_id": "2d7f8a97133e303707312e1562d2b2e6",
+            "title": "Crux Garden Color Bars",
+            "duration_seconds": 30.0
+          }
+        ]
+      },
+      "seconds": 0.011
+    }
+  ],
+  "case": "media_ambiguous",
+  "repeat": 3,
+  "evaluation": {
+    "passed": true,
+    "kind": "ambiguous_media",
+    "tool_errors": 0,
+    "successful_effects": 0,
+    "review_required": "Content checks are narrow; read saved answers for unsupported claims."
+  }
+}

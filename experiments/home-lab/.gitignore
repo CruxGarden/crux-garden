@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+*.part
+*.zim
+*.gguf
+*.mp4
+*.nes
+*.gb
+credentials.json
+*.core

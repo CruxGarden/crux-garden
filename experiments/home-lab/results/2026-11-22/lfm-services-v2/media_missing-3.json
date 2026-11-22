@@ -1,0 +1,50 @@
+{
+  "model": "lfm2.5:8b",
+  "prompt": "Play the movie The Purple Astronaut of Crux 2099 from my media library.",
+  "seed": 3,
+  "answer": "I'm sorry, but I couldn't find a movie titled \u201cThe Purple Astronaut of Crux\u00a02099\u201d in your media library, so I\u2019m unable to start playback.",
+  "failure": null,
+  "seconds": 0.72,
+  "calls": [
+    {
+      "total_duration": 337368734,
+      "load_duration": 477141,
+      "prompt_eval_count": 784,
+      "prompt_eval_duration": 35444000,
+      "eval_count": 130,
+      "eval_duration": 299365000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 364402960,
+      "load_duration": 553721,
+      "prompt_eval_count": 833,
+      "prompt_eval_duration": 13098000,
+      "eval_count": 152,
+      "eval_duration": 348111000,
+      "done_reason": "stop"
+    }
+  ],
+  "events": [
+    {
+      "tool": "media_search",
+      "arguments": {
+        "query": "The Purple Astronaut of Crux 2099"
+      },
+      "result": {
+        "ok": true,
+        "results": []
+      },
+      "seconds": 0.017
+    }
+  ],
+  "case": "media_missing",
+  "repeat": 3,
+  "evaluation": {
+    "passed": true,
+    "kind": "missing_media",
+    "tool_errors": 0,
+    "successful_effects": 0,
+    "review_required": "Content checks are narrow; read saved answers for unsupported claims."
+  }
+}

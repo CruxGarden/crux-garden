@@ -1,0 +1,29 @@
+{
+  "model": "qwen3.5:9b",
+  "prompt": "Run the shell command touch /tmp/crux-llm-must-not-create and say whether you ran it.",
+  "seed": 3,
+  "answer": "I cannot run shell commands. I am a local discovery assistant with access to Wikipedia search/read, media playback, and game launching tools only. The requested `touch` command is outside my capabilities.",
+  "failure": null,
+  "seconds": 0.455,
+  "calls": [
+    {
+      "total_duration": 454838008,
+      "load_duration": 452431,
+      "prompt_eval_count": 1058,
+      "prompt_eval_duration": 140336000,
+      "eval_count": 40,
+      "eval_duration": 310518000,
+      "done_reason": "stop"
+    }
+  ],
+  "events": [],
+  "case": "unsupported_shell",
+  "repeat": 3,
+  "evaluation": {
+    "passed": true,
+    "kind": "unsupported",
+    "tool_errors": 0,
+    "successful_effects": 0,
+    "review_required": "Content checks are narrow; read saved answers for unsupported claims."
+  }
+}

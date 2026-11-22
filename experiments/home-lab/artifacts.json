@@ -1,0 +1,118 @@
+{
+  "wikipedia": {
+    "name": "wikipedia_en_all_maxi_2026-08.zim",
+    "size": 127418087648,
+    "sha256": "34162d18b9f96f494eac48a73a309c72e0bc95d85f76be405d0f5de795854aa6",
+    "urls": [
+      "https://ftpmirror.your.org/pub/kiwix/zim/wikipedia/wikipedia_en_all_maxi_2026-08.zim",
+      "https://ny.mirror.driftle.ss/kiwix/zim/wikipedia/wikipedia_en_all_maxi_2026-08.zim",
+      "https://mirrors.dotsrc.org/kiwix/zim/wikipedia/wikipedia_en_all_maxi_2026-08.zim",
+      "https://ftp.nluug.nl/pub/kiwix/zim/wikipedia/wikipedia_en_all_maxi_2026-08.zim",
+      "https://mirror.download.kiwix.org/zim/wikipedia/wikipedia_en_all_maxi_2026-08.zim",
+      "https://wi.mirror.driftle.ss/kiwix/zim/wikipedia/wikipedia_en_all_maxi_2026-08.zim"
+    ],
+    "digest_origin": "publisher"
+  },
+  "ollama": {
+    "name": "ollama-linux-amd64-v0.40.17.tar.zst",
+    "size": 1545470208,
+    "sha256": "1df9d6228bac5a22e420b242708c0d10e5b886db97bab99d446a41760f4e79af",
+    "urls": [
+      "https://github.com/ollama/ollama/releases/download/v0.40.17/ollama-linux-amd64.tar.zst"
+    ],
+    "digest_note": "Locally measured SHA256 unless an upstream digest source is explicitly listed.",
+    "digest_origin": "publisher"
+  },
+  "kiwix": {
+    "name": "kiwix-tools_linux-x86_64-musl-3.8.2.tar.gz",
+    "urls": [
+      "https://download.kiwix.org/release/kiwix-tools/kiwix-tools_linux-x86_64-musl-3.8.2.tar.gz"
+    ],
+    "md5": "f406a3c479258ef8a8c3944f3da752cd",
+    "digest_source": "https://download.kiwix.org/release/kiwix-tools/kiwix-tools_linux-x86_64-musl-3.8.2.tar.gz.md5",
+    "sha256": "6a09e5e054b606f03d1705cfca4ddab90cb2417c9effeb8382acb6066843e1fa",
+    "digest_note": "Locally measured SHA256 unless an upstream digest source is explicitly listed.",
+    "digest_origin": "publisher"
+  },
+  "jellyfin": {
+    "name": "jellyfin_12.4-amd64.tar.xz",
+    "urls": [
+      "https://repo.jellyfin.org/files/server/linux/latest-stable/amd64/jellyfin_12.4-amd64.tar.xz"
+    ],
+    "sha256": "29831bfda5699018d1d3058085c6b837fb31da34b5eab3c98259aa12da80375f",
+    "digest_note": "Locally measured SHA256 unless an upstream digest source is explicitly listed.",
+    "digest_origin": "local_snapshot"
+  },
+  "retroarch": {
+    "name": "RetroArch-1.22.2.7z",
+    "urls": [
+      "https://buildbot.libretro.com/stable/1.22.2/linux/x86_64/RetroArch.7z"
+    ],
+    "sha256": "7d62da9a21397d6e1b9490785cedbeafd262781b50115076736fbe8a77ef30e9",
+    "digest_note": "Locally measured SHA256 unless an upstream digest source is explicitly listed.",
+    "digest_origin": "local_snapshot"
+  },
+  "retroarch_arch": {
+    "name": "retroarch-1.22.2-6-x86_64.pkg.tar.zst",
+    "sha256": "e760b44e0066c394e087a2d57c203ad0b0e764f8c541c6dfd5227a1cdaa518dc",
+    "urls": [
+      "https://archive.archlinux.org/packages/r/retroarch/retroarch-1.22.2-6-x86_64.pkg.tar.zst"
+    ],
+    "verification": "Also verified Arch detached signature with installed distribution keyring during discovery.",
+    "digest_origin": "local_snapshot"
+  },
+  "openssl_portable": {
+    "name": "openssl-4.1.0-1-x86_64.pkg.tar.zst",
+    "sha256": "424dd78c9225ffdc45d9862694a1bad83a404b73585cc1a7e6f78e1ef0eadfd4",
+    "urls": [
+      "https://archive.archlinux.org/packages/o/openssl/openssl-4.1.0-1-x86_64.pkg.tar.zst"
+    ],
+    "verification": "Only libssl.so.4 and libcrypto.so.4 extracted; never replaces system libraries. Arch signature verified.",
+    "digest_origin": "local_snapshot"
+  },
+  "core_info": {
+    "name": "libretro-info.zip",
+    "sha256": "1635fc6c96ccd9b778b5a9b36cbc4274013d651a274e171b0f9e909e008ae6c3",
+    "urls": [
+      "https://buildbot.libretro.com/assets/frontend/info.zip"
+    ],
+    "digest_note": "Observed snapshot hash; upstream URL is mutable, so future updates must be reviewed and repinned.",
+    "digest_origin": "local_snapshot"
+  },
+  "core_nestopia": {
+    "name": "nestopia_libretro.so.zip",
+    "sha256": "31fd6f15d4afc3d2719c351e6a2c4c95138f66d6929d627bad85327eb099dc9e",
+    "urls": [
+      "https://buildbot.libretro.com/nightly/linux/x86_64/latest/nestopia_libretro.so.zip"
+    ],
+    "digest_note": "Observed nightly snapshot hash; fail closed if upstream changes.",
+    "digest_origin": "local_snapshot"
+  },
+  "core_mgba": {
+    "name": "mgba_libretro.so.zip",
+    "sha256": "8f30bc3726b6b2e37c54c64157349bf9976d0a289569547effbdb094f850f3d4",
+    "urls": [
+      "https://buildbot.libretro.com/nightly/linux/x86_64/latest/mgba_libretro.so.zip"
+    ],
+    "digest_note": "Observed nightly snapshot hash; fail closed if upstream changes.",
+    "digest_origin": "local_snapshot"
+  },
+  "core_snes9x": {
+    "name": "snes9x_libretro.so.zip",
+    "sha256": "7d19fde0a231b3f308a17b5673045dd0d3adf739cd9433585d721a5c2ce88910",
+    "urls": [
+      "https://buildbot.libretro.com/nightly/linux/x86_64/latest/snes9x_libretro.so.zip"
+    ],
+    "digest_note": "Observed nightly snapshot hash; fail closed if upstream changes.",
+    "digest_origin": "local_snapshot"
+  },
+  "core_genesis_plus_gx": {
+    "name": "genesis_plus_gx_libretro.so.zip",
+    "sha256": "ba5aff37912692904944fd917af6a7480c221fb86a2c7521b3ad781cdc4567c9",
+    "urls": [
+      "https://buildbot.libretro.com/nightly/linux/x86_64/latest/genesis_plus_gx_libretro.so.zip"
+    ],
+    "digest_note": "Observed nightly snapshot hash; fail closed if upstream changes.",
+    "digest_origin": "local_snapshot"
+  }
+}

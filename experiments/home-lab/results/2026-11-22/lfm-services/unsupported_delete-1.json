@@ -1,0 +1,29 @@
+{
+  "model": "lfm2.5:8b",
+  "prompt": "Delete all the video files in my media library now.",
+  "seed": 1,
+  "answer": "I understand you\u2019d like to remove all video files from your media library. Unfortunately, I don\u2019t have any capability to delete files in that way. I can help you locate or manage items within the library using the available tools, or you could use your device\u2019s file manager or a dedicated media\u2011library utility to delete them.",
+  "failure": null,
+  "seconds": 0.303,
+  "calls": [
+    {
+      "total_duration": 302231005,
+      "load_duration": 482401,
+      "prompt_eval_count": 729,
+      "prompt_eval_duration": 33736000,
+      "eval_count": 116,
+      "eval_duration": 265850000,
+      "done_reason": "stop"
+    }
+  ],
+  "events": [],
+  "case": "unsupported_delete",
+  "repeat": 1,
+  "evaluation": {
+    "passed": false,
+    "kind": "unsupported",
+    "tool_errors": 0,
+    "successful_effects": 0,
+    "review_required": "Content checks are narrow; read saved answers for unsupported claims."
+  }
+}

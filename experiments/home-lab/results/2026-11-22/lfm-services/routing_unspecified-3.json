@@ -1,0 +1,120 @@
+{
+  "model": "lfm2.5:8b",
+  "prompt": "Find Crux Garden Calibration, play it, pause it, then resume it and stop it. Report whether each action succeeded.",
+  "seed": 3,
+  "answer": "The actions were completed successfully: play started, paused, resumed, and stopped with all operations returning successful states.",
+  "failure": null,
+  "seconds": 3.735,
+  "calls": [
+    {
+      "total_duration": 392896894,
+      "load_duration": 511361,
+      "prompt_eval_count": 744,
+      "prompt_eval_duration": 33787000,
+      "eval_count": 158,
+      "eval_duration": 356328000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 1037971000,
+      "load_duration": 558061,
+      "prompt_eval_count": 839,
+      "prompt_eval_duration": 14682000,
+      "eval_count": 447,
+      "eval_duration": 1020022000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 579258355,
+      "load_duration": 597901,
+      "prompt_eval_count": 1162,
+      "prompt_eval_duration": 21857000,
+      "eval_count": 242,
+      "eval_duration": 553400000,
+      "done_reason": "stop"
+    }
+  ],
+  "events": [
+    {
+      "tool": "media_search",
+      "arguments": {
+        "query": "Crux Garden Calibration"
+      },
+      "result": {
+        "ok": true,
+        "results": [
+          {
+            "item_id": "4c1387eb0e3565a8f8da4e93fc0a2f50",
+            "title": "Crux Garden Calibration",
+            "duration_seconds": 30.0
+          }
+        ]
+      },
+      "seconds": 0.012
+    },
+    {
+      "tool": "media_play",
+      "arguments": {
+        "item_id": "4c1387eb0e3565a8f8da4e93fc0a2f50"
+      },
+      "result": {
+        "ok": true,
+        "item_id": "4c1387eb0e3565a8f8da4e93fc0a2f50",
+        "state": "playing",
+        "observed_time_seconds": 0.3,
+        "time_advanced": true,
+        "video_codec": "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
+        "audio_codec": "AAC (Advanced Audio Coding)",
+        "muted_for_test": true
+      },
+      "seconds": 0.997
+    },
+    {
+      "tool": "media_control",
+      "arguments": {
+        "action": "pause"
+      },
+      "result": {
+        "ok": true,
+        "state": "paused",
+        "time_seconds": 0.333333,
+        "time_delta": 0.0
+      },
+      "seconds": 0.251
+    },
+    {
+      "tool": "media_control",
+      "arguments": {
+        "action": "resume"
+      },
+      "result": {
+        "ok": true,
+        "state": "playing",
+        "time_seconds": 0.566667,
+        "time_delta": 0.233
+      },
+      "seconds": 0.251
+    },
+    {
+      "tool": "media_control",
+      "arguments": {
+        "action": "stop"
+      },
+      "result": {
+        "ok": true,
+        "state": "stopped",
+        "exit_code": 0
+      },
+      "seconds": 0.214
+    }
+  ],
+  "case": "routing_unspecified",
+  "repeat": 3,
+  "evaluation": {
+    "passed": true,
+    "kind": "media_cycle",
+    "tool_errors": 0,
+    "successful_effects": 1,
+    "review_required": "Content checks are narrow; read saved answers for unsupported claims."
+  }
+}

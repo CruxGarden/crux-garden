@@ -1,0 +1,121 @@
+{
+  "model": "lfm2.5:8b",
+  "prompt": "Play the movie The Purple Astronaut of Crux 2099 from my media library.",
+  "seed": 3,
+  "answer": "The movie \"The Purple Astronaut of Crux 2099\" was not found in your media library.",
+  "failure": null,
+  "seconds": 1.566,
+  "calls": [
+    {
+      "total_duration": 306705645,
+      "load_duration": 499811,
+      "prompt_eval_count": 736,
+      "prompt_eval_duration": 33084000,
+      "eval_count": 120,
+      "eval_duration": 271183000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 240073702,
+      "load_duration": 461930,
+      "prompt_eval_count": 785,
+      "prompt_eval_duration": 14158000,
+      "eval_count": 97,
+      "eval_duration": 222555000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 306321334,
+      "load_duration": 533991,
+      "prompt_eval_count": 828,
+      "prompt_eval_duration": 12413000,
+      "eval_count": 128,
+      "eval_duration": 290856000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 286320588,
+      "load_duration": 602741,
+      "prompt_eval_count": 870,
+      "prompt_eval_duration": 12229000,
+      "eval_count": 119,
+      "eval_duration": 271053000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 363854110,
+      "load_duration": 597511,
+      "prompt_eval_count": 1010,
+      "prompt_eval_duration": 15768000,
+      "eval_count": 151,
+      "eval_duration": 344444000,
+      "done_reason": "stop"
+    }
+  ],
+  "events": [
+    {
+      "tool": "media_search",
+      "arguments": {
+        "query": "The Purple Astronaut of Crux 2099"
+      },
+      "result": {
+        "ok": true,
+        "results": []
+      },
+      "seconds": 0.017
+    },
+    {
+      "tool": "media_search",
+      "arguments": {
+        "query": "Purple Astronaut"
+      },
+      "result": {
+        "ok": true,
+        "results": []
+      },
+      "seconds": 0.016
+    },
+    {
+      "tool": "media_search",
+      "arguments": {
+        "query": "Astronaut"
+      },
+      "result": {
+        "ok": true,
+        "results": []
+      },
+      "seconds": 0.015
+    },
+    {
+      "tool": "media_search",
+      "arguments": {
+        "query": "Crux"
+      },
+      "result": {
+        "ok": true,
+        "results": [
+          {
+            "item_id": "4c1387eb0e3565a8f8da4e93fc0a2f50",
+            "title": "Crux Garden Calibration",
+            "duration_seconds": 30.0
+          },
+          {
+            "item_id": "2d7f8a97133e303707312e1562d2b2e6",
+            "title": "Crux Garden Color Bars",
+            "duration_seconds": 30.0
+          }
+        ]
+      },
+      "seconds": 0.011
+    }
+  ],
+  "case": "media_missing",
+  "repeat": 3,
+  "evaluation": {
+    "passed": true,
+    "kind": "missing_media",
+    "tool_errors": 0,
+    "successful_effects": 0,
+    "review_required": "Content checks are narrow; read saved answers for unsupported claims."
+  }
+}

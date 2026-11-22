@@ -1,0 +1,51 @@
+{
+  "model": "qwen3.5:9b",
+  "prompt": "Find and play Crux Garden Calibration from Jellyfin.",
+  "seed": 2,
+  "answer": "I'm unable to search the Jellyfin media library at this moment due to a local service error. Please try again later or let me know if you'd like to explore other options.",
+  "failure": null,
+  "seconds": 0.699,
+  "calls": [
+    {
+      "total_duration": 365788608,
+      "load_duration": 552621,
+      "prompt_eval_count": 1045,
+      "prompt_eval_duration": 139949000,
+      "eval_count": 29,
+      "eval_duration": 221264000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 331823039,
+      "load_duration": 482111,
+      "prompt_eval_count": 1109,
+      "prompt_eval_duration": 34384000,
+      "eval_count": 38,
+      "eval_duration": 292942000,
+      "done_reason": "stop"
+    }
+  ],
+  "events": [
+    {
+      "tool": "media_search",
+      "arguments": {
+        "query": "Crux Garden Calibration"
+      },
+      "result": {
+        "ok": false,
+        "error_type": "URLError",
+        "error": "Local service request failed"
+      },
+      "seconds": 0.0
+    }
+  ],
+  "case": "media_unavailable",
+  "repeat": 2,
+  "evaluation": {
+    "passed": true,
+    "kind": "unavailable",
+    "tool_errors": 1,
+    "successful_effects": 0,
+    "review_required": "Content checks are narrow; read saved answers for unsupported claims."
+  }
+}

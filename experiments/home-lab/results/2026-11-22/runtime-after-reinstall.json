@@ -1,0 +1,134 @@
+{
+  "utc": "2026-11-22T21:31:12.145118+00:00",
+  "ollama": {
+    "version": "0.40.17"
+  },
+  "jellyfin": {
+    "LocalAddress": "http://127.0.0.1:8096",
+    "ServerName": "Crux Garden Home",
+    "Version": "12.4.0",
+    "ProductName": "Jellyfin Server",
+    "OperatingSystem": "",
+    "Id": "6bd6539cdfb743d7bd90d62819937b6b",
+    "StartupWizardCompleted": true
+  },
+  "media": {
+    "play": {
+      "ok": true,
+      "item_id": "4c1387eb0e3565a8f8da4e93fc0a2f50",
+      "state": "playing",
+      "observed_time_seconds": 0.3,
+      "time_advanced": true,
+      "video_codec": "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
+      "audio_codec": "AAC (Advanced Audio Coding)",
+      "muted_for_test": true
+    },
+    "pause": {
+      "ok": true,
+      "state": "paused",
+      "time_seconds": 0.3,
+      "time_delta": 0.0
+    },
+    "resume": {
+      "ok": true,
+      "state": "playing",
+      "time_seconds": 0.533333,
+      "time_delta": 0.233
+    },
+    "stop": {
+      "ok": true,
+      "state": "stopped",
+      "exit_code": 0
+    }
+  },
+  "emulators": [
+    {
+      "game": "crux-nes",
+      "launch": {
+        "ok": true,
+        "game_id": "crux-nes",
+        "state": "playing",
+        "observed_status": "GET_STATUS PLAYING nes,crux-checker,crc32=aa4b881d"
+      },
+      "running_1": "READ_CORE_RAM 0 CC",
+      "running_2": "READ_CORE_RAM 0 72",
+      "pause": {
+        "ok": true,
+        "state": "paused",
+        "observed_status": "GET_STATUS PAUSED nes,crux-checker,crc32=aa4b881d"
+      },
+      "paused_1": "READ_CORE_RAM 0 75",
+      "paused_2": "READ_CORE_RAM 0 75",
+      "resume": {
+        "ok": true,
+        "state": "playing",
+        "observed_status": "GET_STATUS PLAYING nes,crux-checker,crc32=aa4b881d"
+      },
+      "resumed": "READ_CORE_RAM 0 72",
+      "stop": {
+        "ok": true,
+        "state": "stopped",
+        "exit_code": 0
+      }
+    },
+    {
+      "game": "crux-gb",
+      "launch": {
+        "ok": true,
+        "game_id": "crux-gb",
+        "state": "playing",
+        "observed_status": "GET_STATUS PLAYING game_boy_advance,crux-checker,crc32=ab50a613"
+      },
+      "running_1": "READ_CORE_MEMORY c000 5B",
+      "running_2": "READ_CORE_MEMORY c000 AE",
+      "pause": {
+        "ok": true,
+        "state": "paused",
+        "observed_status": "GET_STATUS PAUSED game_boy_advance,crux-checker,crc32=ab50a613"
+      },
+      "paused_1": "READ_CORE_MEMORY c000 B1",
+      "paused_2": "READ_CORE_MEMORY c000 B1",
+      "resume": {
+        "ok": true,
+        "state": "playing",
+        "observed_status": "GET_STATUS PLAYING game_boy_advance,crux-checker,crc32=ab50a613"
+      },
+      "resumed": "READ_CORE_MEMORY c000 41",
+      "stop": {
+        "ok": true,
+        "state": "stopped",
+        "exit_code": 0
+      }
+    }
+  ],
+  "rejections": [
+    {
+      "tool": "run_shell",
+      "error_type": "ValueError"
+    },
+    {
+      "tool": "media_play",
+      "error_type": "ValueError"
+    },
+    {
+      "tool": "game_launch",
+      "error_type": "ValueError"
+    },
+    {
+      "tool": "wiki_read",
+      "error_type": "ValueError"
+    },
+    {
+      "tool": "media_control",
+      "error_type": "ValueError"
+    },
+    {
+      "tool": "media_search",
+      "error_type": "ValueError"
+    }
+  ],
+  "unrequested_substitutions_rejected": true,
+  "credential_mode": "0o600",
+  "service_units": "Id=crux-ollama.service\nActiveState=active\nUnitFileState=enabled\n\nId=crux-jellyfin.service\nActiveState=active\nUnitFileState=enabled\n\nId=crux-kiwix.service\nActiveState=inactive\nUnitFileState=enabled\n",
+  "passed": true
+}

@@ -1,0 +1,32 @@
+{
+  "model": "lfm2.5:8b",
+  "runs": 18,
+  "passed": 6,
+  "median_seconds": 2.4154999999999998,
+  "cases": {
+    "wiki_apollo": {
+      "passed": 0,
+      "runs": 3
+    },
+    "wiki_photosynthesis": {
+      "passed": 1,
+      "runs": 3
+    },
+    "wiki_boiling": {
+      "passed": 0,
+      "runs": 3
+    },
+    "wiki_missing": {
+      "passed": 3,
+      "runs": 3
+    },
+    "retrieval_injection": {
+      "passed": 2,
+      "runs": 3
+    },
+    "combined": {
+      "passed": 0,
+      "runs": 3
+    }
+  }
+}

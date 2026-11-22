@@ -1,0 +1,250 @@
+{
+  "model": "qwen3.5:9b",
+  "prompt": "Use offline Wikipedia to tell me when Apollo 11 landed on the Moon, with a citation. Then play the media video Crux Garden Calibration, stop it, launch Crux Checker NES, and stop the game. Report only observed results.",
+  "seed": 3,
+  "answer": "Apollo 11 landed on the Moon on July 20, 1969. The Washington Post reported \"The Eagle Has Landed\" on Monday, July 21, 1969, confirming the landing had occurred. Source: http://127.0.0.1:8081/content/wikipedia_en_all_maxi_2026-08/Apollo_11_in_popular_culture\n\nMedia video Crux Garden Calibration played and stopped successfully. Game Crux Checker NES launched and stopped successfully.",
+  "failure": null,
+  "seconds": 7.483,
+  "calls": [
+    {
+      "total_duration": 412665545,
+      "load_duration": 482270,
+      "prompt_eval_count": 1083,
+      "prompt_eval_duration": 157088000,
+      "eval_count": 33,
+      "eval_duration": 251632000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 364899555,
+      "load_duration": 766681,
+      "prompt_eval_count": 1545,
+      "prompt_eval_duration": 85361000,
+      "eval_count": 36,
+      "eval_duration": 274543000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 1678087494,
+      "load_duration": 641510,
+      "prompt_eval_count": 5314,
+      "prompt_eval_duration": 481230000,
+      "eval_count": 151,
+      "eval_duration": 1175197000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 506397755,
+      "load_duration": 729991,
+      "prompt_eval_count": 5541,
+      "prompt_eval_duration": 61739000,
+      "eval_count": 55,
+      "eval_duration": 423145000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 274145350,
+      "load_duration": 926861,
+      "prompt_eval_count": 5717,
+      "prompt_eval_duration": 49616000,
+      "eval_count": 27,
+      "eval_duration": 206279000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 160752665,
+      "load_duration": 1106471,
+      "prompt_eval_count": 5775,
+      "prompt_eval_duration": 32973000,
+      "eval_count": 15,
+      "eval_duration": 109536000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 287363871,
+      "load_duration": 624481,
+      "prompt_eval_count": 5865,
+      "prompt_eval_duration": 36246000,
+      "eval_count": 31,
+      "eval_duration": 235102000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 299270771,
+      "load_duration": 752221,
+      "prompt_eval_count": 5959,
+      "prompt_eval_duration": 43640000,
+      "eval_count": 27,
+      "eval_duration": 236187000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 955235864,
+      "load_duration": 880071,
+      "prompt_eval_count": 6017,
+      "prompt_eval_duration": 34608000,
+      "eval_count": 117,
+      "eval_duration": 902020000,
+      "done_reason": "stop"
+    }
+  ],
+  "events": [
+    {
+      "tool": "wiki_search",
+      "arguments": {
+        "query": "Apollo 11 landing on the Moon"
+      },
+      "result": {
+        "ok": true,
+        "query": "Apollo 11 landing on the Moon",
+        "results": [
+          {
+            "article_id": "Third-party_evidence_for_Apollo_Moon_landings",
+            "title": "Third-party evidence for Apollo Moon landings",
+            "url": "http://127.0.0.1:8081/content/wikipedia_en_all_maxi_2026-08/Third-party_evidence_for_Apollo_Moon_landings"
+          },
+          {
+            "article_id": "Apollo_11_in_popular_culture",
+            "title": "Apollo 11 in popular culture",
+            "url": "http://127.0.0.1:8081/content/wikipedia_en_all_maxi_2026-08/Apollo_11_in_popular_culture"
+          },
+          {
+            "article_id": "List_of_people_who_have_flown_to_the_Moon",
+            "title": "List of people who have flown to the Moon",
+            "url": "http://127.0.0.1:8081/content/wikipedia_en_all_maxi_2026-08/List_of_people_who_have_flown_to_the_Moon"
+          },
+          {
+            "article_id": "List_of_species_that_have_landed_on_the_Moon",
+            "title": "List of species that have landed on the Moon",
+            "url": "http://127.0.0.1:8081/content/wikipedia_en_all_maxi_2026-08/List_of_species_that_have_landed_on_the_Moon"
+          },
+          {
+            "article_id": "Apollo_11_anniversaries",
+            "title": "Apollo 11 anniversaries",
+            "url": "http://127.0.0.1:8081/content/wikipedia_en_all_maxi_2026-08/Apollo_11_anniversaries"
+          }
+        ],
+        "snapshot": "2026-08",
+        "offline": true
+      },
+      "seconds": 0.177
+    },
+    {
+      "tool": "wiki_read",
+      "arguments": {
+        "article_id": "Apollo_11_in_popular_culture"
+      },
+      "result": {
+        "ok": true,
+        "article_id": "Apollo_11_in_popular_culture",
+        "url": "http://127.0.0.1:8081/content/wikipedia_en_all_maxi_2026-08/Apollo_11_in_popular_culture",
+        "original_url": "https://en.wikipedia.org/wiki/Apollo_11_in_popular_culture",
+        "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "text": "Apollo 11 in popular culture\n\nApollo 11 in popular culture\n\nThe Washington Post on Monday, July 21, 1969, stating 'The Eagle Has Landed\u2014Two Men Walk on the Moon'\n\nPart of a series on \nApollo 11 \n\nCrew\n\nNeil Armstrong \u00b7 Buzz Aldrin \u00b7 Michael Collins\n\nSpacecraft\n\nCM-107 Columbia \u00b7 Lunar Module Eagle\n\nLanding site\n\nTranquility Base\n\nRecovery vessels\n\nHelicopter 66 \u00b7 USS Hornet\n\nCommemoration\n\nAnniversaries \u00b7 50th Anniversary commemorative coins \u00b7 Eisenhower dollar \u00b7 Anthony dollar\n\nRelated\n\nBritish TV coverage \u00b7 Goodwill messages \u00b7 In popular culture \u00b7 Lunar sample display \u00b7 Missing tapes\n\nApollo 11 was the first human spaceflight to land on the Moon. The 1969 mission's wide effect on popular culture has resulted in numerous portrayals of Apollo 11 and its crew, Neil Armstrong, Buzz Aldrin, and Michael Collins.\n\nPublic reception\n\nThe mission was extensively covered in the press. Over 53.5 million US households tuned in to watch the Apollo 11 mission across the two weeks it was on TV, making it the most watched TV programming up to that date. An estimated 650 million viewers worldwide watched the first steps on the Moon.[1][2][3]\n\nAfter their return and ticker tape parades in New York and Chicago, a dinner event in Los Angeles, and an address to a joint session of Congress, the astronauts went on what was called the \"Giant Leap\" tour, visiting 23 countries in 38 days.[4] Starting in Mexico City, where they donned sombreros and were given a second parade, their tour took them through South America, to Spain, France, the Netherlands, Belgium, Norway, Germany, England, and Vatican City.[4] After a rest in the U.S. embassy in Rome they went on to Turkey and Africa.[4]\nIn Zaire, Buzz Aldrin leaped over the barricade between him and some entertainers and joined in with their dancing.[4]\n\nMissing from the tour was Hungary, which rejected the United States's invitation to host the astronauts.[5]\nRelations between Hungary and the United States were strained at the time, as the Hungarian crown jewels had been taken into U.S. custody after the Second World War and would not be returned until 1978.[5]\n\nStamps\n\nFurther information: Apollo 11 anniversaries\n\nMany countries have issued stamps commemorating the mission.\n\nThe United States issued a US$2.40 stamp commemorating the 20th anniversary in 1989, a stamp for the 25th anniversary, and a 33\u00a2 stamp commemorating the 30th anniversary in 1999.[6][7]\nThe 20th anniversary stamp caused some concern when it was issued, as the law forbade living people from being depicted on stamps, and the image was of two astronauts planting a U.S. flag on the Moon.[7]\nHowever, it was never actually officially stated by the USPS that the figures were specifically Armstrong and Aldrin, and not just generic astronaut figures.[7]\nOther stamps issued included a 10\u00a2 stamp on 1969-09-09 showing an astronaut descending a ladder from a lunar module, and the US$9.95 anniversary stamp issued in 1994.[7]\nThe 1969 stamp art was by Paul Calle, the 1989 art by his son, and the 1994 one by both.[8]\n\nThe postal service of Eire issued a commemorative \u20ac1 stamp for the 50th anniversary in 2019, but misspelled the word \"gealach\" (Gaelic for \"Moon\") as \"gaelach\" (\"Irish\"), an accidental transposition during design that was not caught in proof.[9]\nThe USPS issued two 50th anniversary stamps as part of its \"Forever\" collection, one a photograph of the Moon with the landing site marked, and the other one of Armstrong's pictures of Aldrin.[10]\n\nThe astronauts themselves had, before the mission, signed what were called \"insurance covers\", stamped envelopes that were essentially life insurance in the form of memorabilia that family members could sell off in the events of the astronauts' deaths.[11]\nThis practice would continue through to Apollo 16.[12]\n\nArmstrong and Aldrin also cancelled a commemorative stamp whilst on the surface of the Moon.[13]\nOriginally, they were to have done this reciting pre-scripted dialogue that had been supplied by USPS public relations.[13]\nBut the supplied script was lengthy and stilted, the Washington Post commenting that it would have lasted \"for the better part of one orbit of the moon\" and resulted in \"a veritable barrage of phone calls from a flabbergasted public\", and NASA decided that the astronauts had enough to do; so the stamping was without ceremony.[13]\n\nAcknowledgments and monuments\n\nThe United States of America acknowledged the success of Apollo 11 with a national day of celebration on Monday, July 21, 1969.[14] All but emergency and essential employees were allowed a paid day off from work, in both government[15] and the private sector. The last time this had happened was the national day of mourning on Monday, November 25, 1963, to observe the state funeral of President John F. Kennedy, who had set the political goal to put a man on the Moon by the end of the 1960s and bring him back to Earth safely.\n\nA replica of the footprint left by Neil Armstrong is located at Tranquillity Park in Houston, Texas.[16] The park was dedicated in summer of 1979, a decade after the first Moon landing. In 2019 Buzz Aldrin's well-known photograph of his own footprint was depicted on the Apollo 11 50th Anniversary commemorative coins.[17]\n\nThe Apollo 11 Cave in Namibia was named after the flight upon its successful return to Earth.[18]\n\nA statue of Neil Armstrong by Jon Hair was unveiled at the University of Southern California in 2013, and The Eagle Has Landed, a 2019 sculpture designed by George Lundeen, Mark Lundeen, and Joey Bainer, is exhibited at the Kennedy Space Center Visitor Complex.\n\nPortrayal in media\n\nFilms and television\n\nCBS news coverage of the Apollo 11 landing included several aspects of portrayal. Grumman engineer Scott MacLeod portrayed Neil Armstrong descending from the steps of a full-scale model of the Lunar Module Eagle so that viewers could see what was happening before the live TV broadcast from the Moon began.[19] Tom Sylvester portrayed Buzz Aldrin during the same broadcast.[20]\n\nThe 1969 documentary film, Footprints on the Moon by Bill Gibson and Barry Coe, is about the Apollo 11 mission.[21]\n\nThe 1971 documentary Moonwalk One is a film by Theo Kamecke.[22]\n\nFootage of the landing famously introduced viewers to MTV in 1981, and served as its top and bottom of the hour identifier during the cable channel's early years. MTV producers Alan Goodman and Fred Seibert used this public domain footage to associate MTV with the most famous moment in worldwide television history.[23][24] MTV also pays tribute to the classic ID by handing out astronaut statuettes (or \"Moonmen\") at its annual Video Music Awards.\n\nThere is a brief mention of the Moon landing in the first season of the original Star Trek series in the episode \"Tomorrow is Yesterday\" in early 1967.\n\nIn the 1995 film Apollo 13, based on the real mission, Jim Lovell, Jack Swigert, Fred Haise, Ken Mattingly, Pete Conrad, and Marilyn Lovell gather in the Lovell household to watch Neil Armstrong's Apollo 11 moonwalk. Later in the film, as the crew pass around the Moon, Haise points out that they're passing over the Mare Tranquillitatis and refers to it as \"Neil and Buzz's old neighborhood\". Armstrong and Aldrin talk to and distract Lovell's mother as she watches news reports of her son's endangered mission.\n\nThe 1996 television docudrama Apollo 11 filmed some of its scenes in the original Apollo Mission Control Center.[25]\n\nPortions of the Apollo 11 mission are dramatized in the 1998 HBO mini-series From the Earth to the Moon in the \"Mare Tranquilitatis\" episode.\n\nThe second episode of Futurama, \"The Series Has Landed\" (1999) has Fry and Leela take refuge in the Eagle (which had since been returned to the Moon) to shelter from the cold night of the Moon. Fry finds one of Neil Armstrong's footprints, which he steps on.\n\nThe 2000 film The Dish dramatises assorted mishaps in the run-up to the Moon landing at the Parkes Observatory dish, the Australian relay station scheduled to receive video footage of the landing.\n\nMan on the Moon, a 2006 television opera in one act by Jonathan Dove with a libretto by Nicholas Wright, relates the story of the Apollo 11 Moon landing and the subsequent problems experienced by Buzz Aldrin.[26]\n\nThe 2009 television film Moonshot depicts the preparation for the Apollo 11 mission.[27]\n\nThe Apollo 11 mission is used as a backdrop and plot device in the Doctor Who two-parter[28] \"The Impossible Astronaut\"/\"Day of the Moon\".[29]\n\nThe Apollo 11 mission is used as part of the main story line in the 2011 film Transformers: Dark of the Moon. The movie described the mission and the main reason for the Apollo program's existence as a means to investigate an alien landing on the far side of the Moon.[30] Aldrin has a brief cameo in the film.[31]\n\nIn the 2012 film Men in Black 3, Apollo 11 was used by Agent K to carry the Arc Net (a shield that protects Earth from Alien invasion) to space. The three astronauts see the Men in Black fighting the alien villain from the cockpit, but Buzz Aldrin realizes that if they report this to Mission Control the launch will be aborted. Armstrong nonchalantly responds to Aldrin that \"I didn't see anything\", and Michael Collins apparently agreed as well.[32]\n\nThe last episode of the 2015 television series The Astronaut Wives Club, \"Landing\", features the Apollo 11 mission.[33]\n\nIn Ready Jet Go!'s 2016 episode, \"Earth Mission to Moon\", Jet, Sean, Sydney, Mindy, Celery, and Carrot, re-enact the Apollo 11 mission. Jet, Sean, and Sydney portray the Apollo 11 astronauts, and Carrot and Mindy depict the people at Mission Control. In this re-enactment, Sean plays Neil Armstrong.[34]\n\nThe Apollo 11 mission appears in the 2016 season 1 episode \"Space Race\" of the NBC series Timeless. In the episode, Lucy, Wyatt, and Rufus travel to the day of the mission, July 20, 1969, to stop Garcia Flynn from interfering with the mission. After Flynn's helper, Anthony Bruhl, launches a modern-day virus against NASA, which prevents the staff from communicating with Neil Armstrong and Buzz Aldrin, Rufus and Lucy get help from Mathematician Katherine Johnson to stop the virus and Flynn before it is too late.[35]\n\nThe 2018 film First Man depicts Armstrong and Aldrin as they prepare for, and then accomplish, the Apollo 11 mission.[36]\n\nThe 2019 documentary Apollo 11 is a film by Todd Douglas Miller with restored footage of the 1969 event.[37][38]\n\n1969, a 2019 documentary series, devotes its first episode, \"Moon Shot\", to the Apollo 11 mission.[39]\n\n\"Moondust\", the 2019 seventh episode of the third season of the Netflix series The Crown, includes extensive scenes of the British royal family watching the original BBC coverage of the Apollo 11 mission. It also includes a fictionalized portrayal of the private meeting of Prince Philip, Duke of Edinburgh, with the Apollo 11 crew during their visit to Buckingham Palace, and the prince's admiration for the Apollo astronauts.[40][41]\n\nChasing the Moon, a July 2019 PBS three-night six-hour documentary, directed by Robert Stone, examines the events leading up to the Apollo 11 mission,[42] the mission itself, and its legacy.\n\nThe 2023 film Indiana Jones and the Dial of Destiny takes place in 1969 and the New York parade for the Apollo 11 crew is directly related to the plot.[43]\n\nThe 2024 film Fly Me to the Moon focuses on the Apollo 11 mission, telling the fictional story of a marketing specialist tasked with filming a staged version of the Moon landing should the real one be unsuccessful. The scenes of the set for the staged version are very similar to the Bethpage moonscape from the CBS news portrayal.[19][20]\n\nMusic\n\nThe Byrds 1969 album Ballad of Easy Rider contains the song \"Armstrong, Aldrin, and Collins\" and uses the mission's countdown sequence.[44]\n\nThomas Bergersen's 2021 album Humanity, Chapter IV contains the song \"Apollo\", which includes two voiceover clips from President John F. Kennedy's 1962 \"We choose to go to the Moon\" speech and the mission's countdown sequence, as well as Neil Armstrong's \"The Eagle has landed\" near the end of the song.[45]\n\nThe song \"Go\" by the British group Public Service Broadcasting incorporates audio recordings from the Apollo 11 space flight. Their 2015 album The Race for Space includes the song.\n\nThe instrumental track \"Apollo XI\" by the British band Orchestral Manoeuvres in the Dark (OMD) contains a sample from John F. Kennedy's \"Landing a man on the Moon\" speech and Apollo 11-related radio transmissions. Their eighth studio album, Sugar Tax (1991) contains the track, which was also used as the opener for their live shows supporting the album.\n\nVideo games\n\nIn the Touhou Project series, the Apollo 11 crew's arrival and subsequent planting of the American flag on the lunar surface (hence 'claiming' it) is interpreted by the inhabitants of the Moon as an invasion, provoking the 'Lunar War'. The lunarians engage in acts of sabotage, by which they succeed in preventing humans from establishing a foothold on the Moon.\n\nTeam Fortress 2's Pyromania Update Day 1's blogpost mentions the Apollo 11 mission was delayed by three years when Buzz Aldrin suplexed Neil Armstrong into a pile of folding chairs at an event called 'Astromania'.[46]\n\nFolklore\n\nSee also: Moon landing conspiracy theories in popular culture and Third-party evidence for Apollo Moon landings\n\nSoon after the mission, conspiracy theories arose that the landing was a hoax, which are theories widely discounted by historians and scientists.[47][48][49] It may have gained more popularity after the 1978 film Capricorn One portrayed a fictional NASA attempt to fake a landing on Mars.[50]\n\nThere is a humorous and ribald urban legend that when Armstrong was a child, the wife of a neighbor named Gorsky, when asked by her husband to perform oral sex, had ridiculed him by saying \"...when the kid next door walks on the Moon!\" and then decades later while walking on the Moon, Armstrong supposedly ",
+        "truncated": true,
+        "snapshot": "2026-08"
+      },
+      "seconds": 0.018
+    },
+    {
+      "tool": "media_search",
+      "arguments": {
+        "query": "Crux Garden Calibration"
+      },
+      "result": {
+        "ok": true,
+        "results": [
+          {
+            "item_id": "4c1387eb0e3565a8f8da4e93fc0a2f50",
+            "title": "Crux Garden Calibration",
+            "duration_seconds": 30.0
+          }
+        ]
+      },
+      "seconds": 0.016
+    },
+    {
+      "tool": "media_play",
+      "arguments": {
+        "item_id": "4c1387eb0e3565a8f8da4e93fc0a2f50"
+      },
+      "result": {
+        "ok": true,
+        "item_id": "4c1387eb0e3565a8f8da4e93fc0a2f50",
+        "state": "playing",
+        "observed_time_seconds": 0.3,
+        "time_advanced": true,
+        "video_codec": "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
+        "audio_codec": "AAC (Advanced Audio Coding)",
+        "muted_for_test": true
+      },
+      "seconds": 0.962
+    },
+    {
+      "tool": "media_control",
+      "arguments": {
+        "action": "stop"
+      },
+      "result": {
+        "ok": true,
+        "state": "stopped",
+        "exit_code": 0
+      },
+      "seconds": 0.214
+    },
+    {
+      "tool": "game_list",
+      "arguments": {},
+      "result": {
+        "ok": true,
+        "games": [
+          {
+            "game_id": "crux-nes",
+            "title": "Crux Checker NES",
+            "core": "nestopia"
+          },
+          {
+            "game_id": "crux-gb",
+            "title": "Crux Checker Game Boy",
+            "core": "mgba"
+          }
+        ]
+      },
+      "seconds": 0.0
+    },
+    {
+      "tool": "game_launch",
+      "arguments": {
+        "game_id": "crux-nes"
+      },
+      "result": {
+        "ok": true,
+        "game_id": "crux-nes",
+        "state": "playing",
+        "observed_status": "GET_STATUS PLAYING nes,crux-checker,crc32=aa4b881d"
+      },
+      "seconds": 1.001
+    },
+    {
+      "tool": "game_control",
+      "arguments": {
+        "action": "stop"
+      },
+      "result": {
+        "ok": true,
+        "state": "stopped",
+        "exit_code": 0
+      },
+      "seconds": 0.15
+    }
+  ],
+  "case": "combined",
+  "repeat": 3,
+  "evaluation": {
+    "passed": true,
+    "kind": "combined",
+    "tool_errors": 0,
+    "successful_effects": 2,
+    "review_required": "Content checks are narrow; read saved answers for unsupported claims."
+  }
+}

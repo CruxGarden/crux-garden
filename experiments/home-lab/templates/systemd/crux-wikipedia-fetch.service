@@ -1,0 +1,17 @@
+[Unit]
+Description=Download and verify full English Wikipedia for Crux Garden Home
+After=network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/python3 %h/Workspace/CruxGarden/crux-garden/experiments/home-lab/fetch_artifact.py %h/Workspace/CruxGarden/crux-garden/experiments/home-lab/artifacts.json wikipedia %h/.local/share/crux-garden-home/kiwix/wikipedia_en_all_maxi_2026-08.zim
+ExecStartPost=/usr/bin/systemctl --user start crux-kiwix.service
+TimeoutStartSec=infinity
+Restart=on-failure
+RestartSec=30
+Nice=10
+IOSchedulingClass=idle
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,11 @@
+{
+  "title": "Wikipedia",
+  "updated": "2026-08-25T00:00:00Z",
+  "language": "eng",
+  "name": "wikipedia_en_all",
+  "flavour": "maxi",
+  "tags": "wikipedia;_category:wikipedia;_pictures:yes;_videos:no;_details:yes;_ftindex:yes",
+  "articleCount": "21673012",
+  "mediaCount": "8469385",
+  "count_note": "Kiwix-reported archive counts, not an independently audited count of unique Wikipedia articles."
+}

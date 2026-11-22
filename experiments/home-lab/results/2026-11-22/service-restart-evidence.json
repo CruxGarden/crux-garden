@@ -1,0 +1,4 @@
+{
+  "crux-ollama": "ActiveState=active\nUnitFileState=enabled\nNRestarts=0\nExecMainStartTimestamp=Sun 2026-11-22 16:30:02 EST\n",
+  "crux-jellyfin": "ActiveState=active\nUnitFileState=enabled\nNRestarts=0\nExecMainStartTimestamp=Sun 2026-11-22 16:30:02 EST\n"
+}

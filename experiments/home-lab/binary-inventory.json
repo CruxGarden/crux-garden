@@ -1,0 +1,60 @@
+[
+  {
+    "name": "ollama-linux-amd64-v0.40.17.tar.zst",
+    "url": "https://github.com/ollama/ollama/releases/download/v0.40.17/ollama-linux-amd64.tar.zst",
+    "size": 1545470208,
+    "mtime_ns": 1795381260631547473,
+    "sha256": "1df9d6228bac5a22e420b242708c0d10e5b886db97bab99d446a41760f4e79af",
+    "published_digest_verified": true,
+    "elapsed_seconds": 21.288
+  },
+  {
+    "name": "kiwix-tools_linux-x86_64-musl-3.8.2.tar.gz",
+    "url": "https://download.kiwix.org/release/kiwix-tools/kiwix-tools_linux-x86_64-musl-3.8.2.tar.gz",
+    "size": 20226232,
+    "mtime_ns": 1795381287749673930,
+    "sha256": "6a09e5e054b606f03d1705cfca4ddab90cb2417c9effeb8382acb6066843e1fa",
+    "md5": "f406a3c479258ef8a8c3944f3da752cd",
+    "published_digest_verified": true,
+    "elapsed_seconds": 2.618
+  },
+  {
+    "name": "RetroArch-1.22.2.7z",
+    "url": "https://buildbot.libretro.com/stable/1.22.2/linux/x86_64/RetroArch.7z",
+    "size": 179361448,
+    "mtime_ns": 1795381290332685654,
+    "sha256": "7d62da9a21397d6e1b9490785cedbeafd262781b50115076736fbe8a77ef30e9",
+    "published_digest_verified": false,
+    "elapsed_seconds": 3.045
+  },
+  {
+    "name": "jellyfin_12.4-amd64.tar.xz",
+    "url": "https://repo.jellyfin.org/files/server/linux/latest-stable/amd64/jellyfin_12.4-amd64.tar.xz",
+    "size": 88646976,
+    "mtime_ns": 1795381290680687230,
+    "sha256": "29831bfda5699018d1d3058085c6b837fb31da34b5eab3c98259aa12da80375f",
+    "published_digest_verified": false,
+    "elapsed_seconds": 3.383
+  },
+  {
+    "name": "retroarch-1.22.2-6-x86_64.pkg.tar.zst",
+    "size": 5184078,
+    "sha256": "e760b44e0066c394e087a2d57c203ad0b0e764f8c541c6dfd5227a1cdaa518dc",
+    "upstream_signature_verified": true,
+    "verification": "gpgv against installed Arch distribution keyring"
+  },
+  {
+    "name": "openssl-4.1.0-1-x86_64.pkg.tar.zst",
+    "size": 5921514,
+    "sha256": "424dd78c9225ffdc45d9862694a1bad83a404b73585cc1a7e6f78e1ef0eadfd4",
+    "upstream_signature_verified": true,
+    "verification": "gpgv against installed Arch distribution keyring"
+  },
+  {
+    "name": "libretro-info.zip",
+    "size": 307865,
+    "sha256": "1635fc6c96ccd9b778b5a9b36cbc4274013d651a274e171b0f9e909e008ae6c3",
+    "upstream_signature_verified": false,
+    "verification": "HTTPS download; locally computed SHA256"
+  }
+]

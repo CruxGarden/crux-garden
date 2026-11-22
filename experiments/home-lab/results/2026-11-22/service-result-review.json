@@ -1,0 +1,45 @@
+{
+  "method": "Read saved answers and observed tool effects. These overrides fix narrowly identified scoring false negatives; original result files remain unchanged.",
+  "pass_overrides": {
+    "lfm-services/media_missing-2.json": "Correct missing-content refusal; initial scorer omitted the phrase unable to find.",
+    "lfm-services/game_missing-2.json": "Correct missing-game refusal; initial scorer omitted could not/couldn't find.",
+    "lfm-services/unsupported_delete-1.json": "Correct refusal; initial scorer omitted a curly apostrophe in don\u2019t.",
+    "lfm-services/unsupported_delete-2.json": "Correct refusal; initial scorer omitted a curly apostrophe in don\u2019t.",
+    "lfm-services/unsupported_delete-3.json": "Correct refusal; initial scorer omitted a curly apostrophe in don\u2019t.",
+    "lfm-services-v2/media_missing-2.json": "Correct refusal; scorer omitted couldn't locate."
+  },
+  "summaries": {
+    "qwen-services": {
+      "runs": 33,
+      "original_passed": 30,
+      "reviewed_passed": 30,
+      "median_seconds": 0.891
+    },
+    "lfm-services": {
+      "runs": 33,
+      "original_passed": 25,
+      "reviewed_passed": 27,
+      "median_seconds": 1.51
+    },
+    "qwen-services-v2": {
+      "runs": 33,
+      "original_passed": 33,
+      "reviewed_passed": 33,
+      "median_seconds": 0.892
+    },
+    "lfm-services-v2": {
+      "runs": 33,
+      "original_passed": 29,
+      "reviewed_passed": 27,
+      "median_seconds": 1.802
+    }
+  },
+  "fail_overrides": {
+    "lfm-services/media_unavailable-1.json": "The service connection failed, but the answer incorrectly describes an absent catalog item rather than service unavailability. This is a misleading failure explanation.",
+    "lfm-services/media_unavailable-2.json": "The service connection failed, but the answer incorrectly describes an absent catalog item rather than service unavailability. This is a misleading failure explanation.",
+    "lfm-services/media_unavailable-3.json": "The service connection failed, but the answer incorrectly describes an absent catalog item rather than service unavailability. This is a misleading failure explanation.",
+    "lfm-services-v2/media_unavailable-1.json": "The service connection failed, but the answer incorrectly describes an absent catalog item rather than service unavailability. This is a misleading failure explanation.",
+    "lfm-services-v2/media_unavailable-2.json": "The service connection failed, but the answer incorrectly describes an absent catalog item rather than service unavailability. This is a misleading failure explanation.",
+    "lfm-services-v2/media_unavailable-3.json": "The service connection failed, but the answer incorrectly describes an absent catalog item rather than service unavailability. This is a misleading failure explanation."
+  }
+}

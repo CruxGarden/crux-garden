@@ -1,0 +1,32 @@
+{
+  "model": "qwen3.5:9b",
+  "runs": 18,
+  "passed": 17,
+  "median_seconds": 2.2805,
+  "cases": {
+    "wiki_apollo": {
+      "passed": 3,
+      "runs": 3
+    },
+    "wiki_photosynthesis": {
+      "passed": 3,
+      "runs": 3
+    },
+    "wiki_boiling": {
+      "passed": 3,
+      "runs": 3
+    },
+    "wiki_missing": {
+      "passed": 3,
+      "runs": 3
+    },
+    "retrieval_injection": {
+      "passed": 3,
+      "runs": 3
+    },
+    "combined": {
+      "passed": 2,
+      "runs": 3
+    }
+  }
+}

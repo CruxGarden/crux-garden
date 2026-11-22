@@ -1,0 +1,105 @@
+{
+  "model": "qwen3.5:9b",
+  "prompt": "Use offline Wikipedia to find the calendar date on which Apollo 11 landed on the Moon. Cite the article you read.",
+  "seed": 2,
+  "answer": "Apollo 11 landed on the Moon on **July 20, 1969**. This is confirmed by multiple references in the article, including the 10th anniversary ceremony held on July 20, 1979, and the 50th anniversary projection showing Armstrong's first step exactly 50 years to the second after the actual event.\n\nSource: Apollo 11 anniversaries - http://127.0.0.1:8081/content/wikipedia_en_all_maxi_2026-08/Apollo_11_anniversaries",
+  "failure": null,
+  "seconds": 2.56,
+  "calls": [
+    {
+      "total_duration": 394039710,
+      "load_duration": 519170,
+      "prompt_eval_count": 1060,
+      "prompt_eval_duration": 136930000,
+      "eval_count": 31,
+      "eval_duration": 231226000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 340056777,
+      "load_duration": 535920,
+      "prompt_eval_count": 1474,
+      "prompt_eval_duration": 76240000,
+      "eval_count": 34,
+      "eval_duration": 258552000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 1605273389,
+      "load_duration": 678951,
+      "prompt_eval_count": 6060,
+      "prompt_eval_duration": 572593000,
+      "eval_count": 128,
+      "eval_duration": 1011573000,
+      "done_reason": "stop"
+    }
+  ],
+  "events": [
+    {
+      "tool": "wiki_search",
+      "arguments": {
+        "query": "Apollo 11 landing date"
+      },
+      "result": {
+        "ok": true,
+        "query": "Apollo 11 landing date",
+        "results": [
+          {
+            "article_id": "Third-party_evidence_for_Apollo_Moon_landings",
+            "title": "Third-party evidence for Apollo Moon landings",
+            "url": "http://127.0.0.1:8081/content/wikipedia_en_all_maxi_2026-08/Third-party_evidence_for_Apollo_Moon_landings"
+          },
+          {
+            "article_id": "Apollo_11_anniversaries",
+            "title": "Apollo 11 anniversaries",
+            "url": "http://127.0.0.1:8081/content/wikipedia_en_all_maxi_2026-08/Apollo_11_anniversaries"
+          },
+          {
+            "article_id": "Apollo_12",
+            "title": "Apollo 12",
+            "url": "http://127.0.0.1:8081/content/wikipedia_en_all_maxi_2026-08/Apollo_12"
+          },
+          {
+            "article_id": "List_of_Apollo_astronauts",
+            "title": "List of Apollo astronauts",
+            "url": "http://127.0.0.1:8081/content/wikipedia_en_all_maxi_2026-08/List_of_Apollo_astronauts"
+          },
+          {
+            "article_id": "Apollo_10",
+            "title": "Apollo 10",
+            "url": "http://127.0.0.1:8081/content/wikipedia_en_all_maxi_2026-08/Apollo_10"
+          }
+        ],
+        "snapshot": "2026-08",
+        "offline": true
+      },
+      "seconds": 0.207
+    },
+    {
+      "tool": "wiki_read",
+      "arguments": {
+        "article_id": "Apollo_11_anniversaries"
+      },
+      "result": {
+        "ok": true,
+        "article_id": "Apollo_11_anniversaries",
+        "url": "http://127.0.0.1:8081/content/wikipedia_en_all_maxi_2026-08/Apollo_11_anniversaries",
+        "original_url": "https://en.wikipedia.org/wiki/Apollo_11_anniversaries",
+        "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "text": "Apollo 11 anniversaries\n\nApollo 11 anniversaries\n\nApollo 11 anniversary \nPresident George H.W. Bush and the Apollo 11 astronauts\n\nStatus Active \nGenre anniversary \nBegins July\u00a016\u00a0(16-07) \nEnds July\u00a020\u00a0(20-07) \nFrequency Quinquennially \nCountry United States \nYears\u00a0active 52 \nInaugurated July\u00a016,\u00a01974\u00a0(1974-07-16) \nFounder NASA \n\nPart of a series on \nApollo 11 \n\nCrew\n\nNeil Armstrong \u00b7 Buzz Aldrin \u00b7 Michael Collins\n\nSpacecraft\n\nCM-107 Columbia \u00b7 Lunar Module Eagle\n\nLanding site\n\nTranquility Base\n\nRecovery vessels\n\nHelicopter 66 \u00b7 USS Hornet\n\nCommemoration\n\nAnniversaries \u00b7 50th Anniversary commemorative coins \u00b7 Eisenhower dollar \u00b7 Anthony dollar\n\nRelated\n\nBritish TV coverage \u00b7 Goodwill messages \u00b7 In popular culture \u00b7 Lunar sample display \u00b7 Missing tapes\n\nApollo 11 was the first human spaceflight to land on the Moon. In the decades after its 1969 mission took place, widespread celebrations have been held to celebrate its anniversaries.\n\n10th anniversary\n\nThe Apollo 11 crew, Buzz Aldrin, Neil Armstrong, and Michael Collins, who had not appeared publicly since the 5th anniversary, participated in ceremonies in Washington, D.C., on July 20, 1979.[1]\n\n15th anniversary\n\nA model rocket launch, closed to the public due to the explosives involved, occurred at Kennedy Space Center in 1984.[2]\n\n20th anniversary\n\n20th anniversary logo\n\nOn the 20th anniversary in 1989, President George H. W. Bush announced plans to return to the Moon and then to Mars, known as the Space Exploration Initiative (SEI).[3]\n\nThe USPS released a stamp designed by Chris Calle, son of Paul Calle, the artist that designed the Apollo 11 stamp issued in 1969.[4][5] The $2.40 priority mail stamp depicts two astronauts planting a flag on the Moon. Living people cannot be featured on US stamps, but the faces of the astronauts are obscured by their visors.[6] It was released July 20 at the Smithsonian Air and Space Museum in Washington, D.C.[7]\n\n25th anniversary\n\n25th anniversary logo\n\nOn July 16, 1994, NASA held a replay of the countdown and launched scale models of the Saturn rocket. The Apollo 11 astronauts declined to attend. They had attended the event five years prior.[8]\n\nThe United States Postal Service (USPS) issued two stamps, a 29 cent vertical stamp and a $9.95 express mail stamp,[9] to commemorate the anniversary.[10] The 29 cent stamp depicts an astronaut saluting a flag on the Moon; the express mail stamp shows a zoomed-out version of the same scene.[8] They were designed by Paul and Chris Calle.[8] The stamp design was unveiled July 20 by Aldrin in Washington.[11]\n\nThe Apollo 11 crew accepted an invitation to the White House on July 21 to celebrate the event. President Bill Clinton, Vice President Al Gore, First Lady Hillary Clinton, and other members of Apollo flight crews were among the attendees.[12]\n\nPBS released a documentary, Apollo 13: To the Edge and Back.[13]\n\n30th anniversary\n\nAldrin and Armstrong at a press conference in Mission Control for the anniversary\n\nOn the 30th anniversary in 1999, Vice-President Al Gore awarded the astronauts with the Langley Gold Medal for aviation. This was the twenty-second time the award had been given out.[14][15] The ceremony was held at the National Air and Space Museum. On receiving the medal, Armstrong said, \"We the Apollo 11 crew are enormously appreciative of being asked to receive this Langley Medal and we do so on behalf of all the men and women of the Apollo program.\"[16]\n\nArmstrong attended a banquet at Kennedy Space Center but declined to sign autographs or make a speech. Aldrin attended the event as well; Collins declined, as he was retired.[17] Aldrin held a public briefing on July 17 at the center.[18]\n\nThe USPS issued a 33-cent stamp as part of a series of stamps that commemorated events that occurred in the 1960s.[4] The stamp, named \"Man Walks on Moon\", is Scott catalogue number 3188e, and depicts Aldrin's lunar bootprint.[19] It was unveiled at Kennedy Space Center on July 17.[18]\n\nGround was broke at Kennedy Space Center for the Apollo Exhibit located in the U.S. Space Walk of Fame.[18][20]\n\nThe National Air and Space Museum added two new exhibits: Armstrong and Aldrin's helmet and gloves, and the ability to operate a camera inside of the lunar module, allowing visitors to see inside the cockpit for the first time.[21]\n\nOn July 21, Aldrin was a keynote speaker at the unveiling of a Moon rock at the base of the Tribune Tower in Chicago, Illinois. This marked the first time NASA loaned a lunar sample to a private corporation rather than a school, museum, or planetarium.[22] The rock was removed in 2011 due to an outdated display.[23] A new rock display is planned but has not been installed as of 2018.[24]\n\nThe USS Hornet held a ten-day event called Moonfest 1999 at the museum. The event included NASA exhibits and evening astronomy. Aldrin, along with Carl Seilberlich, captain of the Hornet during recovery operations, attended the event on the 24th, the anniversary of the day of the recovery.[25] 17,000 visitors attended the event.[26]\n\n40th anniversary\n\nPresident Obama meets with crew of Apollo 11\n\nOn July 15, 2009, Life.com released a photo gallery of previously unpublished photos of the astronauts taken by Life photographer Ralph Morse prior to the Apollo 11 launch.[27] From July 16 to 24, 2009, NASA streamed the original mission audio on its website in real time 40 years to the minute after the events occurred.[28] In addition, it is in the process of restoring the video footage and has released a preview of key moments.[29] In July 2010, air-to-ground voice recordings and film footage shot in Mission Control during the Apollo 11 powered descent and landing was re-synchronized and released for the first time.[30] The John F. Kennedy Presidential Library and Museum set up an Adobe Flash website that rebroadcasts the transmissions of Apollo 11 from launch to landing on the Moon.[31] On July 20, 2009, Armstrong, Aldrin, and Collins met with U.S. President Barack Obama at the White House.[32] \"We expect that there is, as we speak, another generation of kids out there who are looking up at the sky and are going to be the next Armstrong, Collins, and Aldrin\", Obama said. \"We want to make sure that NASA is going to be there for them when they want to take their journey.\"[33] On August 7, 2009, an act of Congress awarded the three astronauts a Congressional Gold Medal, the highest civilian award in the United States. The bill was sponsored by Florida Senator Bill Nelson and Florida Representative Alan Grayson.[34][35]\n\nA group of British scientists interviewed as part of the anniversary events reflected on the significance of the Moon landing:\n\nIt was carried out in a technically brilliant way with risks taken\u00a0... that would be inconceivable in the risk-averse world of today\u00a0... The Apollo programme is arguably the greatest technical achievement of mankind to date\u00a0... nothing since Apollo has come close [to] the excitement that was generated by those astronauts \u2013 Armstrong, Aldrin and the 10 others who followed them.[36]\n\n45th anniversary\n\nOn July 21, 2014, the Kennedy Space Center Operations and Checkout building was renamed for Armstrong. Aldrin and Collins attended the ceremony.[37]\n\n50th anniversary\n\nFurther information: Apollo 11 50th Anniversary commemorative coins\n\nOn June 10, 2015, Congressman Bill Posey introduced resolution H.R. 2726 to the 114th session of the United States House of Representatives directing the United States Mint to design and sell commemorative coins in gold, silver and clad for the 50th anniversary of the Apollo 11 mission. On January 24, 2019, the Mint released the Apollo 11 50th Anniversary commemorative coins to the public on its website.[38][39]\n\nThe USPS created two forever stamps to commemorate the 50th anniversary of the mission. The stamps were designed by Antonio Alcal\u00e1.[40] One stamp features the famous image that Armstrong took of Aldrin, with Armstrong visible in Aldrin's faceplate's reflection. The other stamp shows an image of the Moon, taken by Gregory H. Revera,[40] with the Apollo 11 landing site highlighted.[41][42] The stamps were unveiled at Kennedy Space Center on July 19. Apollo 9 astronaut Rusty Schweickart was among the celebrities present.[43]\n\nThe Smithsonian Institute's National Air and Space Museum and NASA sponsored the \u201cApollo 50 Festival\u201d on the National Mall in Washington DC. The three day (July 18 to 20, 2019) outdoor festival featured hands-on exhibits and activities, live performances, and speakers such as Adam Savage and NASA scientists.[44]\n\nA photo taken during the Apollo 11 50th anniversary show of the Apollo 11 rocket projected on the Washington Monument in Washington, DC on July 20, 2019\n\nAs part of the festival was a projection of the 363-foot (111\u00a0m) tall Saturn V rocket on the east face of the 555-foot (169\u00a0m) tall Washington Monument from July 16 through the 20th from 9:30\u00a0pm until 11:30\u00a0pm (EDT). There was also a 17-minute show that combined full-motion video projected on the Washington Monument to recreate the assembly and launch of the Saturn V rocket. The projection was combined with a 40-foot (12\u00a0m) wide recreation of the Kennedy Space Center countdown clock and two large video screens showing archival footage to recreate the time leading up to the Moon landing. The shows were at 9:30\u00a0pm, 10:30\u00a0pm, and 11:30\u00a0pm on Friday, July 19, and Saturday, July 20, with the 10:30\u00a0pm show on Saturday delayed slightly so the portion of the show where Neil Armstrong first set foot on the Moon would happen exactly 50 years to the second after the actual event (10:56:15 EDT).[45]\n\nA documentary film, Apollo 11, with restored footage of the 1969 event, premiered in IMAX on March 1, 2019, and broadly in theaters on March 8.[46][47]\n\nOn July 19, 2019, the Google Doodle paid tribute to the Apollo 11 Moon Landing, complete with a link to an animated YouTube video with voiceover by astronaut Michael Collins.[48][49]\n\nBuzz Aldrin, Michael Collins, Rick Armstrong (Neil's son), Mark Armstrong (Rick's son), and others were hosted by President Donald Trump in the Oval Office.[50] Trump had also honored Aldrin, Gene Kranz, and the Apollo 11 mission in the 2019 State of the Union Address and the 2019 Salute to America event at the National Mall.[51][52]\n\nSee also\n\nApollo 11 in popular culture\n\nReferences\n\n\u2191 \"Exploration Takes a Back Seat to Space Exploitation\". Casper Star-Tribune. Casper, Wyoming. UPI. July 3, 1979. p.\u00a05 \u2013 via Newspapers.com.\n\n\u2191 \"Launch of mini-Apollo 11 planned\". Florida Today. Cocoa, Florida. July 15, 1984. p.\u00a01B \u2013 via Newspapers.com.\n\n\u2191 Davenport, Christian (October 11, 2017). \"Pence vows America will return to the moon. The history of such promises suggests otherwise\". The Washington Post. Retrieved January 3, 2019.\n\n1 2 \"US Postal Service reveals stamps for moon landing 50th anniversary\". collectSPACE. March 21, 2019. Retrieved September 7, 2019.\n\n\u2191 Ebeling, Ashlea (July 21, 1989). \"Collector's Voyage to Moon, Va\". Daily Press. p.\u00a0A8 \u2013 via Newspapers.com.\n\n\u2191 Brown, George (June 4, 1989). \"Stamp recalls '69 moon step\". Asbury Park Press. Asbury Park, New Jersey. p.\u00a0141 \u2013 via Newspapers.com.\n\n\u2191 Faries, Belmont (May 14, 1989). \"20 Years Later, Another 'Man on the Moon'\". The Boston Globe. Boston, Massachusetts. p.\u00a074 \u2013 via Newspapers.com.\n\n1 2 3 \"Once Again, Apollo 11 has a liftoff\". The Courier-News. Bridgewater, New Jersey. Associated Press. July 17, 1994. p.\u00a0A-6 \u2013 via Newspapers.com.\n\n\u2191 \"Silver-Coin Set Salutes U.S. Vets\". The Orlando Sentinel. Orlando, Florida. July 23, 1994. p.\u00a0G-4 \u2013 via Newspapers.com.\n\n\u2191 \"Post Office Adds Its Stamps of Approval\". The Orlando Sentinel. Orlando, Florida. July 20, 1994. p.\u00a0A-19 \u2013 via Newspapers.com.\n\n\u2191 Nakashima, Ellen (July 21, 1994). \"Father, Son Put Their Stamps on Space\". Hartford Courant. Hartford, Connecticut. p.\u00a0D7 \u2013 via Newspapers.com.\n\n\u2191 \"Apollo Astronauts Put in an Appearance\". The Orlando Sentinel. Orlando, Florida. July 20, 1994. p.\u00a0A-19 \u2013 via Newspapers.com.\n\n\u2191 \"Wednesday Highlights\". Chicago Tribune. Chicago, Illinois. July 17, 1994. p.\u00a0230 \u2013 via Newspapers.com.\n\n\u2191 \"Astronauts Honored on Mission Milestone\". Chicago Tribune. Chicago, Illinois. Associated Press. July 20, 1999. p.\u00a081 \u2013 via Newspapers.com.\n\n\u2191 \"Langley Medal to be Awarded to Apollo 11 Astronauts on 30th Anniversary of Their Mission\". Smithsonian National Air and Space Museum. September 30, 2004. Retrieved October 30, 2019.\n\n\u2191 \"Apollo 11 Astronauts Recall Historic Flight\". Edmonton Journal. Edmonton, Alberta. Reuters. July 21, 1999. p.\u00a04 \u2013 via Newspapers.com.\n\n\u2191 Dunn, Marcia (July 16, 1999). \"One Small Step for Armstrong Would be to Talk\". The Morning Call. Allentown, Pennsylvania. Associated Press. p.\u00a010 \u2013 via Newspapers.com.\n\n1 2 3 McCarthy, John (July 17, 1999). \"3, 2, 1...Astronauts Launch Exhibit\". Florida Today. Cocoa, Florida. p.\u00a01B \u2013 via Newspapers.com.\n\n\u2191 \"Space on Stamps\" (PDF). American Philatelic Society. p.\u00a015. Retrieved September 8, 2019.\n\n\u2191 Donnelly, Francis X. (June 13, 1999). \"Space Coast Prepares for Apollo 11 Anniversary\". Florida Today. Cocoa, Florida. p.\u00a01 \u2013 via Newspapers.com.\n\n\u2191 \"National Air and Space Museum Events & Activities\". National Air and Space Museum. Archived from the original on March 5, 2000.\n\n\u2191 Manier, Jeremy (July 22, 1999). \"Sliver of Moon Brightens Michigan Avenue\". Chicago Tribune. Chicago, Illinois. p.\u00a0197 \u2013 via Newspapers.com.\n\n\u2191 \"Tribune Tower moon rock gone, but new one to take its place\". Chicago Tribune. Chicago, Illinois. September 28, 2011. Retrieved September 8, 2019.\n\n\u2191 \"How did Tribune Tower get all those stones?\". The New Chicagoan. June 5, 2018. Retrieved September 8, 2019.\n\n\u2191 \"Aircraft Carrier Marks 'Moonfest'\". The Californian. Salinas, California. July 17, 1999. p.\u00a014 \u2013 via Newspapers.com.\n\n\u2191 \"A Brief History of the USS Hornet Museum\" (PDF). USS Hornet Museum. p.\u00a03. Retrieved September 8, 2019.\n\n\u2191 \"LIFE: Up Close With Apollo 11\". Life. Archived from the original on May 21",
+        "truncated": true,
+        "snapshot": "2026-08"
+      },
+      "seconds": 0.012
+    }
+  ],
+  "case": "wiki_apollo",
+  "repeat": 2,
+  "evaluation": {
+    "passed": true,
+    "kind": "wiki",
+    "tool_errors": 0,
+    "successful_effects": 0,
+    "review_required": "Content checks are narrow; read saved answers for unsupported claims."
+  }
+}

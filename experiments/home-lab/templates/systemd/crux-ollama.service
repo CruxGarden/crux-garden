@@ -1,0 +1,21 @@
+[Unit]
+Description=Crux Garden Home local LLM (Ollama)
+After=network-online.target
+
+[Service]
+ExecStart=%h/.local/opt/crux-garden-home/ollama-0.40.17/bin/ollama serve
+Environment=OLLAMA_HOST=127.0.0.1:11434
+Environment=OLLAMA_MODELS=%h/.local/share/crux-garden-home/models
+Environment=OLLAMA_CONTEXT_LENGTH=8192
+Environment=OLLAMA_NUM_PARALLEL=1
+Environment=OLLAMA_MAX_LOADED_MODELS=1
+Environment=OLLAMA_KEEP_ALIVE=5m
+Environment=OLLAMA_NO_CLOUD=1
+Environment=OLLAMA_FLASH_ATTENTION=1
+Environment=OLLAMA_KV_CACHE_TYPE=q8_0
+Restart=on-failure
+RestartSec=5
+Nice=5
+
+[Install]
+WantedBy=default.target

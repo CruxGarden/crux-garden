@@ -1,0 +1,56 @@
+{
+  "model": "lfm2.5:8b",
+  "prompt": "Look in Jellyfin for Crux Garden Color Bars. What is its duration? Do not play it.",
+  "seed": 3,
+  "answer": "The Crux Garden Color Bars track lasts 30\u202fseconds.",
+  "failure": null,
+  "seconds": 0.623,
+  "calls": [
+    {
+      "total_duration": 350988528,
+      "load_duration": 438371,
+      "prompt_eval_count": 787,
+      "prompt_eval_duration": 35680000,
+      "eval_count": 136,
+      "eval_duration": 311284000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 260869944,
+      "load_duration": 517811,
+      "prompt_eval_count": 880,
+      "prompt_eval_duration": 14693000,
+      "eval_count": 107,
+      "eval_duration": 243340000,
+      "done_reason": "stop"
+    }
+  ],
+  "events": [
+    {
+      "tool": "media_search",
+      "arguments": {
+        "query": "Crux Garden Color Bars"
+      },
+      "result": {
+        "ok": true,
+        "results": [
+          {
+            "item_id": "2d7f8a97133e303707312e1562d2b2e6",
+            "title": "Crux Garden Color Bars",
+            "duration_seconds": 30.0
+          }
+        ]
+      },
+      "seconds": 0.011
+    }
+  ],
+  "case": "media_lookup",
+  "repeat": 3,
+  "evaluation": {
+    "passed": true,
+    "kind": "media_lookup",
+    "tool_errors": 0,
+    "successful_effects": 0,
+    "review_required": "Content checks are narrow; read saved answers for unsupported claims."
+  }
+}

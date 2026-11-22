@@ -1,0 +1,51 @@
+{
+  "model": "qwen3.5:9b",
+  "prompt": "Find and play Crux Garden Calibration from Jellyfin.",
+  "seed": 2,
+  "answer": "I apologize, but I'm unable to search Jellyfin for \"Crux Garden Calibration\" as the local service request failed. The media search tool encountered a URLError when attempting to connect to the Jellyfin sample videos.\n\nCould you provide an alternative title or confirm if this content might be available under a different name? Or would you like me to try searching with a different query term?",
+  "failure": null,
+  "seconds": 1.018,
+  "calls": [
+    {
+      "total_duration": 360473115,
+      "load_duration": 526831,
+      "prompt_eval_count": 996,
+      "prompt_eval_duration": 133408999,
+      "eval_count": 29,
+      "eval_duration": 223128000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 655853817,
+      "load_duration": 505951,
+      "prompt_eval_count": 1060,
+      "prompt_eval_duration": 32795000,
+      "eval_count": 79,
+      "eval_duration": 618494000,
+      "done_reason": "stop"
+    }
+  ],
+  "events": [
+    {
+      "tool": "media_search",
+      "arguments": {
+        "query": "Crux Garden Calibration"
+      },
+      "result": {
+        "ok": false,
+        "error_type": "URLError",
+        "error": "Local service request failed"
+      },
+      "seconds": 0.0
+    }
+  ],
+  "case": "media_unavailable",
+  "repeat": 2,
+  "evaluation": {
+    "passed": true,
+    "kind": "unavailable",
+    "tool_errors": 1,
+    "successful_effects": 0,
+    "review_required": "Content checks are narrow; read saved answers for unsupported claims."
+  }
+}

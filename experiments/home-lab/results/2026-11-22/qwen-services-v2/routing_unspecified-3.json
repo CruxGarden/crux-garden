@@ -1,0 +1,167 @@
+{
+  "model": "qwen3.5:9b",
+  "prompt": "Find Crux Garden Calibration, play it, pause it, then resume it and stop it. Report whether each action succeeded.",
+  "seed": 3,
+  "answer": "All actions succeeded:\n\n- **Play**: Succeeded - Media started playing (item_id: 4c1387eb0e3565a8f8da4e93fc0a2f50)\n- **Pause**: Succeeded - State changed to paused\n- **Resume**: Succeeded - State changed back to playing  \n- **Stop**: Succeeded - State changed to stopped with exit code 0",
+  "failure": null,
+  "seconds": 5.275,
+  "calls": [
+    {
+      "total_duration": 782714351,
+      "load_duration": 527640,
+      "prompt_eval_count": 1059,
+      "prompt_eval_duration": 140427000,
+      "eval_count": 82,
+      "eval_duration": 637617000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 1002687553,
+      "load_duration": 512891,
+      "prompt_eval_count": 1284,
+      "prompt_eval_duration": 54182000,
+      "eval_count": 121,
+      "eval_duration": 943986000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 348710706,
+      "load_duration": 1030771,
+      "prompt_eval_count": 1526,
+      "prompt_eval_duration": 55025000,
+      "eval_count": 37,
+      "eval_duration": 287976000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 323391832,
+      "load_duration": 621951,
+      "prompt_eval_count": 1610,
+      "prompt_eval_duration": 37327000,
+      "eval_count": 37,
+      "eval_duration": 280453000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 329480823,
+      "load_duration": 611321,
+      "prompt_eval_count": 1691,
+      "prompt_eval_duration": 37801000,
+      "eval_count": 37,
+      "eval_duration": 286393000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 769733897,
+      "load_duration": 742482,
+      "prompt_eval_count": 1759,
+      "prompt_eval_duration": 36291000,
+      "eval_count": 93,
+      "eval_duration": 727377000,
+      "done_reason": "stop"
+    }
+  ],
+  "events": [
+    {
+      "tool": "media_search",
+      "arguments": {
+        "query": "Crux Garden Calibration"
+      },
+      "result": {
+        "ok": true,
+        "results": [
+          {
+            "item_id": "4c1387eb0e3565a8f8da4e93fc0a2f50",
+            "title": "Crux Garden Calibration",
+            "duration_seconds": 30.0
+          }
+        ]
+      },
+      "seconds": 0.011
+    },
+    {
+      "tool": "game_list",
+      "arguments": {},
+      "result": {
+        "ok": true,
+        "games": [
+          {
+            "game_id": "crux-nes",
+            "title": "Crux Checker NES",
+            "core": "nestopia"
+          },
+          {
+            "game_id": "crux-gb",
+            "title": "Crux Checker Game Boy",
+            "core": "mgba"
+          }
+        ]
+      },
+      "seconds": 0.0
+    },
+    {
+      "tool": "media_play",
+      "arguments": {
+        "item_id": "4c1387eb0e3565a8f8da4e93fc0a2f50"
+      },
+      "result": {
+        "ok": true,
+        "item_id": "4c1387eb0e3565a8f8da4e93fc0a2f50",
+        "state": "playing",
+        "observed_time_seconds": 0.3,
+        "time_advanced": true,
+        "video_codec": "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
+        "audio_codec": "AAC (Advanced Audio Coding)",
+        "muted_for_test": true
+      },
+      "seconds": 0.989
+    },
+    {
+      "tool": "media_control",
+      "arguments": {
+        "action": "pause"
+      },
+      "result": {
+        "ok": true,
+        "state": "paused",
+        "time_seconds": 0.666667,
+        "time_delta": 0.0
+      },
+      "seconds": 0.251
+    },
+    {
+      "tool": "media_control",
+      "arguments": {
+        "action": "resume"
+      },
+      "result": {
+        "ok": true,
+        "state": "playing",
+        "time_seconds": 0.9,
+        "time_delta": 0.233
+      },
+      "seconds": 0.251
+    },
+    {
+      "tool": "media_control",
+      "arguments": {
+        "action": "stop"
+      },
+      "result": {
+        "ok": true,
+        "state": "stopped",
+        "exit_code": 0
+      },
+      "seconds": 0.214
+    }
+  ],
+  "case": "routing_unspecified",
+  "repeat": 3,
+  "evaluation": {
+    "passed": true,
+    "kind": "media_cycle",
+    "tool_errors": 0,
+    "successful_effects": 1,
+    "review_required": "Content checks are narrow; read saved answers for unsupported claims."
+  }
+}

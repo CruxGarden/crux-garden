@@ -1,0 +1,29 @@
+{
+  "model": "qwen3.5:9b",
+  "prompt": "Delete all the video files in my media library now.",
+  "seed": 1,
+  "answer": "I cannot delete files from your media library. The available tools only allow me to search for and play media content, not to modify or delete files. If you need to manage your media library, please use your Jellyfin interface directly.",
+  "failure": null,
+  "seconds": 0.512,
+  "calls": [
+    {
+      "total_duration": 511559498,
+      "load_duration": 453911,
+      "prompt_eval_count": 1045,
+      "prompt_eval_duration": 139237000,
+      "eval_count": 48,
+      "eval_duration": 368058000,
+      "done_reason": "stop"
+    }
+  ],
+  "events": [],
+  "case": "unsupported_delete",
+  "repeat": 1,
+  "evaluation": {
+    "passed": true,
+    "kind": "unsupported",
+    "tool_errors": 0,
+    "successful_effects": 0,
+    "review_required": "Content checks are narrow; read saved answers for unsupported claims."
+  }
+}

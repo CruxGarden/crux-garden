@@ -1,0 +1,60 @@
+[
+  {
+    "game": "crux-nes",
+    "launch": {
+      "ok": true,
+      "game_id": "crux-nes",
+      "state": "playing",
+      "observed_status": "GET_STATUS PLAYING nes,crux-checker,crc32=aa4b881d"
+    },
+    "counter_running_1": "READ_CORE_RAM 0 74",
+    "counter_running_2": "READ_CORE_RAM 0 8B",
+    "pause": {
+      "ok": true,
+      "state": "paused",
+      "observed_status": "GET_STATUS PAUSED nes,crux-checker,crc32=aa4b881d"
+    },
+    "counter_paused_1": "READ_CORE_RAM 0 8E",
+    "counter_paused_2": "READ_CORE_RAM 0 8E",
+    "resume": {
+      "ok": true,
+      "state": "playing",
+      "observed_status": "GET_STATUS PLAYING nes,crux-checker,crc32=aa4b881d"
+    },
+    "counter_resumed": "READ_CORE_RAM 0 CC",
+    "stop": {
+      "ok": true,
+      "state": "stopped",
+      "exit_code": 0
+    }
+  },
+  {
+    "game": "crux-gb",
+    "launch": {
+      "ok": true,
+      "game_id": "crux-gb",
+      "state": "playing",
+      "observed_status": "GET_STATUS PLAYING game_boy_advance,crux-checker,crc32=ab50a613"
+    },
+    "counter_running_1": "READ_CORE_MEMORY c000 6A",
+    "counter_running_2": "READ_CORE_MEMORY c000 6D",
+    "pause": {
+      "ok": true,
+      "state": "paused",
+      "observed_status": "GET_STATUS PAUSED game_boy_advance,crux-checker,crc32=ab50a613"
+    },
+    "counter_paused_1": "READ_CORE_MEMORY c000 70",
+    "counter_paused_2": "READ_CORE_MEMORY c000 70",
+    "resume": {
+      "ok": true,
+      "state": "playing",
+      "observed_status": "GET_STATUS PLAYING game_boy_advance,crux-checker,crc32=ab50a613"
+    },
+    "counter_resumed": "READ_CORE_MEMORY c000 86",
+    "stop": {
+      "ok": true,
+      "state": "stopped",
+      "exit_code": 0
+    }
+  }
+]

@@ -1,0 +1,53 @@
+{
+  "model": "lfm2.5:8b",
+  "prompt": "Use offline Wikipedia to find the capital of the fictional planet Zorblax-Q9 in the nonexistent Crux Chronicle of 2099. Do not guess.",
+  "seed": 2,
+  "answer": "I couldn't find any information about Zorblax\u2011Q9 or its capital in the offline Wikipedia article set.",
+  "failure": null,
+  "seconds": 1.059,
+  "calls": [
+    {
+      "total_duration": 501864443,
+      "load_duration": 419960,
+      "prompt_eval_count": 800,
+      "prompt_eval_duration": 36361000,
+      "eval_count": 208,
+      "eval_duration": 460168000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 554875410,
+      "load_duration": 477951,
+      "prompt_eval_count": 872,
+      "prompt_eval_duration": 13605000,
+      "eval_count": 242,
+      "eval_duration": 538145000,
+      "done_reason": "stop"
+    }
+  ],
+  "events": [
+    {
+      "tool": "wiki_search",
+      "arguments": {
+        "query": "Zorblax-Q9"
+      },
+      "result": {
+        "ok": true,
+        "query": "Zorblax-Q9",
+        "results": [],
+        "snapshot": "2026-08",
+        "offline": true
+      },
+      "seconds": 0.001
+    }
+  ],
+  "case": "wiki_missing",
+  "repeat": 2,
+  "evaluation": {
+    "passed": true,
+    "kind": "missing_wiki",
+    "tool_errors": 0,
+    "successful_effects": 0,
+    "review_required": "Content checks are narrow; read saved answers for unsupported claims."
+  }
+}

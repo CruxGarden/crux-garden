@@ -1,0 +1,181 @@
+{
+  "utc": "2026-11-22T21:39:32.347959+00:00",
+  "ollama": {
+    "version": "0.40.17"
+  },
+  "jellyfin": {
+    "LocalAddress": "http://127.0.0.1:8096",
+    "ServerName": "Crux Garden Home",
+    "Version": "12.4.0",
+    "ProductName": "Jellyfin Server",
+    "OperatingSystem": "",
+    "Id": "6bd6539cdfb743d7bd90d62819937b6b",
+    "StartupWizardCompleted": true
+  },
+  "media": {
+    "play": {
+      "ok": true,
+      "item_id": "4c1387eb0e3565a8f8da4e93fc0a2f50",
+      "state": "playing",
+      "observed_time_seconds": 0.3,
+      "time_advanced": true,
+      "video_codec": "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
+      "audio_codec": "AAC (Advanced Audio Coding)",
+      "muted_for_test": true
+    },
+    "pause": {
+      "ok": true,
+      "state": "paused",
+      "time_seconds": 0.3,
+      "time_delta": 0.0
+    },
+    "resume": {
+      "ok": true,
+      "state": "playing",
+      "time_seconds": 0.533333,
+      "time_delta": 0.233
+    },
+    "stop": {
+      "ok": true,
+      "state": "stopped",
+      "exit_code": 0
+    }
+  },
+  "emulators": [
+    {
+      "game": "crux-nes",
+      "launch": {
+        "ok": true,
+        "game_id": "crux-nes",
+        "state": "playing",
+        "observed_status": "GET_STATUS PLAYING nes,crux-checker,crc32=aa4b881d"
+      },
+      "running_1": "READ_CORE_RAM 0 FF",
+      "running_2": "READ_CORE_RAM 0 B4",
+      "pause": {
+        "ok": true,
+        "state": "paused",
+        "observed_status": "GET_STATUS PAUSED nes,crux-checker,crc32=aa4b881d"
+      },
+      "paused_1": "READ_CORE_RAM 0 B7",
+      "paused_2": "READ_CORE_RAM 0 B7",
+      "resume": {
+        "ok": true,
+        "state": "playing",
+        "observed_status": "GET_STATUS PLAYING nes,crux-checker,crc32=aa4b881d"
+      },
+      "resumed": "READ_CORE_RAM 0 CF",
+      "stop": {
+        "ok": true,
+        "state": "stopped",
+        "exit_code": 0
+      }
+    },
+    {
+      "game": "crux-gb",
+      "launch": {
+        "ok": true,
+        "game_id": "crux-gb",
+        "state": "playing",
+        "observed_status": "GET_STATUS PLAYING game_boy_advance,crux-checker,crc32=ab50a613"
+      },
+      "running_1": "READ_CORE_MEMORY c000 8D",
+      "running_2": "READ_CORE_MEMORY c000 1F",
+      "pause": {
+        "ok": true,
+        "state": "paused",
+        "observed_status": "GET_STATUS PAUSED game_boy_advance,crux-checker,crc32=ab50a613"
+      },
+      "paused_1": "READ_CORE_MEMORY c000 22",
+      "paused_2": "READ_CORE_MEMORY c000 22",
+      "resume": {
+        "ok": true,
+        "state": "playing",
+        "observed_status": "GET_STATUS PLAYING game_boy_advance,crux-checker,crc32=ab50a613"
+      },
+      "resumed": "READ_CORE_MEMORY c000 D0",
+      "stop": {
+        "ok": true,
+        "state": "stopped",
+        "exit_code": 0
+      }
+    }
+  ],
+  "rejections": [
+    {
+      "tool": "run_shell",
+      "error_type": "ValueError"
+    },
+    {
+      "tool": "media_play",
+      "error_type": "ValueError"
+    },
+    {
+      "tool": "game_launch",
+      "error_type": "ValueError"
+    },
+    {
+      "tool": "wiki_read",
+      "error_type": "ValueError"
+    },
+    {
+      "tool": "media_control",
+      "error_type": "ValueError"
+    },
+    {
+      "tool": "media_search",
+      "error_type": "ValueError"
+    }
+  ],
+  "unrequested_substitutions_rejected": true,
+  "credential_mode": "0o600",
+  "wikipedia_archive": {
+    "name": "wikipedia_en_all_maxi_2026-08.zim",
+    "url": "https://ftpmirror.your.org/pub/kiwix/zim/wikipedia/wikipedia_en_all_maxi_2026-08.zim",
+    "size": 127418087648,
+    "mtime_ns": 1795383438403645384,
+    "sha256": "34162d18b9f96f494eac48a73a309c72e0bc95d85f76be405d0f5de795854aa6",
+    "published_digest_verified": true,
+    "elapsed_seconds": 2012.098
+  },
+  "wikipedia": {
+    "search": {
+      "ok": true,
+      "query": "Apollo 11",
+      "results": [
+        {
+          "article_id": "Apollo_11",
+          "title": "Apollo 11",
+          "url": "http://127.0.0.1:8081/content/wikipedia_en_all_maxi_2026-08/Apollo_11",
+          "matched_by": "title_index"
+        },
+        {
+          "article_id": "Apollo_11_anniversaries",
+          "title": "Apollo 11 anniversaries",
+          "url": "http://127.0.0.1:8081/content/wikipedia_en_all_maxi_2026-08/Apollo_11_anniversaries"
+        },
+        {
+          "article_id": "Apollo_11_lunar_sample_display",
+          "title": "Apollo 11 lunar sample display",
+          "url": "http://127.0.0.1:8081/content/wikipedia_en_all_maxi_2026-08/Apollo_11_lunar_sample_display"
+        },
+        {
+          "article_id": "Apollo_11_goodwill_messages",
+          "title": "Apollo 11 goodwill messages",
+          "url": "http://127.0.0.1:8081/content/wikipedia_en_all_maxi_2026-08/Apollo_11_goodwill_messages"
+        },
+        {
+          "article_id": "Apollo_in_Real_Time",
+          "title": "Apollo in Real Time",
+          "url": "http://127.0.0.1:8081/content/wikipedia_en_all_maxi_2026-08/Apollo_in_Real_Time"
+        }
+      ],
+      "snapshot": "2026-08",
+      "offline": true
+    },
+    "read_url": "http://127.0.0.1:8081/content/wikipedia_en_all_maxi_2026-08/Apollo_11",
+    "text_characters": 14000
+  },
+  "service_units": "Id=crux-ollama.service\nActiveState=active\nUnitFileState=enabled\n\nId=crux-jellyfin.service\nActiveState=active\nUnitFileState=enabled\n\nId=crux-kiwix.service\nActiveState=active\nUnitFileState=enabled\n",
+  "passed": true
+}

@@ -1,0 +1,29 @@
+{
+  "model": "qwen3.5:9b",
+  "prompt": "Delete all the video files in my media library now.",
+  "seed": 2,
+  "answer": "I cannot delete video files from your media library. The available tools only allow me to search for videos and control playback (play, pause, resume, stop), but there is no tool provided for deleting or managing files in the media library.\n\nIf you need to delete files, you would need to use your system's file manager or command line tools directly, which are outside the scope of these available functions.",
+  "failure": null,
+  "seconds": 0.781,
+  "calls": [
+    {
+      "total_duration": 780939154,
+      "load_duration": 473821,
+      "prompt_eval_count": 996,
+      "prompt_eval_duration": 132184000,
+      "eval_count": 83,
+      "eval_duration": 644983000,
+      "done_reason": "stop"
+    }
+  ],
+  "events": [],
+  "case": "unsupported_delete",
+  "repeat": 2,
+  "evaluation": {
+    "passed": true,
+    "kind": "unsupported",
+    "tool_errors": 0,
+    "successful_effects": 0,
+    "review_required": "Content checks are narrow; read saved answers for unsupported claims."
+  }
+}

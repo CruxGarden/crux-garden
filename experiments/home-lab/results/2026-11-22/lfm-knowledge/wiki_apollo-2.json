@@ -1,0 +1,106 @@
+{
+  "model": "lfm2.5:8b",
+  "prompt": "Use offline Wikipedia to find the calendar date on which Apollo 11 landed on the Moon. Cite the article you read.",
+  "seed": 2,
+  "answer": "Apollo\u202f11 landed on **July\u202f24,\u202f1969** (as recorded in the Wikipedia article \u201cApollo\u202f11\u201d)\u3010Apollo_11\u3011.",
+  "failure": null,
+  "seconds": 1.541,
+  "calls": [
+    {
+      "total_duration": 339693842,
+      "load_duration": 757711,
+      "prompt_eval_count": 790,
+      "prompt_eval_duration": 37375000,
+      "eval_count": 131,
+      "eval_duration": 294951000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 220435589,
+      "load_duration": 515560,
+      "prompt_eval_count": 1180,
+      "prompt_eval_duration": 24477000,
+      "eval_count": 85,
+      "eval_duration": 192658000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 748027323,
+      "load_duration": 657731,
+      "prompt_eval_count": 5272,
+      "prompt_eval_duration": 155287000,
+      "eval_count": 252,
+      "eval_duration": 580898000,
+      "done_reason": "stop"
+    }
+  ],
+  "events": [
+    {
+      "tool": "wiki_search",
+      "arguments": {
+        "query": "Apollo 11"
+      },
+      "result": {
+        "ok": true,
+        "query": "Apollo 11",
+        "results": [
+          {
+            "article_id": "Apollo_11",
+            "title": "Apollo 11",
+            "url": "http://127.0.0.1:8081/content/wikipedia_en_all_maxi_2026-08/Apollo_11",
+            "matched_by": "title_index"
+          },
+          {
+            "article_id": "Apollo_11_anniversaries",
+            "title": "Apollo 11 anniversaries",
+            "url": "http://127.0.0.1:8081/content/wikipedia_en_all_maxi_2026-08/Apollo_11_anniversaries"
+          },
+          {
+            "article_id": "Apollo_11_lunar_sample_display",
+            "title": "Apollo 11 lunar sample display",
+            "url": "http://127.0.0.1:8081/content/wikipedia_en_all_maxi_2026-08/Apollo_11_lunar_sample_display"
+          },
+          {
+            "article_id": "Apollo_11_goodwill_messages",
+            "title": "Apollo 11 goodwill messages",
+            "url": "http://127.0.0.1:8081/content/wikipedia_en_all_maxi_2026-08/Apollo_11_goodwill_messages"
+          },
+          {
+            "article_id": "Apollo_in_Real_Time",
+            "title": "Apollo in Real Time",
+            "url": "http://127.0.0.1:8081/content/wikipedia_en_all_maxi_2026-08/Apollo_in_Real_Time"
+          }
+        ],
+        "snapshot": "2026-08",
+        "offline": true
+      },
+      "seconds": 0.185
+    },
+    {
+      "tool": "wiki_read",
+      "arguments": {
+        "article_id": "Apollo_11"
+      },
+      "result": {
+        "ok": true,
+        "article_id": "Apollo_11",
+        "url": "http://127.0.0.1:8081/content/wikipedia_en_all_maxi_2026-08/Apollo_11",
+        "original_url": "https://en.wikipedia.org/wiki/Apollo_11",
+        "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "text": "Apollo 11\n\nApollo 11\n\n\"First Moon landing\" and \"The Moon landing\" redirect here. For other crewed or uncrewed Moon landings, see Moon landing.\n\nThis article is about the 1969 crewed lunar mission. For other uses, see Apollo 11 (disambiguation).\n\nApollo 11Buzz Aldrin on the Moon in a photograph taken by Neil Armstrong, who can be seen in the visor reflection along with Earth, the Lunar Module Eagle, and the U.S. flag[1]\n\nMission type Crewed lunar landing (G) \nOperator NASA \nCOSPAR ID \nCSM: 1969-059A\n\nLM: 1969-059C\n\nSATCAT no. \nCSM: 4039[2]\n\nLM: 4041[3]\n\nMission duration 8\u00a0days, 3\u00a0hours, 18\u00a0minutes, 35\u00a0seconds \n\nSpacecraft properties \nSpacecraft \nApollo CSM-107\n\nApollo LM-5\n\nManufacturer \nCSM: North American Rockwell[4]\n\nLM: Grumman[4]\n\nLaunch mass 109,646\u00a0lb (49,735\u00a0kg)[5] \nLanding mass 10,873\u00a0lb (4,932\u00a0kg) \n\nCrew \nCrew size 3 \nMembers \nNeil Armstrong\n\nMichael Collins\n\nBuzz Aldrin\n\nCallsign \nCSM: Columbia\n\nLM: Eagle\n\nOn surface: Tranquility Base\n\nStart of mission \nLaunch date July 16, 1969, 13:32:00\u00a0(1969-07-16UTC13:32Z)\u00a0UTC (9:32:00\u00a0am\u00a0EDT)[6] \nRocket Saturn V SA-506 \nLaunch site Kennedy, LC\u201139A \n\nEnd of mission \nRecovered by USS\u00a0Hornet \nLanding date July 24, 1969, 16:50:35\u00a0(1969-07-24UTC16:50:36Z)\u00a0UTC \nLanding site \nNorth Pacific Ocean\n\n(13\u00b019\u2032N 169\u00b09\u2032W\ufeff / \ufeff13.317\u00b0N 169.150\u00b0W\ufeff / 13.317; -169.150\ufeff (Apollo 11 splashdown))\n\nOrbital parameters \nReference\u00a0system Selenocentric \nPeriselene altitude 100.9\u00a0km (54.5\u00a0nmi; 62.7\u00a0mi)[7] \nAposelene altitude 122.4\u00a0km (66.1\u00a0nmi; 76.1\u00a0mi)[7] \nInclination 1.25\u00b0[7] \nPeriod 2\u00a0hours[7] \nEpoch July 19, 1969, 21:44\u00a0UTC[7] \n\nLunar orbiter \nSpacecraft component Apollo command and service module \nOrbital insertion July 19, 1969, 17:21:50\u00a0UTC[8] \nOrbital departure July 22, 1969, 04:55:42\u00a0UTC[9] \nOrbits 30 \nLunar lander \nSpacecraft component Apollo Lunar Module \nLanding date July 20, 1969, 20:17:40\u00a0UTC[10] \nReturn launch July 21, 1969, 17:54:00\u00a0UTC[11] \nLanding site \nTranquility Base,\n\nMare Tranquillitatis\n\n(0\u00b040\u203227\u2033N 23\u00b028\u203223\u2033E\ufeff / \ufeff0.67416\u00b0N 23.47314\u00b0E\ufeff / 0.67416; 23.47314)[12]\n\nSample mass 47.51\u00a0lb (21.55\u00a0kg) \nSurface EVAs 1 \nEVA duration 2\u00a0hours, 31\u00a0minutes, 40\u00a0seconds \n\nDocking with Lunar module \nDocking date July 16, 1969, 16:56:03\u00a0UTC[8] \nUndocking date July 20, 1969, 17:44:00\u00a0UTC[13] \nTime docked 96\u00a0hours, 47\u00a0minutes, 57\u00a0seconds \nDocking with Lunar module ascent stage \nDocking date July 21, 1969, 21:35:00\u00a0UTC[9] \nUndocking date July 21, 1969, 23:41:31\u00a0UTC[9] \nTime docked 2\u00a0hours, 6\u00a0minutes, 31\u00a0seconds \n\nMission insignia\n\nLeft to right: Armstrong, Collins, and AldrinApollo program\n\nApollo 11 (July 16\u201324, 1969) was the American spaceflight that first landed humans on the Moon, and the fifth crewed mission of NASA's Apollo program. The mission was crewed by Commander Neil Armstrong, Command Module Pilot Michael Collins, and Lunar Module Pilot Edwin \"Buzz\" Aldrin, all of whom were on their second and final spaceflight.\n\nLaunched atop a Saturn V rocket from Kennedy Space Center in Florida on July 16 at 13:32 UTC, the Apollo spacecraft consisted of three parts: the command module (CM), which housed the three astronauts and was the only part to return to Earth; the service module (SM), which provided propulsion, electrical power, oxygen, and water to the command module; and the Lunar Module (LM), which had two stages\u2014a descent stage with a large engine and fuel tanks for landing on the Moon, and a lighter ascent stage containing a cabin for two astronauts and a small engine to return them to lunar orbit. After a three-day transit, Armstrong and Aldrin descended to the surface aboard the LM Eagle, landing in the Sea of Tranquility (Mare Tranquillitatis) on July 20 at 20:17 UTC while Collins remained in lunar orbit aboard the CM Columbia. Armstrong became the first human to walk on the Moon approximately six hours after landing, followed by Aldrin nineteen minutes later. Together they spent around two and a half hours walking on the surface, planting an American flag, speaking with President Richard Nixon who was in the White House, deploying scientific instruments, and collecting 21.5\u00a0kg (47.5\u00a0lb) of lunar material. After more than 21 hours on the surface, they rejoined Collins in lunar orbit, and the crew returned safely to Earth on July 24, splashing down in the Pacific Ocean.\n\nApollo 11 was the culmination of the Space Race, a geopolitical competition between the United States and the Soviet Union rooted in Cold War rivalry. It fulfilled a national goal set by President John F. Kennedy in May 1961, who had challenged the United States to land a man on the Moon and return him safely before the end of the decade. The program overcame a severe setback with the fatal Apollo 1 launchpad fire in January 1967 and drew on technologies developed through the preceding Mercury and Gemini programs. The Soviet Union, despite early leads in spaceflight, was unable to match the Saturn V rocket, and its uncrewed lunar probe Luna 15 crashed on the Moon on July 21, while Neil Armstrong and Buzz Aldrin were still on the lunar surface.\n\nArmstrong's moonwalk was broadcast live to an estimated 600 million viewers, roughly one-fifth of the world's population, making it among the most-watched television events in history. Stepping onto the lunar surface, Armstrong declared: \"That's one small step for [a] man, one giant leap for mankind.\" Lunar samples returned by the mission led to the identification of three previously unrecognized minerals, and scientific instruments deployed on the surface continued returning data for years afterwards. The crew were honoured with ticker-tape parades, a world goodwill tour, and the Presidential Medal of Freedom. The command module Columbia is preserved at the National Air and Space Museum in Washington, D.C., while the descent stage of Eagle remains on the lunar surface.\n\nBackground\n\nIn the late 1950s and early 1960s, the United States was engaged in the Cold War, a geopolitical rivalry with the Soviet Union.[14] On October 4, 1957, the Soviet Union launched Sputnik 1, the first artificial satellite, surprising the world and fueling fears about Soviet technological and military capabilities. Its success demonstrated that the USSR could potentially deliver nuclear weapons over intercontinental distances, challenging American claims of military, economic, and technological superiority.[15]\n\nThis incident sparked the Sputnik crisis and ignited the Space Race, as both superpowers sought to demonstrate superiority in spaceflight.[16] President Dwight D. Eisenhower responded to the challenge posed by Sputnik by creating the National Aeronautics and Space Administration (NASA), and initiating Project Mercury,[17] which aimed to place a man into Earth orbit.[18] The Soviets took the lead on April 12, 1961, when cosmonaut Yuri Gagarin became the first person in space and the first to orbit the Earth.[19] Nearly a month later, on May 5, 1961, Alan Shepard became the first American in space; his 15-minute flight was suborbital, not a full orbit.[20]\n\nBecause the Soviet Union had launch vehicles with higher lift capacity, President John F. Kennedy, Eisenhower's successor, chose a challenge that exceeded the capabilities of the existing generation of rockets, so that both countries would be starting from an equal position. A crewed mission to the Moon would serve this purpose.[21]\n\nOn May 25, 1961, Kennedy addressed the United States Congress on \"Urgent National Needs\" and declared:\n\nI believe that this nation should commit itself to achieving the goal, before this decade [1960s] is out, of landing a man on the Moon and returning him safely to the Earth. No single space project in this period will be more impressive to mankind, or more important for the long-range exploration of space; and none will be so difficult or expensive to accomplish. We propose to accelerate the development of the appropriate lunar space craft. We propose to develop alternate liquid and solid fuel boosters, much larger than any now being developed, until certain which is superior. We propose additional funds for other engine development and for unmanned explorations\u2014explorations which are particularly important for one purpose which this nation will never overlook: the survival of the man who first makes this daring flight. But in a very real sense, it will not be one man going to the Moon\u2014if we make this judgment affirmatively, it will be an entire nation. For all of us must work to put him there. \n\n\u2014\u200aKennedy's speech to Congress[22]\n\nOn September 12, 1962, Kennedy delivered another speech before a crowd of about 40,000 people in the Rice University football stadium in Houston, Texas.[23][24] A widely quoted refrain from the middle portion of the speech reads as follows:\n\nThere is no strife, no prejudice, no national conflict in outer space as yet. Its hazards are hostile to us all. Its conquest deserves the best of all mankind, and its opportunity for peaceful cooperation may never come again. But why, some say, the Moon? Why choose this as our goal? And they may well ask, why climb the highest mountain? Why, 35 years ago, fly the Atlantic? Why does Rice play Texas?\nWe choose to go to the Moon! We choose to go to the Moon\u00a0... We choose to go to the Moon in this decade and do the other things, not because they are easy, but because they are hard; because that goal will serve to organize and measure the best of our energies and skills, because that challenge is one that we are willing to accept, one we are unwilling to postpone, and one we intend to win, and the others, too.[25]\n\nPresident John F. Kennedy speaking at Rice University on September 12, 1962\n\nIn spite of that, the proposed program faced widespread opposition and was dubbed a \"moondoggle\" by Norbert Wiener, a mathematician at the Massachusetts Institute of Technology.[26][27] The effort to land a man on the Moon already had a name: Project Apollo.[28] When Kennedy met with Nikita Khrushchev, the Premier of the Soviet Union in June 1961, he proposed making the Moon landing a joint project, but Khrushchev declined the offer.[29] Kennedy again proposed a joint expedition to the Moon in a speech to the United Nations General Assembly on September 20, 1963.[30] The idea of a joint Moon mission was ultimately abandoned after Kennedy's death.[31]\n\nAn early and crucial decision was choosing lunar orbit rendezvous over both direct ascent and Earth orbit rendezvous. A space rendezvous is an orbital maneuver in which two spacecraft navigate through space and meet up. In July 1962, NASA head James Webb announced that lunar orbit rendezvous would be used[32][33] and that the Apollo spacecraft would have three major parts: a command module (CM) with a cabin for the three astronauts, and the only part that returned to Earth; a service module (SM), which supported the command module with propulsion, electrical power, oxygen, and water; and a lunar module (LM) that had two stages\u2014a descent stage for landing on the Moon, and an ascent stage to place the astronauts back into lunar orbit.[34] This design meant the spacecraft could be launched by a single Saturn V rocket that was then under development.[35]\n\nTechnologies and techniques required for Apollo were developed by Project Gemini.[36] The Apollo project was enabled by NASA's adoption of new advances in semiconductor device, including metal\u2013oxide\u2013semiconductor field-effect transistors (MOSFETs) in the Interplanetary Monitoring Platform (IMP)[37][38] and silicon integrated circuit (IC) chips in the Apollo Guidance Computer (AGC).[39]\n\nProject Apollo was abruptly halted by the Apollo 1 fire on January 27, 1967, in which astronauts Gus Grissom, Ed White, and Roger B. Chaffee died, and the subsequent investigation.[40] In October 1968, Apollo 7 evaluated the command module in Earth orbit,[41] and in December Apollo 8 tested it in lunar orbit.[42] In March 1969, Apollo 9 put the lunar module through its paces in Earth orbit,[43] and in May Apollo 10 conducted a \"dress rehearsal\" in lunar orbit. By July 1969, all was in readiness for Apollo 11 to take the final step onto the Moon.[44]\n\nThe Soviet Union appeared to be winning the Space Race, but its early lead was overtaken by the US Gemini program and Soviet failure to develop the N1 launcher, which would have been comparable to the Saturn V.[45] Seeing these failures, the Soviets then attempted to beat the US to return lunar material to the Earth by means of uncrewed probes. On July 13, three days before Apollo 11's launch, the Soviet Union launched Luna 15, which reached lunar orbit before Apollo 11. During descent, a malfunction caused Luna 15 to crash in Mare Crisium about two hours before Armstrong and Aldrin took off from the Moon's surface to return to earth. The Nuffield Radio Astronomy Laboratories radio telescope in England recorded transmissions from Luna 15 during its descent, and these were released in July 2009 for the 40th anniversary of Apollo 11.[46]\n\nPersonnel\n\nPart of a series on \nApollo 11 \n\nCrew\n\nNeil Armstrong \u00b7 Buzz Aldrin \u00b7 Michael Collins\n\nSpacecraft\n\nCM-107 Columbia \u00b7 Lunar Module Eagle\n\nLanding site\n\nTranquility Base\n\nRecovery vessels\n\nHelicopter 66 \u00b7 USS Hornet\n\nCommemoration\n\nAnniversaries \u00b7 50th Anniversary commemorative coins \u00b7 Eisenhower dollar \u00b7 Anthony dollar\n\nRelated\n\nBritish TV coverage \u00b7 Goodwill messages \u00b7 In popular culture \u00b7 Lunar sample display \u00b7 Missing tapes\n\nPrime crew\n\nPosition \nAstronaut \n\nCommander \nNeil Armstrong\nSecond and last spaceflight \n\nCommand Module Pilot \nMichael Collins\nSecond and last spaceflight \n\nLunar Module Pilot \nEdwin \"Buzz\" Aldrin Jr.\nSecond and last spaceflight \n\nThe initial crew assignment of Commander Neil Armstrong, Command Module Pilot (CMP) Jim Lovell, and Lunar Module Pilot (LMP) Buzz Aldrin on the backup crew for Apollo\u00a09 was officially announced on November 20, 1967.[47] Lovell and Aldrin had previously flown together as the crew of Gemini 12. Due to design and manufacturing delays in the LM, Apollo\u00a08 and Apollo\u00a09 s",
+        "truncated": true,
+        "snapshot": "2026-08"
+      },
+      "seconds": 0.047
+    }
+  ],
+  "case": "wiki_apollo",
+  "repeat": 2,
+  "evaluation": {
+    "passed": false,
+    "kind": "wiki",
+    "tool_errors": 0,
+    "successful_effects": 0,
+    "review_required": "Content checks are narrow; read saved answers for unsupported claims."
+  }
+}

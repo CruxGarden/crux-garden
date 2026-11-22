@@ -1,0 +1,147 @@
+{
+  "model": "lfm2.5:8b",
+  "prompt": "In the media server, find the video Crux Garden Calibration. Play it, pause it, resume it, then stop it. Report the observed outcomes.",
+  "seed": 3,
+  "answer": "The video \u201cCrux Garden Calibration\u201d was found (item_id\u202f=\u202f4c1387eb0e3565a8f8da4e93fc0a2f50). It started playing (state\u202f=\u202fplaying, time\u202f\u2248\u202f0.3\u202fs). It was then paused (state\u202f=\u202fpaused, time\u202f\u2248\u202f0.533\u202fs). After pausing, it resumed (state\u202f=\u202fplaying, advanced by 0.267\u202fs). Finally, it was stopped (state\u202f=\u202fstopped). All actions completed successfully.",
+  "failure": null,
+  "seconds": 5.208,
+  "calls": [
+    {
+      "total_duration": 497417807,
+      "load_duration": 475950,
+      "prompt_eval_count": 798,
+      "prompt_eval_duration": 37238000,
+      "eval_count": 203,
+      "eval_duration": 457560000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 524674834,
+      "load_duration": 696401,
+      "prompt_eval_count": 893,
+      "prompt_eval_duration": 14865000,
+      "eval_count": 220,
+      "eval_duration": 506606000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 219883594,
+      "load_duration": 1036591,
+      "prompt_eval_count": 1058,
+      "prompt_eval_duration": 17752000,
+      "eval_count": 89,
+      "eval_duration": 198445000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 1113064946,
+      "load_duration": 684172,
+      "prompt_eval_count": 1123,
+      "prompt_eval_duration": 13618000,
+      "eval_count": 479,
+      "eval_duration": 1095441000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 412800663,
+      "load_duration": 605151,
+      "prompt_eval_count": 1188,
+      "prompt_eval_duration": 14180000,
+      "eval_count": 176,
+      "eval_duration": 394566000,
+      "done_reason": "stop"
+    },
+    {
+      "total_duration": 739626499,
+      "load_duration": 664961,
+      "prompt_eval_count": 1239,
+      "prompt_eval_duration": 13243000,
+      "eval_count": 320,
+      "eval_duration": 722511000,
+      "done_reason": "stop"
+    }
+  ],
+  "events": [
+    {
+      "tool": "media_search",
+      "arguments": {
+        "query": "Crux Garden Calibration"
+      },
+      "result": {
+        "ok": true,
+        "results": [
+          {
+            "item_id": "4c1387eb0e3565a8f8da4e93fc0a2f50",
+            "title": "Crux Garden Calibration",
+            "duration_seconds": 30.0
+          }
+        ]
+      },
+      "seconds": 0.012
+    },
+    {
+      "tool": "media_play",
+      "arguments": {
+        "item_id": "4c1387eb0e3565a8f8da4e93fc0a2f50"
+      },
+      "result": {
+        "ok": true,
+        "item_id": "4c1387eb0e3565a8f8da4e93fc0a2f50",
+        "state": "playing",
+        "observed_time_seconds": 0.3,
+        "time_advanced": true,
+        "video_codec": "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
+        "audio_codec": "AAC (Advanced Audio Coding)",
+        "muted_for_test": true
+      },
+      "seconds": 0.969
+    },
+    {
+      "tool": "media_control",
+      "arguments": {
+        "action": "pause"
+      },
+      "result": {
+        "ok": true,
+        "state": "paused",
+        "time_seconds": 0.533333,
+        "time_delta": 0.0
+      },
+      "seconds": 0.251
+    },
+    {
+      "tool": "media_control",
+      "arguments": {
+        "action": "resume"
+      },
+      "result": {
+        "ok": true,
+        "state": "playing",
+        "time_seconds": 0.8,
+        "time_delta": 0.267
+      },
+      "seconds": 0.251
+    },
+    {
+      "tool": "media_control",
+      "arguments": {
+        "action": "stop"
+      },
+      "result": {
+        "ok": true,
+        "state": "stopped",
+        "exit_code": 0
+      },
+      "seconds": 0.214
+    }
+  ],
+  "case": "media_cycle",
+  "repeat": 3,
+  "evaluation": {
+    "passed": true,
+    "kind": "media_cycle",
+    "tool_errors": 0,
+    "successful_effects": 1,
+    "review_required": "Content checks are narrow; read saved answers for unsupported claims."
+  }
+}
