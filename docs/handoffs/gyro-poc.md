@@ -1,11 +1,11 @@
 # Gyro — interactive persona study
 
 Updated: November 28, 2026
-Status: complete (local prototype checkpoint; production integration is not included)
-Owner: MacBook / Codex; receiver unassigned
+Status: ready-for-transfer (published prototype; production AI integration is not included)
+Owner: MacBook / Codex; receiver unassigned; sender stops implementation after the verified push
 Branch: `codex/gyro-poc`
 Base: `dcca939ec8023dc18b14f5fe56ef1d1999aacb54`
-Code availability: monorepo source `9b7da63` remains local; standalone static demo published publicly at https://crux-garden-gyro.thesantiagodog.chatgpt.site. No monorepo push/merge or native release.
+Code availability: implementation `9b7da63` plus documentation is included on `codex/gyro-poc`; GitHub branch push authorized November 28. standalone static demo published publicly at https://crux-garden-gyro.thesantiagodog.chatgpt.site. No main merge or native release.
 
 ## TL;DR
 
@@ -51,7 +51,7 @@ macOS Apple Silicon, Node 22.19.0, local working tree. Verification is automated
 
 ## Next bounded step
 
-Review the running prototype's state legibility at distance, visual styles and sound on real speakers/headphones. Continue from the simple-ring and whole-ring-fade direction. Any model/voice/Assistant integration is separate scoped work. The demo is publicly shareable; monorepo source remains local until a branch push is authorized. Preserve unrelated Home work when staging; do not resume unrelated roadmap tasks.
+Review the running prototype's state legibility at distance, visual styles and sound on real speakers/headphones. Continue from the simple-ring and whole-ring-fade direction. Any model/voice/Assistant integration is separate scoped work. The demo is publicly shareable; Daniel authorized the completed branch push to GitHub. Use the final verified remote SHA in the transfer receipt; receiver remains unassigned. Preserve unrelated Home work when staging; do not resume unrelated roadmap tasks.
 
 ## Public demo publication — November 28
 
