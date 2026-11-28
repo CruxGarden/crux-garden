@@ -210,73 +210,72 @@ function App() {
   }
   const controls = (
     <section className="controls" aria-label="Persona state controls">
-      <div className="section-label">
-        <span>Explore its state</span>
-        <span>01 — {String(stateKeys.length).padStart(2, "0")}</span>
-      </div>
-      <div className="states">
-        {stateKeys.map((key) => (
-          <button
-            key={key}
-            aria-pressed={state === key}
-            onClick={() => select(key)}
-          >
-            <span
-              className="state-symbol"
-              aria-hidden="true"
-              style={{ color: `var(${getVar(personaToken(key, "color"))})` }}
+      <details className="optics-controls" open>
+        <summary>Explore its state</summary>
+        <div className="states">
+          {stateKeys.map((key) => (
+            <button
+              key={key}
+              aria-pressed={state === key}
+              onClick={() => select(key)}
             >
-              {states[key].symbol}
-            </span>
-            {states[key].label}
-          </button>
-        ))}
-      </div>
-      <div className="transport">
-        <button
-          className="primary"
-          onClick={() => {
-            if (playing) setPlaying(false);
-            else {
-              setPaused(false);
-              setPlaying(true);
-            }
-          }}
-        >
-          {playing ? "Stop sequence" : "Play an interaction"}{" "}
-          <span aria-hidden="true">↗</span>
-        </button>
-        <button onClick={() => setPaused(!paused)} aria-pressed={paused}>
-          {paused ? "Resume motion" : "Pause motion"}
-        </button>
-        <button onClick={() => scene.current?.reset()}>Reset view</button>
-      </div>
-      <div className="motion-control">
-        <label htmlFor="energy">Motion energy</label>
-        <input
-          id="energy"
-          type="range"
-          min="0.25"
-          max="1.75"
-          step="0.05"
-          value={intensity}
-          onChange={(e) => setIntensity(Number(e.target.value))}
-        />
-        <output htmlFor="energy">{intensity.toFixed(2)}×</output>
-      </div>
-      <label className="quiet">
-        <input
-          type="checkbox"
-          checked={reduced}
-          onChange={(e) => setReduced(e.target.checked)}
-        />{" "}
-        Reduced motion
-      </label>
-      <section className="style-picker" aria-label="Visual style">
-        <div className="section-label">
-          <span>Style</span>
-          <span>Same states, different personality</span>
+              <span
+                className="state-symbol"
+                aria-hidden="true"
+                style={{ color: `var(${getVar(personaToken(key, "color"))})` }}
+              >
+                {states[key].symbol}
+              </span>
+              {states[key].label}
+            </button>
+          ))}
         </div>
+      </details>
+      <details className="optics-controls">
+        <summary>Playback</summary>
+        <div className="transport">
+          <button
+            className="primary"
+            onClick={() => {
+              if (playing) setPlaying(false);
+              else {
+                setPaused(false);
+                setPlaying(true);
+              }
+            }}
+          >
+            {playing ? "Stop sequence" : "Play an interaction"}{" "}
+            <span aria-hidden="true">↗</span>
+          </button>
+          <button onClick={() => setPaused(!paused)} aria-pressed={paused}>
+            {paused ? "Resume motion" : "Pause motion"}
+          </button>
+          <button onClick={() => scene.current?.reset()}>Reset view</button>
+        </div>
+        <div className="motion-control">
+          <label htmlFor="energy">Motion energy</label>
+          <input
+            id="energy"
+            type="range"
+            min="0.25"
+            max="1.75"
+            step="0.05"
+            value={intensity}
+            onChange={(e) => setIntensity(Number(e.target.value))}
+          />
+          <output htmlFor="energy">{intensity.toFixed(2)}×</output>
+        </div>
+        <label className="quiet">
+          <input
+            type="checkbox"
+            checked={reduced}
+            onChange={(e) => setReduced(e.target.checked)}
+          />{" "}
+          Reduced motion
+        </label>
+      </details>
+      <details className="optics-controls style-picker">
+        <summary>Visual style</summary>
         <div className="styles">
           {renderStyles.map((style) => (
             <button
@@ -291,13 +290,14 @@ function App() {
             </button>
           ))}
         </div>
-      </section>
-      <details className="optics-controls state-editor" open>
+      </details>
+      <details className="optics-controls state-editor">
         <summary>{selected.label} settings</summary>
         <p className="caption">
           Changes apply only to {selected.label.toLowerCase()}. Glow spread runs
           from tight to diffuse; Electrical flow adds traveling light in Glow
-          style. Save all states with Export Mood.
+          style. Each ring’s speed multiplier sets its rhythm; Movement speed
+          scales the whole state. Save all states with Export Mood.
         </p>
         <label className="ring-color">
           State color{" "}
@@ -315,6 +315,9 @@ function App() {
         {(
           [
             ["speed", "Movement speed", 0, 1.8, 0.01],
+            ["innerSpeed", "Inner ring speed", 0, 2, 0.05],
+            ["middleSpeed", "Middle ring speed", 0, 2, 0.05],
+            ["outerSpeed", "Outer ring speed", 0, 2, 0.05],
             ["size", "Ring size", 0.65, 1.3, 0.01],
             ["glow", "Glow strength", 0, 2, 0.01],
             ["glowSpread", "Glow spread", 0, 1, 0.01],
@@ -342,6 +345,7 @@ function App() {
             />
             <output htmlFor={`state-${key}`}>
               {Number(mood[personaToken(state, key)] ?? 0).toFixed(2)}
+              {key.endsWith("Speed") ? "×" : ""}
             </output>
           </div>
         ))}
@@ -528,6 +532,73 @@ function App() {
       </p>
     </section>
   );
+  const moodEditor = (
+    <details className="mood-editor">
+      <summary>Mood & materials</summary>
+      <p>
+        Shared Garden tokens. Each state has its own color, motion, size and
+        effects.
+      </p>
+      <div className="swatches">
+        {(["accent", "warning", "bg", "text"] as const).map((key) => (
+          <label key={key}>
+            {key}
+            <input
+              type="color"
+              value={
+                /^#[0-9a-f]{6}$/i.test(mood[key] ?? "") ? mood[key] : "#000000"
+              }
+              onChange={(e) => updateMood({ ...mood, [key]: e.target.value })}
+            />
+          </label>
+        ))}
+      </div>
+      <div className="transport">
+        <button onClick={exportMood}>Export Mood</button>
+        <label className="file-label">
+          Import Mood
+          <input
+            type="file"
+            accept="application/json,.json"
+            onChange={async (e) => {
+              const file = e.target.files?.[0];
+              if (!file) return;
+              try {
+                if (file.size > 200000)
+                  throw new Error("Mood file is too large.");
+                updateMood(readMood(await file.text()));
+              } catch (error) {
+                setMoodError(
+                  error instanceof Error
+                    ? error.message
+                    : "Could not read Mood.",
+                );
+              }
+              e.target.value = "";
+            }}
+          />
+        </label>
+        <button onClick={() => updateMood(initialMood)}>Reset Mood</button>
+      </div>
+      <label className="token-editor">
+        All shared tokens (JSON)
+        <textarea
+          key={moodRevision}
+          defaultValue={JSON.stringify(mood, null, 2)}
+          onBlur={(e) => {
+            try {
+              updateMood(readMood(e.target.value));
+            } catch (error) {
+              setMoodError(
+                error instanceof Error ? error.message : "Invalid Mood.",
+              );
+            }
+          }}
+        />
+      </label>
+      <p role="status">{moodError}</p>
+    </details>
+  );
   return (
     <main
       className={`app ${variant.toLowerCase()}`}
@@ -551,139 +622,85 @@ function App() {
           Persona study <span>001</span>
         </span>
       </header>
-      {soundscape}
-      {variant === "Companion" && (
-        <section className="workbench">
-          <p className="eyebrow">An imagined Garden workspace</p>
-          <h2>
-            Make room
-            <br />
-            for a new idea.
-          </h2>
-          <p>
-            A companion at the edge of your creative work.
-            <br />
-            Present when you need it. Quiet when you don’t.
-          </p>
-          <div className="notebook">
-            <span>Collaboration</span>
-            <p>What if a garden could help us think?</p>
-            <div className="notebook-lines" />
-          </div>
-          {conversation}
-        </section>
-      )}
       <div className="experience">
-        <section className="stage" aria-label="Gyro persona">
-          <div className="stage-meta">
-            <span>GYRO / {selected.label.toUpperCase()}</span>
-            <span>WebGL 2 · live 3D</span>
-          </div>
-          <div className="viewport" ref={host} />
-          {renderError && (
-            <p className="render-error" role="alert">
-              {renderError}
+        <div className="main-view">
+          <section className="stage" aria-label="Gyro persona">
+            <div className="stage-meta">
+              <span>GYRO / {selected.label.toUpperCase()}</span>
+              <span>WebGL 2 · live 3D</span>
+            </div>
+            <div className="viewport" ref={host} />
+            {renderError && (
+              <p className="render-error" role="alert">
+                {renderError}
+              </p>
+            )}
+            <p className="context-lost" role="status">
+              Graphics context interrupted. Reload if it does not recover.
             </p>
+            <div className="stage-caption">
+              <span
+                className="state-readout"
+                aria-live="polite"
+                style={{
+                  color: `var(${getVar(personaToken(state, "color"))})`,
+                }}
+              >
+                {selected.symbol} {selected.label}
+                {paused
+                  ? " · motion paused"
+                  : reduced
+                    ? " · reduced motion"
+                    : ""}
+              </span>
+              <p>
+                Drag to orbit <span>·</span> Scroll to explore
+              </p>
+            </div>
+          </section>
+          <div className="state-story">
+            <p className="eyebrow">
+              {selected.label} /{" "}
+              {String(stateKeys.indexOf(state) + 1).padStart(2, "0")}
+            </p>
+            <h2>{selected.title}</h2>
+            <p>{selected.copy}</p>
+          </div>
+          {variant === "Companion" && (
+            <section className="workbench">
+              <p className="eyebrow">An imagined Garden workspace</p>
+              <h2>
+                Make room
+                <br />
+                for a new idea.
+              </h2>
+              <p>
+                A companion at the edge of your creative work.
+                <br />
+                Present when you need it. Quiet when you don’t.
+              </p>
+              <div className="notebook">
+                <span>Collaboration</span>
+                <p>What if a garden could help us think?</p>
+                <div className="notebook-lines" />
+              </div>
+              {conversation}
+            </section>
           )}
-          <p className="context-lost" role="status">
-            Graphics context interrupted. Reload if it does not recover.
-          </p>
-          <div className="stage-caption">
-            <span
-              className="state-readout"
-              aria-live="polite"
-              style={{ color: `var(${getVar(personaToken(state, "color"))})` }}
-            >
-              {selected.symbol} {selected.label}
-              {paused ? " · motion paused" : reduced ? " · reduced motion" : ""}
-            </span>
-            <p>
-              Drag to orbit <span>·</span> Scroll to explore
-            </p>
-          </div>
-        </section>
-        <div className="state-story">
-          <p className="eyebrow">
-            {selected.label} /{" "}
-            {String(stateKeys.indexOf(state) + 1).padStart(2, "0")}
-          </p>
-          <h2>{selected.title}</h2>
-          <p>{selected.copy}</p>
+
+          {variant === "Conversation" && conversation}
         </div>
-        {variant === "Conversation" && conversation}
-        {controls}
+        <aside className="control-panel" aria-label="Gyro controls">
+          {soundscape}
+          {controls}
+          {moodEditor}
+        </aside>
       </div>
       <footer>
         <span>Made with Crux Garden</span>
         <span>Light, motion & a sense of possibility.</span>
       </footer>
-      <details className="mood-editor">
-        <summary>Mood & materials</summary>
-        <p>
-          Shared Garden tokens. Each state has its own color, motion, size and
-          effects.
-        </p>
-        <div className="swatches">
-          {(["accent", "warning", "bg", "text"] as const).map((key) => (
-            <label key={key}>
-              {key}
-              <input
-                type="color"
-                value={
-                  /^#[0-9a-f]{6}$/i.test(mood[key] ?? "")
-                    ? mood[key]
-                    : "#000000"
-                }
-                onChange={(e) => updateMood({ ...mood, [key]: e.target.value })}
-              />
-            </label>
-          ))}
-        </div>
-        <div className="transport">
-          <button onClick={exportMood}>Export Mood</button>
-          <label className="file-label">
-            Import Mood
-            <input
-              type="file"
-              accept="application/json,.json"
-              onChange={async (e) => {
-                const file = e.target.files?.[0];
-                if (!file) return;
-                try {
-                  if (file.size > 200000)
-                    throw new Error("Mood file is too large.");
-                  updateMood(readMood(await file.text()));
-                } catch (error) {
-                  setMoodError(
-                    error instanceof Error
-                      ? error.message
-                      : "Could not read Mood.",
-                  );
-                }
-                e.target.value = "";
-              }}
-            />
-          </label>
-          <button onClick={() => updateMood(initialMood)}>Reset Mood</button>
-        </div>
-        <label className="token-editor">
-          All shared tokens (JSON)
-          <textarea
-            key={moodRevision}
-            defaultValue={JSON.stringify(mood, null, 2)}
-            onBlur={(e) => {
-              try {
-                updateMood(readMood(e.target.value));
-              } catch (error) {
-                setMoodError(
-                  error instanceof Error ? error.message : "Invalid Mood.",
-                );
-              }
-            }}
-          />
-        </label>
-        <p role="status">{moodError}</p>
-      </details>
+
       {import.meta.env.DEV && (
         <nav className="variant-switcher" aria-label="Prototype presentation">
           <button

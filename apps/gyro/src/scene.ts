@@ -22,6 +22,9 @@ type Profile = {
   color: T.Color;
   alpha: number;
   speed: number;
+  innerSpeed: number;
+  middleSpeed: number;
+  outerSpeed: number;
   spread: number;
   glow: number;
   glowSpread: number;
@@ -165,13 +168,16 @@ export function createScene(host: HTMLElement, input: () => SceneInput) {
     style = "";
   let profiles = {} as Record<PersonaState, Profile>;
   let previous = performance.now(),
-    rotationTime = 0,
+    rotationTime = [0, 0, 0],
     pulseTime = 0;
   const current = {
     ...states.idle,
     color: new T.Color("#76adff"),
     alpha: 1,
     speed: 0.18 as number,
+    innerSpeed: 1,
+    middleSpeed: 0.65,
+    outerSpeed: 0.35,
     spread: 0.9 as number,
     tilt: 0.28 as number,
     pulse: 0.025 as number,
@@ -198,7 +204,7 @@ export function createScene(host: HTMLElement, input: () => SceneInput) {
     controls.enableDamping = false;
     controls.update();
     controls.reset();
-    rotationTime = 0;
+    rotationTime.fill(0);
     pulseTime = 0;
     returning = null;
     controls.enabled = true;
@@ -239,6 +245,9 @@ export function createScene(host: HTMLElement, input: () => SceneInput) {
             {
               ...readColor(name("color")),
               speed: token(name("speed"), 1.8),
+              innerSpeed: token(name("innerSpeed"), 2),
+              middleSpeed: token(name("middleSpeed"), 2),
+              outerSpeed: token(name("outerSpeed"), 2),
               spread: Math.max(0.65, token(name("size"), 1.3)),
               glow: token(name("glow"), 2),
               glowSpread: token(name("glowSpread")),
@@ -302,7 +311,7 @@ export function createScene(host: HTMLElement, input: () => SceneInput) {
         zoom: camera.zoom,
         pulseTime,
       };
-      rotationTime = 0;
+      rotationTime.fill(0);
       // Ignore drag/zoom while returning; a rapid state change captures this pose anew.
       controls.enabled = false;
       controls.enableDamping = false;
@@ -336,6 +345,9 @@ export function createScene(host: HTMLElement, input: () => SceneInput) {
       : 1 - Math.exp((-delta * 2.6) / Math.max(0.1, motionScale));
     for (const name of [
       "speed",
+      "innerSpeed",
+      "middleSpeed",
+      "outerSpeed",
       "spread",
       "tilt",
       "pulse",
@@ -350,14 +362,19 @@ export function createScene(host: HTMLElement, input: () => SceneInput) {
       current[name] = T.MathUtils.lerp(current[name], target[name], blend);
     current.color.lerp(target.color, blend);
     if (!still && !resetting) {
-      rotationTime += delta * current.speed * options.intensity * motionScale;
+      [current.innerSpeed, current.middleSpeed, current.outerSpeed].forEach(
+        (rate, i) => {
+          rotationTime[i]! +=
+            delta * current.speed * rate * options.intensity * motionScale;
+        },
+      );
       pulseTime += delta * motionScale;
     }
-    const phase = options.reduced || motionScale === 0 ? 0 : rotationTime;
     const pulsePhase = options.reduced || motionScale === 0 ? 0 : pulseTime;
     const breath = Math.sin(pulsePhase * 2) * current.pulse;
     rings.forEach((ring, i) => {
-      const angle = phase * 0.65;
+      const angle =
+        options.reduced || motionScale === 0 ? 0 : rotationTime[i]! * 0.65;
       // Every state begins with the same head-on, concentric rings.
       ring.rotation.set(
         i === 0 ? angle : i === 2 ? -angle : 0,

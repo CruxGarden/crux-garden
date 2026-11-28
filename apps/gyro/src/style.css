@@ -648,3 +648,125 @@ button:disabled {
   border-top: 0;
   padding-top: 0;
 }
+
+/* The persona stays in view while its control panel scrolls independently. */
+.app.companion {
+  display: block;
+}
+.app .experience {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 390px;
+  align-items: start;
+  gap: 28px;
+  margin: 24px 0;
+  padding: 0;
+  border: 0;
+}
+.main-view {
+  min-width: 0;
+  position: sticky;
+  top: 24px;
+}
+.app .main-view .viewport {
+  height: min(62vh, 660px);
+  min-height: 360px;
+}
+.app .main-view .stage-meta {
+  position: absolute;
+  inset: 16px 0 auto;
+}
+.control-panel {
+  min-width: 0;
+  position: sticky;
+  top: 24px;
+  max-height: calc(100dvh - 120px);
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  padding: 0 18px 18px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius);
+}
+.control-panel .controls {
+  margin: 0;
+}
+.control-panel details {
+  margin: 0;
+  padding: 0 0 18px;
+  border-top: 1px solid var(--border);
+}
+.control-panel > details:first-child {
+  border-top: 0;
+}
+.control-panel details:not([open]) {
+  padding-bottom: 0;
+}
+.control-panel summary {
+  padding: 16px 0;
+  color: var(--text);
+}
+.control-panel .soundscape {
+  max-width: none;
+  width: auto;
+}
+.control-panel .states {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.control-panel .styles {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.control-panel .transport {
+  margin-top: 0;
+}
+.control-panel .transport .primary {
+  width: 100%;
+}
+.control-panel .motion-control {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 50px;
+  gap: 8px;
+  margin-top: 14px;
+}
+.control-panel .motion-control label {
+  grid-column: 1 / -1;
+  min-width: 0;
+}
+.control-panel .motion-control input {
+  width: 100%;
+  min-width: 0;
+}
+.control-panel .motion-control output {
+  min-width: 0;
+  text-align: right;
+}
+.control-panel .sound-options {
+  gap: 0 16px;
+}
+.control-panel .swatches {
+  gap: 12px;
+}
+.control-panel .token-editor textarea {
+  min-height: 240px;
+}
+@media (max-width: 900px) {
+  .app .experience {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+  }
+  .main-view,
+  .control-panel {
+    position: static;
+  }
+  .control-panel {
+    max-height: none;
+    overflow: visible;
+  }
+  .app .main-view .viewport {
+    height: 75vw;
+    min-height: 260px;
+    max-height: 460px;
+  }
+  .main-view .state-story h2 {
+    font-size: calc(var(--dialog-title-size) * 1.8);
+  }
+}
