@@ -36,7 +36,10 @@ function App() {
   const [moodRevision, setMoodRevision] = useState(0);
   const [moodError, setMoodError] = useState("");
   const [renderError, setRenderError] = useState("");
-  const [soundEnabled, setSoundEnabled] = useState(false);
+  const [soundEnabled, setSoundEnabled] = useState(true);
+  const [soundReady, setSoundReady] = useState(false);
+  const soundWanted = useRef(true);
+  const soundStarting = useRef(false);
   const [soundBusy, setSoundBusy] = useState(false);
   const [soundError, setSoundError] = useState("");
   const [soundVolume, setSoundVolume] = useState(0.3);
@@ -68,42 +71,57 @@ function App() {
   );
   useEffect(() => {
     sound.current?.setMix(soundVolume, ambientSound, stateSounds, buttonSounds);
-  }, [soundVolume, ambientSound, stateSounds, buttonSounds, soundEnabled]);
+  }, [soundVolume, ambientSound, stateSounds, buttonSounds, soundReady]);
   useEffect(() => {
     sound.current?.setPadStyle(padStyle);
-  }, [padStyle, soundEnabled]);
+  }, [padStyle, soundReady]);
   useEffect(() => {
     sound.current?.setState(state, stateSounds);
-  }, [state, soundEnabled, stateSounds]);
-  async function toggleSound() {
-    if (soundBusy) return;
+  }, [state, soundReady, stateSounds]);
+  async function startSound() {
+    if (!soundWanted.current || sound.current || soundStarting.current) return;
+    soundStarting.current = true;
     const generation = ++soundGeneration.current;
-    if (sound.current) {
-      setSoundBusy(true);
-      const previous = sound.current;
-      sound.current = null;
-      setSoundEnabled(false);
-      await previous.dispose();
-      setSoundBusy(false);
-      return;
-    }
     setSoundBusy(true);
     setSoundError("");
     try {
       const next = await createSound();
-      if (generation !== soundGeneration.current) {
+      if (generation !== soundGeneration.current || !soundWanted.current) {
         await next.dispose();
         return;
       }
       sound.current = next;
-      next.setPadStyle(padStyle);
-      next.setMix(soundVolume, ambientSound, stateSounds, buttonSounds);
-      setSoundEnabled(true);
+      setSoundReady(true);
     } catch {
-      setSoundError("Audio could not start. Try enabling sound again.");
+      if (generation === soundGeneration.current)
+        setSoundError("Audio could not start. Click or tap to try again.");
     } finally {
-      if (generation === soundGeneration.current) setSoundBusy(false);
+      if (generation === soundGeneration.current) {
+        soundStarting.current = false;
+        setSoundBusy(false);
+      }
     }
+  }
+  function toggleSound() {
+    soundWanted.current = !soundWanted.current;
+    setSoundEnabled(soundWanted.current);
+    if (soundWanted.current) {
+      void startSound();
+    } else {
+      soundGeneration.current++;
+      soundStarting.current = false;
+      setSoundBusy(false);
+      setSoundReady(false);
+      setSoundError("");
+      const previous = sound.current;
+      sound.current = null;
+      void previous?.dispose();
+    }
+  }
+  function unlockSound(target: EventTarget) {
+    if (!(target instanceof Element) || target.closest("[data-sound-toggle]"))
+      return;
+    void startSound();
   }
   useEffect(() => {
     const media = matchMedia("(prefers-reduced-motion: reduce)");
@@ -391,84 +409,86 @@ function App() {
           Optional lens character. Set an effect to zero for a clean view.
         </p>
       </details>
-      <details className="optics-controls" open>
-        <summary>Soundscape</summary>
-        <div className="styles pad-styles" aria-label="Ambient pad style">
-          {(Object.keys(padStyles) as PadStyle[]).map((key) => (
-            <button
-              key={key}
-              aria-pressed={padStyle === key}
-              onClick={() => setPadStyle(key)}
-            >
-              <strong>{padStyles[key].label}</strong>
-              <span>{padStyles[key].description}</span>
-            </button>
-          ))}
-        </div>
-        <div className="transport">
-          <button
-            onClick={() => void toggleSound()}
-            aria-pressed={soundEnabled}
-            disabled={soundBusy}
-          >
-            {soundBusy
-              ? "Updating sound…"
-              : soundEnabled
-                ? "Mute sound"
-                : "Enable sound"}
-          </button>
-          <span className="caption">
-            {soundProfiles[state].name} · {selected.label.toLowerCase()} pad
-          </span>
-        </div>
-        <div className="motion-control">
-          <label htmlFor="sound-volume">Volume</label>
-          <input
-            id="sound-volume"
-            type="range"
-            min="0"
-            max="0.8"
-            step="0.01"
-            value={soundVolume}
-            onChange={(event) => setSoundVolume(Number(event.target.value))}
-          />
-          <output htmlFor="sound-volume">
-            {Math.round(soundVolume * 100)}%
-          </output>
-        </div>
-        <div className="sound-options">
-          <label className="quiet">
-            <input
-              type="checkbox"
-              checked={buttonSounds}
-              onChange={(event) => setButtonSounds(event.target.checked)}
-            />{" "}
-            Button sounds
-          </label>
-          <label className="quiet">
-            <input
-              type="checkbox"
-              checked={ambientSound}
-              onChange={(event) => setAmbientSound(event.target.checked)}
-            />{" "}
-            Ambient pads
-          </label>
-          <label className="quiet">
-            <input
-              type="checkbox"
-              checked={stateSounds}
-              onChange={(event) => setStateSounds(event.target.checked)}
-            />{" "}
-            Transition sounds
-          </label>
-        </div>
-        <p className="caption">
-          Sound starts only when enabled and fades out when this tab is hidden.
-          Motion pause controls visuals.
-        </p>
-        {soundError && <p role="status">{soundError}</p>}
-      </details>
     </section>
+  );
+  const soundscape = (
+    <details className="optics-controls soundscape" open>
+      <summary>Soundscape</summary>
+      <div className="transport">
+        <button
+          data-sound-toggle
+          onClick={toggleSound}
+          aria-pressed={soundEnabled}
+        >
+          {soundEnabled ? "Mute sound" : "Enable sound"}
+        </button>
+        <span className="caption">
+          {soundProfiles[state].name} · {selected.label.toLowerCase()} pad
+        </span>
+      </div>
+      <div className="motion-control">
+        <label htmlFor="sound-volume">Volume</label>
+        <input
+          id="sound-volume"
+          type="range"
+          min="0"
+          max="0.8"
+          step="0.01"
+          value={soundVolume}
+          onChange={(event) => setSoundVolume(Number(event.target.value))}
+        />
+        <output htmlFor="sound-volume">{Math.round(soundVolume * 100)}%</output>
+      </div>
+      <div className="styles pad-styles" aria-label="Ambient pad style">
+        {(Object.keys(padStyles) as PadStyle[]).map((key) => (
+          <button
+            key={key}
+            aria-pressed={padStyle === key}
+            onClick={() => setPadStyle(key)}
+          >
+            <strong>{padStyles[key].label}</strong>
+            <span>{padStyles[key].description}</span>
+          </button>
+        ))}
+      </div>
+      <div className="sound-options">
+        <label className="quiet">
+          <input
+            type="checkbox"
+            checked={buttonSounds}
+            onChange={(event) => setButtonSounds(event.target.checked)}
+          />{" "}
+          Button sounds
+        </label>
+        <label className="quiet">
+          <input
+            type="checkbox"
+            checked={ambientSound}
+            onChange={(event) => setAmbientSound(event.target.checked)}
+          />{" "}
+          Ambient pads
+        </label>
+        <label className="quiet">
+          <input
+            type="checkbox"
+            checked={stateSounds}
+            onChange={(event) => setStateSounds(event.target.checked)}
+          />{" "}
+          Transition sounds
+        </label>
+      </div>
+      <p className="caption">
+        {soundEnabled
+          ? soundReady
+            ? "Sound is on."
+            : soundBusy
+              ? "Starting sound…"
+              : "Sound is on — starts with your first click, tap or keypress."
+          : "Sound is muted."}{" "}
+        Audio fades out when this tab is hidden. Motion pause controls visuals.
+      </p>
+      {soundError && <p role="status">{soundError}</p>}
+    </details>
   );
   const conversation = (
     <section className="conversation" aria-label="Simulated conversation">
@@ -511,7 +531,13 @@ function App() {
   return (
     <main
       className={`app ${variant.toLowerCase()}`}
+      onPointerUpCapture={(event) => unlockSound(event.target)}
+      onKeyDownCapture={(event) => {
+        if (!event.repeat && !event.metaKey && !event.ctrlKey && !event.altKey)
+          unlockSound(event.target);
+      }}
       onClickCapture={(event) => {
+        unlockSound(event.target);
         const target = event.target as HTMLElement;
         if (target.closest("button:not(:disabled), summary"))
           sound.current?.press();
@@ -525,6 +551,7 @@ function App() {
           Persona study <span>001</span>
         </span>
       </header>
+      {soundscape}
       {variant === "Companion" && (
         <section className="workbench">
           <p className="eyebrow">An imagined Garden workspace</p>

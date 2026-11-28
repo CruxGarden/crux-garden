@@ -423,6 +423,7 @@ form button {
   grid-template-columns: 1fr 440px;
   column-gap: 7vw;
 }
+.companion .soundscape,
 .companion header,
 .companion footer,
 .companion .mood-editor {
@@ -638,4 +639,12 @@ button:disabled {
 
 .pad-styles {
   margin-top: 18px;
+}
+
+.soundscape {
+  width: 100%;
+  max-width: 840px;
+  margin: 20px auto 0;
+  border-top: 0;
+  padding-top: 0;
 }
