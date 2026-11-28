@@ -19,7 +19,6 @@ export type SceneInput = {
   moodRevision: number;
 };
 type Profile = {
-  angles: number[];
   color: T.Color;
   alpha: number;
   speed: number;
@@ -185,7 +184,6 @@ export function createScene(host: HTMLElement, input: () => SceneInput) {
   };
   const spectralColor = new T.Color();
   const front = new T.Quaternion();
-  const startingRotation = new T.Quaternion();
   let activeState = input().state;
   let returning: {
     elapsed: number;
@@ -239,9 +237,6 @@ export function createScene(host: HTMLElement, input: () => SceneInput) {
           return [
             state,
             {
-              angles: ["innerAngle", "middleAngle", "outerAngle"].map((angle) =>
-                T.MathUtils.degToRad(token(name(angle), 180, -180)),
-              ),
               ...readColor(name("color")),
               speed: token(name("speed"), 1.8),
               spread: Math.max(0.65, token(name("size"), 1.3)),
@@ -363,18 +358,16 @@ export function createScene(host: HTMLElement, input: () => SceneInput) {
     const breath = Math.sin(pulsePhase * 2) * current.pulse;
     rings.forEach((ring, i) => {
       const angle = phase * 0.65;
-      const start = target.angles[i]!;
-      // Each state starts at its own centered pose, then uses opposing X/Y motion.
+      // Every state begins with the same head-on, concentric rings.
       ring.rotation.set(
-        i === 0 ? start + angle : i === 2 ? start - angle : 0,
-        i === 1 ? start - angle : 0,
+        i === 0 ? angle : i === 2 ? -angle : 0,
+        i === 1 ? -angle : 0,
         0,
       );
       if (returning) {
-        startingRotation.copy(ring.quaternion);
         ring.quaternion.slerpQuaternions(
           returning.rotations[i]!,
-          startingRotation,
+          front,
           returnBlend,
         );
       }

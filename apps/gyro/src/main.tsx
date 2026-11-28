@@ -327,40 +327,6 @@ function App() {
             </output>
           </div>
         ))}
-        <p className="caption">
-          Starting pose · State changes ease into these angles before their
-          animation begins.
-        </p>
-        {(["inner", "middle", "outer"] as const).map((ring) => {
-          const key = personaToken(state, `${ring}Angle`);
-          return (
-            <div className="motion-control" key={key}>
-              <label htmlFor={`pose-${ring}`}>
-                {ring[0]!.toUpperCase() + ring.slice(1)} starting angle
-              </label>
-              <input
-                id={`pose-${ring}`}
-                type="range"
-                min="-180"
-                max="180"
-                step="1"
-                value={mood[key] ?? "0"}
-                onChange={(event) =>
-                  updateMood({ ...mood, [key]: event.target.value })
-                }
-              />
-              <output htmlFor={`pose-${ring}`}>{mood[key] ?? "0"}°</output>
-            </div>
-          );
-        })}
-        <button
-          onClick={() => {
-            setPaused(true);
-            scene.current?.reset();
-          }}
-        >
-          Preview starting pose
-        </button>
         <button
           className="reset-state"
           onClick={() => {

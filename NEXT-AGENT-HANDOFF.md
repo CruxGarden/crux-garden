@@ -4,7 +4,7 @@ Updated November 28, 2026. Read [AGENTS.md](AGENTS.md), the [documentation index
 
 ## TL;DR
 
-Gyro is now a runnable, isolated WebGL 2 gyroscope persona study on `codex/gyro-poc`. Start with `npm run gyro`; seven editable states, four visual styles, three presentation contexts, per-ring shades, solid whole-ring color fades and optional state/UI audio with four pad choices are ready for review. Each state now has editable starting angles; transitions ease into its pose before restarting its animation. No live AI or microphone connection. See [Gyro handoff](docs/handoffs/gyro-poc.md) for validation and code availability. Existing Home presentation changes are preserved.
+Gyro is now a runnable, isolated WebGL 2 gyroscope persona study on `codex/gyro-poc`. Start with `npm run gyro`; seven editable states, four visual styles, three presentation contexts, per-ring shades, solid whole-ring color fades and optional state/UI audio with four pad choices are ready for review. All states share the same head-on concentric starting pose; transitions ease back to it before restarting the animation. Per-state starting angles were reverted at the user’s request. No live AI or microphone connection. See [Gyro handoff](docs/handoffs/gyro-poc.md) for validation and code availability. Existing Home presentation changes are preserved.
 
 ## Current state
 

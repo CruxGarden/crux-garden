@@ -4,7 +4,7 @@
 
 ## Current study
 
-Can a non-humanoid persona communicate its state clearly from a distance while feeling playful? The seven presets are blue Idle, green Listening, purple Thinking, gold Speaking, whole-ring color-cycling Delighted, amber Uncertain and red Error/danger. Each has independent editable color, speed, size, glow strength/spread, electrical flow, pulse, color cycling and RGB split. Three rings use deeper/base/lighter shades of the same state color. Each state also has editable starting angles for its three rings. Changes ease into the destination pose before its animation starts from zero; rapid selections retarget the currently displayed pose.
+Can a non-humanoid persona communicate its state clearly from a distance while feeling playful? The seven presets are blue Idle, green Listening, purple Thinking, gold Speaking, whole-ring color-cycling Delighted, amber Uncertain and red Error/danger. Each has independent editable color, speed, size, glow strength/spread, electrical flow, pulse, color cycling and RGB split. Three rings use deeper/base/lighter shades of the same state color. All states share one head-on concentric starting pose. State changes ease back to it before the animation starts from zero; rapid selections retarget the currently displayed pose. Per-state angles were reverted at the user’s request.
 
 Glow, Metal, Flat and Cartoon styles retain the same state vocabulary. The simple geometry remains consistent; style changes lighting, ring thickness, outline and shading. Flat is a 2D-looking orthographic WebGL rendering. WebGL 2 is the current GPU renderer; no WebGPU claim.
 
