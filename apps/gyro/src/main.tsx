@@ -208,29 +208,31 @@ function App() {
     link.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
+  const stateControls = (
+    <details className="optics-controls" open>
+      <summary>State</summary>
+      <div className="states">
+        {stateKeys.map((key) => (
+          <button
+            key={key}
+            aria-pressed={state === key}
+            onClick={() => select(key)}
+          >
+            <span
+              className="state-symbol"
+              aria-hidden="true"
+              style={{ color: `var(${getVar(personaToken(key, "color"))})` }}
+            >
+              {states[key].symbol}
+            </span>
+            {states[key].label}
+          </button>
+        ))}
+      </div>
+    </details>
+  );
   const controls = (
     <section className="controls" aria-label="Persona state controls">
-      <details className="optics-controls" open>
-        <summary>Explore its state</summary>
-        <div className="states">
-          {stateKeys.map((key) => (
-            <button
-              key={key}
-              aria-pressed={state === key}
-              onClick={() => select(key)}
-            >
-              <span
-                className="state-symbol"
-                aria-hidden="true"
-                style={{ color: `var(${getVar(personaToken(key, "color"))})` }}
-              >
-                {states[key].symbol}
-              </span>
-              {states[key].label}
-            </button>
-          ))}
-        </div>
-      </details>
       <details className="optics-controls">
         <summary>Playback</summary>
         <div className="transport">
@@ -275,7 +277,7 @@ function App() {
         </label>
       </details>
       <details className="optics-controls style-picker">
-        <summary>Visual style</summary>
+        <summary>Style</summary>
         <div className="styles">
           {renderStyles.map((style) => (
             <button
@@ -292,7 +294,7 @@ function App() {
         </div>
       </details>
       <details className="optics-controls state-editor">
-        <summary>{selected.label} settings</summary>
+        <summary>Settings</summary>
         <p className="caption">
           Changes apply only to {selected.label.toLowerCase()}. Glow spread runs
           from tight to diffuse; Electrical flow adds traveling light in Glow
@@ -362,7 +364,7 @@ function App() {
         </button>
       </details>
       <details className="optics-controls">
-        <summary>Ring shading & global effects</summary>
+        <summary>Effects</summary>
         {(["Inner", "Middle", "Outer"] as const).map((ring) => (
           <div className="motion-control" key={ring}>
             <label htmlFor={`shade-${ring}`}>{ring} ring shade</label>
@@ -534,7 +536,7 @@ function App() {
   );
   const moodEditor = (
     <details className="mood-editor">
-      <summary>Mood & materials</summary>
+      <summary>Mood</summary>
       <p>
         Shared Garden tokens. Each state has its own color, motion, size and
         effects.
@@ -691,6 +693,7 @@ function App() {
           {variant === "Conversation" && conversation}
         </div>
         <aside className="control-panel" aria-label="Gyro controls">
+          {stateControls}
           {soundscape}
           {controls}
           {moodEditor}
