@@ -7,7 +7,8 @@
     "packages/migration-contracts",
     "packages/migration-providers",
     "packages/garden-ui",
-    "packages/migration-ui"
+    "packages/migration-ui",
+    "apps/gyro"
   ],
   "engines": {
     "node": ">=22.19.0 <23"
@@ -18,11 +19,13 @@
     "typecheck": "tsc --noEmit",
     "test": "node --test packages/migration-engine/tests/*.test.cjs",
     "test:desktop": "tools/node_modules/.bin/playwright test --config apps/migration/playwright.config.cjs",
-    "verify": "npm run typecheck && node scripts/check-boundaries.mjs && npm run build && npm test",
+    "verify": "npm run typecheck && node scripts/check-boundaries.mjs && npm run build && npm run build:gyro && npm test",
     "start": "npm run build && tools/node_modules/.bin/electron apps/migration",
     "package:tauri": "npm run build && cd apps/migration/src-tauri && ../../../tools/node_modules/.bin/tauri build",
     "test:embedding": "tools/node_modules/.bin/playwright test --config tests/embedding/playwright.config.cjs",
-    "check:package": "node scripts/check-packages.mjs"
+    "check:package": "node scripts/check-packages.mjs",
+    "gyro": "npm run dev --workspace @cruxgarden/gyro",
+    "build:gyro": "npm run build --workspace @cruxgarden/gyro"
   },
   "devDependencies": {
     "vite": "6.4.3",

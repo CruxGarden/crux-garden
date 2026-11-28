@@ -19,5 +19,11 @@
     "resolveJsonModule": true,
     "types": ["node", "vite/client"]
   },
-  "include": ["packages/*/src", "apps/migration/*.ts", "apps/migration/*.tsx"]
+  "include": [
+    "packages/*/src",
+    "apps/migration/*.ts",
+    "apps/migration/*.tsx",
+    "apps/gyro/src",
+    "apps/gyro/vite.config.ts"
+  ]
 }

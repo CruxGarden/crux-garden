@@ -1,3 +1,5 @@
+import { personaTokens } from "./persona-tokens";
+
 /**
  * Garden Dark — The default mood palette.
  *
@@ -27,6 +29,15 @@ export const GARDEN_DARK = {
   surface: "#121513",
   // Neutral backing keeps original third-party brand artwork readable.
   logoSurface: "#ffffff",
+  // Optional 3D/optical appearance. Zero keeps ordinary surfaces unaffected.
+  ...personaTokens(),
+  personaRenderStyle: "glow",
+  personaRingInnerShade: "0.68",
+  personaRingMiddleShade: "1",
+  personaRingOuterShade: "1.24",
+  personaOutlineColor: "#101918",
+  lensChromaticAberration: "0",
+  filmGrain: "0",
   error: "#e63946",
   warning: "#e6a030",
   success: "#4caf50",

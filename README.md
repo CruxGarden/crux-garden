@@ -1,10 +1,14 @@
 # Crux Garden monorepo
 
-Shared project plans now live here: **[Home](docs/projects/home/README.md)**, **[Migrate](docs/projects/migrate/README.md)** and **[Lifecycle](docs/projects/lifecycle/README.md)**. This is the only repository required by the current MacBook/Omarchy workflow. Find the plans in the [docs folder](docs/README.md), including the [ordered Omarchy setup](docs/projects/lifecycle/omarchy-setup.md). Start with [agent instructions](AGENTS.md), [current state](NEXT-AGENT-HANDOFF.md), [roadmap](ROADMAP.md) and [cross-machine handoffs](docs/agents/workflow.md). Home and general Lifecycle are plans; Migrate is the existing implementation.
+Shared project plans now live here: **[Home](docs/projects/home/README.md)**, **[Migrate](docs/projects/migrate/README.md)** **[Lifecycle](docs/projects/lifecycle/README.md)** and **[Gyro](docs/projects/gyro/README.md)**. This is the only repository required by the current MacBook/Omarchy workflow. Find the plans in the [docs folder](docs/README.md), including the [ordered Omarchy setup](docs/projects/lifecycle/omarchy-setup.md). Start with [agent instructions](AGENTS.md), [current state](NEXT-AGENT-HANDOFF.md), [roadmap](ROADMAP.md) and [cross-machine handoffs](docs/agents/workflow.md). Home and general Lifecycle are plans; Migrate is the existing implementation.
 
 Migrate is the first application here: a standalone desktop tool for bringing personal cloud exports onto storage you control. Its React interface and headless engine can later be hosted in Home, Lab, or Builder.
 
 The first vertical slice is a small Dropbox export: guide → select an existing folder or ZIP → choose destination → review → preserve and verify → reopen and inspect the saved result. The inherited preview also supports TAR/TAR.GZ and includes 32 offline provider guides; these are guidance, not automated cloud connectors.
+
+## Gyro persona prototype
+
+Run `npm run gyro` after `npm ci` to open the interactive WebGL 2 gyroscope study at http://127.0.0.1:4190. Seven editable states, four visual styles, shaded rings, optional state/UI audio and shared Mood controls. [Gyro setup and controls](apps/gyro/README.md).
 
 ## Run
 
@@ -22,6 +26,7 @@ npm start
 
 ## Boundaries
 
+- `apps/gyro`: standalone exploratory 3D AI persona; browser-only, simulated state controls.
 - `apps/migration`: Tauri host, Electron comparison host, standalone renderer entry. Owns native dialogs and application lifecycle.
 - `packages/migration-ui`: React interface accepting an injected `MigrationClient`. Embedded mode leaves global Mood and Plasma ownership with its host.
 - `packages/migration-contracts`: host-neutral job and client types.

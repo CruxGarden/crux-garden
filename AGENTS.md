@@ -10,6 +10,7 @@ Applies throughout this repository. This monorepo is the only repository shared 
 
 ## Project boundaries
 
+- **Gyro:** exploratory WebGL 2 gyroscope persona in `apps/gyro`; simulated states, shared Mood tokens, no model/microphone/native integration. See its project page and handoff.
 - **Home:** planned everyday experience using the shared Garden UI, Mood and host-injected clients. Visual concepts are references, not implemented features.
 - **Migrate:** implemented standalone React/Tauri application; Electron is the comparison/test host. Internal `migration-*` names remain stable. Do not bundle Builder, Cruxes or personal data.
 - **Lifecycle:** console-style hardware sleep/wake with a controller or remote is the starting point; host/service coordination supports it. Existing Migrate tray/process behavior is evidence, not a general installed service manager.
@@ -27,4 +28,4 @@ Applies throughout this repository. This monorepo is the only repository shared 
 - Record command, platform, result, skips and unverified areas. macOS passing does not qualify Linux; fixture checks do not qualify live accounts.
 - Keep the roadmap and current-state index concise. Update the relevant task handoff with its code checkpoint; use Git history for chronology. Use relative paths, never local profile/token paths or secrets.
 - Commit only intended files, push the task branch when authorized, and verify the remote SHA before announcing a transfer. Never merge main, publish a release, force-push shared history or delete another agent's work without authorization.
-- The legacy parent workspace documents are historical context for other repositories. For these three monorepo projects, maintain the documents here; do not require agents to synchronize an unavailable parent repository.
+- The legacy parent workspace documents are historical context for other repositories. For these monorepo projects, maintain the documents here; do not require agents to synchronize an unavailable parent repository.

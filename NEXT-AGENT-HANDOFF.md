@@ -1,8 +1,14 @@
 # Start here — current monorepo state
 
-Updated November 12, 2026. Read [AGENTS.md](AGENTS.md), the [documentation index](docs/README.md), then the relevant project/task handoff. Only this repository is required; no sibling clone or conversation is a setup dependency.
+Updated November 28, 2026. Read [AGENTS.md](AGENTS.md), the [documentation index](docs/README.md), then the relevant project/task handoff. Only this repository is required; no sibling clone or conversation is a setup dependency.
+
+## TL;DR
+
+Gyro is now a runnable, isolated WebGL 2 gyroscope persona study on `codex/gyro-poc`. Start with `npm run gyro`; seven editable states, four visual styles, three presentation contexts, per-ring shades, solid whole-ring color fades and optional state/UI audio with four pad choices are ready for review. No live AI or microphone connection. See [Gyro handoff](docs/handoffs/gyro-poc.md) for validation and code availability. Existing Home presentation changes are preserved.
 
 ## Current state
+
+- **Gyro (November 28):** new project in `apps/gyro`, shared Mood tokens, three simple rings, seven editable states, four visual styles, per-ring shade variation and optional local synthesized audio. The earlier core/lattice/particles were removed at the user’s request. Presentation verdict and production integration remain open.
 
 - Repository: `CruxGarden/crux-garden`, shared development branch `codex/migration-foundation`. Main has not been merged or released. Verify the exact pushed SHA in the transfer receipt before taking ownership.
 - The user authorized consolidating and committing all relevant Home/Migrate/Lifecycle code and context. **The previously local-only Migrate comparison implementation is included in this checkpoint**, together with its tests and design. It is no longer missing from a clone of this checkpoint.
@@ -20,6 +26,7 @@ Updated November 12, 2026. Read [AGENTS.md](AGENTS.md), the [documentation index
 
 | Task | State | Next action |
 | --- | --- | --- |
+| [Gyro persona prototype](docs/handoffs/gyro-poc.md) | Local runnable checkpoint | Review state legibility, visual styles and audio |
 | [Local file comparison](docs/handoffs/migrate-local-comparison.md) | Code checkpoint available; qualification incomplete | Verify received commit; agree next scoped review/package work |
 | [Omarchy setup](docs/handoffs/omarchy-setup.md) | Ordered plan ready; execution unverified | Start with live baseline and recovery/backup inventory within agreed scope |
 | Home first journey | Planning | Review [Home project](docs/projects/home/README.md) |

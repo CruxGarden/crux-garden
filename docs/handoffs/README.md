@@ -2,6 +2,7 @@
 
 Copy [TEMPLATE.md](TEMPLATE.md) to a descriptive task filename. Keep each handoff concise and paired with its code checkpoint. Refer to project plans/ADRs instead of duplicating them; use the [transfer workflow](../agents/workflow.md).
 
+- [Gyro persona prototype](gyro-poc.md): new project and runnable WebGL 2 state study; no live AI connection.
 - [Migrate local comparison](migrate-local-comparison.md): implementation is included in this checkpoint; final qualification remains pending.
 - [Omarchy setup](omarchy-setup.md): practical ordered machine plan, including SSH/backups/controller/display; no live setup claimed.
 

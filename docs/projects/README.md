@@ -1,9 +1,10 @@
 # Projects
 
-These are the three current planning projects in the shared monorepo. A project page describes scope and evidence; it is not a promise of a separate binary, database or daemon.
+These are the current projects in the shared monorepo. A project page describes scope and evidence; it is not a promise of a separate binary, database or daemon.
 
 | Project | Responsibility | State |
 | --- | --- | --- |
+| [Gyro](gyro/README.md) | Interactive 3D gyroscope AI persona study | Runnable WebGL 2 prototype; simulated state controls, visual verdict pending |
 | [Home](home/README.md) | Everyday libraries, applications and personal computing experience | Product/design plan; app implementation not started here |
 | [Migrate](migrate/README.md) | Acquire selected data, preserve originals and verify copies | Standalone implementation; comparison checkpoint included, final qualification pending |
 | [Lifecycle](lifecycle/README.md) | Console-style hardware sleep/wake via controller/remote, with supporting service coordination | Planning; Migrate has a narrower implemented background lifecycle |

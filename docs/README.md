@@ -2,6 +2,7 @@
 
 Project plans and code live together in this monorepo. `apps/` contains runnable application entries; `packages/` contains shared implementation; `docs/` contains plans, decisions, evidence and handoffs. A project plan is not necessarily a separate executable yet.
 
+- [Gyro](projects/gyro/README.md): interactive 3D gyroscope AI persona prototype; seven editable states, four styles, simple shaded rings and optional audio.
 - [Home](projects/home/README.md): everyday experience, [vision](projects/home/vision.md) and [13 visual references](projects/home/design/README.md).
 - [Migrate](projects/migrate/README.md): current standalone tool in `apps/migration`; its internal path is historical, its display name is Migrate.
 - [Lifecycle](projects/lifecycle/README.md): proposed reusable host/service management boundary.
