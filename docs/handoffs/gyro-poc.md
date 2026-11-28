@@ -5,11 +5,11 @@ Status: complete (local prototype checkpoint; production integration is not incl
 Owner: MacBook / Codex; receiver unassigned
 Branch: `codex/gyro-poc`
 Base: `dcca939ec8023dc18b14f5fe56ef1d1999aacb54`
-Code availability: included in this local checkpoint commit; not pushed, merged or released.
+Code availability: monorepo source `8a2d14f` remains local; standalone static demo published publicly at https://crux-garden-gyro.thesantiagodog.chatgpt.site. No monorepo push/merge or native release.
 
 ## TL;DR
 
-Run `npm run gyro`, open http://127.0.0.1:4190. The preview was left running. Gyro is three simple rings with seven editable states, four visual styles, per-ring shading and optional UI/state audio with four ambient pad choices. All states use the same head-on concentric starting pose, with smooth arrival before their animation restarts. Per-state angles were reverted; no tilted resting pose remains. Full setup/controls: [app README](../../apps/gyro/README.md). Scope: [project](../projects/gyro/README.md).
+Public review: [Gyro](https://crux-garden-gyro.thesantiagodog.chatgpt.site). Local development: `npm run gyro`, open http://127.0.0.1:4190. Gyro is three simple rings with seven editable states, four visual styles, per-ring shading and optional UI/state audio with four ambient pad choices. All states use the same head-on concentric starting pose, with smooth arrival before their animation restarts. Per-state angles were reverted; no tilted resting pose remains. Full setup/controls: [app README](../../apps/gyro/README.md). Scope: [project](../projects/gyro/README.md).
 
 ## Current user-approved direction
 
@@ -51,4 +51,14 @@ macOS Apple Silicon, Node 22.19.0, local working tree. Verification is automated
 
 ## Next bounded step
 
-Review the running prototype's state legibility at distance, visual styles and sound on real speakers/headphones. Continue from the simple-ring and whole-ring-fade direction. Any model/voice/Assistant integration is separate scoped work. The checkpoint is committed locally but not pushed; another clone cannot see it until transfer is authorized. Preserve unrelated Home work when staging; do not resume unrelated roadmap tasks.
+Review the running prototype's state legibility at distance, visual styles and sound on real speakers/headphones. Continue from the simple-ring and whole-ring-fade direction. Any model/voice/Assistant integration is separate scoped work. The demo is publicly shareable; monorepo source remains local until a branch push is authorized. Preserve unrelated Home work when staging; do not resume unrelated roadmap tasks.
+
+## Public demo publication — November 28
+
+Daniel authorized publishing and explicitly chose anyone-with-the-link access. Sites version 1 succeeded; public URL above. No Zulip message was sent: a copyable announcement was drafted in chat.
+
+- Site ID: `appgprj_6b0a844ab4908191bf9c1eb49532233a`; tracked manifest: `apps/gyro/.openai/hosting.json`. Reuse this Site for updates.
+- Saved version: `appgprj_6b0a844ab4908191bf9c1eb49532233a~appgver_a4179306bb3881919d9e5414dc2c51d4`; deployment: `appgdep_6b0a848e76388191898cedd8d985f8c4`.
+- Canonical source: monorepo `8a2d14f`; isolated static publishing commit: `f5adcd101d26e8de7c9e9935e9d592eaaac4cb5c`. Only built Gyro HTML/assets, manifest and provenance README were uploaded. No monorepo history, private data or unrelated Home files.
+- Build: `npm run build:gyro` passes; source full gate remains 205 passing checks. Published anonymous Chromium smoke evidence: `/tmp/gyro-live.json` (HTTP, WebGL, seven states, styles, sound toggle).
+- For updates, build `apps/gyro/dist`, obtain a fresh Sites source credential, open the existing Site through the Sites source workflow and replace its static `dist` with the new build. Preserve Site identity/public audience, push/package/save/deploy through that workflow. Local publishing checkout `.agent-local/gyro-site` is ignored scratch, not canonical source. Never run the Sites Git helper against the whole monorepo.

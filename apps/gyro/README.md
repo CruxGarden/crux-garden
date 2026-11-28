@@ -2,6 +2,8 @@
 
 Three simple gyroscope rings exploring how color, motion, shape and sound communicate an AI persona's state. This is a standalone prototype in the Crux Garden monorepo, not a live AI integration.
 
+Public demo: [Gyro](https://crux-garden-gyro.thesantiagodog.chatgpt.site). Anyone with the link can open it; no sign-in required.
+
 From the monorepo root, using `.nvmrc` and after `npm ci`:
 
 ```sh
