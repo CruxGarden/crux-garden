@@ -1,6 +1,9 @@
 // Semantic persona appearance: portable Mood values, independent of a renderer.
 export const PERSONA_PRESETS = {
   idle: {
+    innerAngle: 0,
+    middleAngle: 0,
+    outerAngle: 0,
     color: "#76adff",
     speed: 0.18,
     size: 0.9,
@@ -12,6 +15,9 @@ export const PERSONA_PRESETS = {
     rgbSplit: 0,
   },
   listening: {
+    innerAngle: 20,
+    middleAngle: -20,
+    outerAngle: 0,
     color: "#6fe0a7",
     speed: 0.3,
     size: 1.12,
@@ -23,6 +29,9 @@ export const PERSONA_PRESETS = {
     rgbSplit: 0,
   },
   thinking: {
+    innerAngle: 45,
+    middleAngle: -45,
+    outerAngle: 25,
     color: "#bb89ff",
     speed: 1.1,
     size: 0.94,
@@ -34,6 +43,9 @@ export const PERSONA_PRESETS = {
     rgbSplit: 0,
   },
   speaking: {
+    innerAngle: -20,
+    middleAngle: 25,
+    outerAngle: -15,
     color: "#efc566",
     speed: 0.55,
     size: 1.04,
@@ -45,6 +57,9 @@ export const PERSONA_PRESETS = {
     rgbSplit: 0,
   },
   delighted: {
+    innerAngle: 35,
+    middleAngle: -35,
+    outerAngle: 60,
     color: "#b5d5ed",
     speed: 0.8,
     size: 1.23,
@@ -56,6 +71,9 @@ export const PERSONA_PRESETS = {
     rgbSplit: 0.08,
   },
   uncertain: {
+    innerAngle: -30,
+    middleAngle: 15,
+    outerAngle: -10,
     color: "#ed9c57",
     speed: 0.1,
     size: 0.84,
@@ -67,6 +85,9 @@ export const PERSONA_PRESETS = {
     rgbSplit: 0,
   },
   error: {
+    innerAngle: 0,
+    middleAngle: 0,
+    outerAngle: 0,
     color: "#ff4654",
     speed: 0.35,
     size: 1.12,

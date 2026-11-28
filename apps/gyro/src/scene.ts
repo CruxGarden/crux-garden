@@ -19,6 +19,7 @@ export type SceneInput = {
   moodRevision: number;
 };
 type Profile = {
+  angles: number[];
   color: T.Color;
   alpha: number;
   speed: number;
@@ -160,6 +161,7 @@ export function createScene(host: HTMLElement, input: () => SceneInput) {
   }
   let revision = -1,
     motionScale = 1,
+    returnDuration = 0.4,
     globalSplit = 0,
     style = "";
   let profiles = {} as Record<PersonaState, Profile>;
@@ -182,6 +184,27 @@ export function createScene(host: HTMLElement, input: () => SceneInput) {
     rgbSplit: 0,
   };
   const spectralColor = new T.Color();
+  const front = new T.Quaternion();
+  const startingRotation = new T.Quaternion();
+  let activeState = input().state;
+  let returning: {
+    elapsed: number;
+    rotations: T.Quaternion[];
+    cameraRotation: T.Quaternion;
+    distance: number;
+    zoom: number;
+    pulseTime: number;
+  } | null = null;
+  function resetPose() {
+    // Flush orbit inertia before restoring the camera, so it cannot pull away again.
+    controls.enableDamping = false;
+    controls.update();
+    controls.reset();
+    rotationTime = 0;
+    pulseTime = 0;
+    returning = null;
+    controls.enabled = true;
+  }
   let active = true;
   const lost = (event: Event) => {
     event.preventDefault();
@@ -203,10 +226,10 @@ export function createScene(host: HTMLElement, input: () => SceneInput) {
     if (revision !== options.moodRevision) {
       revision = options.moodRevision;
       const css = getComputedStyle(document.documentElement);
-      const token = (name: string, max = 1) =>
+      const token = (name: string, max = 1, min = 0) =>
         T.MathUtils.clamp(
           Number.parseFloat(css.getPropertyValue(name)) || 0,
-          0,
+          min,
           max,
         );
       profiles = Object.fromEntries(
@@ -216,6 +239,9 @@ export function createScene(host: HTMLElement, input: () => SceneInput) {
           return [
             state,
             {
+              angles: ["innerAngle", "middleAngle", "outerAngle"].map((angle) =>
+                T.MathUtils.degToRad(token(name(angle), 180, -180)),
+              ),
               ...readColor(name("color")),
               speed: token(name("speed"), 1.8),
               spread: Math.max(0.65, token(name("size"), 1.3)),
@@ -230,6 +256,10 @@ export function createScene(host: HTMLElement, input: () => SceneInput) {
         }),
       ) as Record<PersonaState, Profile>;
       motionScale = token("--motion-scale", 3);
+      const duration = css.getPropertyValue("--motion-duration-slow").trim();
+      returnDuration =
+        Math.max(0, Number.parseFloat(duration) || 0) /
+        (duration.endsWith("ms") ? 1000 : 1);
       globalSplit = token("--lens-chromatic-aberration");
       optics.uniforms.grain!.value = token("--film-grain");
       shades = ["inner", "middle", "outer"].map((ring) =>
@@ -266,6 +296,45 @@ export function createScene(host: HTMLElement, input: () => SceneInput) {
       }
     }
     const still = options.paused || options.reduced || motionScale === 0;
+    const changed = activeState !== options.state;
+    if (changed) {
+      activeState = options.state;
+      returning = {
+        elapsed: 0,
+        rotations: rings.map((ring) => ring.quaternion.clone()),
+        cameraRotation: camera.quaternion.clone(),
+        distance: camera.position.length(),
+        zoom: camera.zoom,
+        pulseTime,
+      };
+      rotationTime = 0;
+      // Ignore drag/zoom while returning; a rapid state change captures this pose anew.
+      controls.enabled = false;
+      controls.enableDamping = false;
+      controls.update();
+    }
+    const resetting = returning !== null;
+    let returnBlend = 0;
+    if (returning) {
+      const duration = returnDuration * motionScale;
+      if (!still && !changed) returning.elapsed += delta;
+      const progress =
+        options.reduced || duration === 0
+          ? 1
+          : Math.min(1, returning.elapsed / duration);
+      returnBlend = T.MathUtils.smoothstep(progress, 0, 1);
+      camera.quaternion.slerpQuaternions(
+        returning.cameraRotation,
+        front,
+        returnBlend,
+      );
+      camera.position
+        .set(0, 0, T.MathUtils.lerp(returning.distance, 9.2, returnBlend))
+        .applyQuaternion(camera.quaternion);
+      camera.zoom = T.MathUtils.lerp(returning.zoom, 1, returnBlend);
+      camera.updateProjectionMatrix();
+      pulseTime = returning.pulseTime * (1 - returnBlend);
+    }
     const target = { ...states[options.state], ...profiles[options.state] };
     const blend = still
       ? 1
@@ -285,7 +354,7 @@ export function createScene(host: HTMLElement, input: () => SceneInput) {
     ] as const)
       current[name] = T.MathUtils.lerp(current[name], target[name], blend);
     current.color.lerp(target.color, blend);
-    if (!still) {
+    if (!still && !resetting) {
       rotationTime += delta * current.speed * options.intensity * motionScale;
       pulseTime += delta * motionScale;
     }
@@ -294,12 +363,21 @@ export function createScene(host: HTMLElement, input: () => SceneInput) {
     const breath = Math.sin(pulsePhase * 2) * current.pulse;
     rings.forEach((ring, i) => {
       const angle = phase * 0.65;
-      // Opposing X rotations and a centered Y rotation; zero phase is three circles.
+      const start = target.angles[i]!;
+      // Each state starts at its own centered pose, then uses opposing X/Y motion.
       ring.rotation.set(
-        i === 0 ? angle : i === 2 ? -angle : 0,
-        i === 1 ? -angle : 0,
+        i === 0 ? start + angle : i === 2 ? start - angle : 0,
+        i === 1 ? start - angle : 0,
         0,
       );
+      if (returning) {
+        startingRotation.copy(ring.quaternion);
+        ring.quaternion.slerpQuaternions(
+          returning.rotations[i]!,
+          startingRotation,
+          returnBlend,
+        );
+      }
       ring.scale.setScalar(current.spread + breath * 0.18);
       outlines[i]!.rotation.copy(ring.rotation);
       outlines[i]!.scale.copy(ring.scale);
@@ -333,19 +411,14 @@ export function createScene(host: HTMLElement, input: () => SceneInput) {
     });
     optics.uniforms.aberration!.value = Math.max(globalSplit, current.rgbSplit);
     optics.uniforms.time!.value = pulsePhase;
-    controls.enableDamping = !still;
+    if (returning && returnBlend === 1) resetPose();
+    controls.enableDamping = !still && !returning;
     controls.update();
     composer.render();
   });
   return {
     reset() {
-      camera.position.set(0, 0, 9.2);
-      camera.zoom = 1;
-      camera.updateProjectionMatrix();
-      rotationTime = 0;
-      pulseTime = 0;
-      controls.target.set(0, 0, 0);
-      controls.update();
+      resetPose();
     },
     dispose() {
       renderer.setAnimationLoop(null);
