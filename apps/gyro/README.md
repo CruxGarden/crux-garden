@@ -24,7 +24,9 @@ Open http://127.0.0.1:4190. `npm run build:gyro` produces `apps/gyro/dist`; root
 | Uncertain | Amber, slow, hesitant | Amber dusk |
 | Error / danger | Red, measured pulse | Low ember |
 
-Select a state directly or play a scripted interaction. Each state independently owns its color, movement speed, ring size, glow strength, glow spread, electrical flow, pulse, whole-ring color cycling and RGB split. Reset restores only the selected state's defaults. Changes remain in memory until exported.
+The large main view stays visible beside a separately scrolling control panel. Its seven sections collapse independently: Soundscape, Explore its state, Playback, Visual style, state settings, Ring shading & global effects, and Mood & materials. On narrow screens the panel stacks below the main view.
+
+Select a state directly or play a scripted interaction. Each state independently owns its color, movement speed, ring size, glow strength, glow spread, electrical flow, pulse, whole-ring color cycling and RGB split. Inner/Middle/Outer ring speed multipliers independently control each ring’s motion; Movement speed scales the whole state. All presets move every ring at different rates. Each ring accumulates its own rotation phase, so changing a rate does not jump its orientation. Reset restores only the selected state's defaults. Changes remain in memory until exported.
 
 Four visual styles use the same states: **Glow** (LED rings), **Metal** (satin reflections), **Flat** (orthographic, unlit 2D graphic) and **Cartoon** (thicker rings, outlines and stepped shading). The three rings have deeper/base/lighter shades of the same state color; customize those factors under Ring shading & global effects. Shading changes color intensity, not alpha.
 
@@ -32,7 +34,7 @@ All styles and states start in the same head-on orientation: three concentric ci
 
 ## Sound
 
-Sound controls are directly below the header and **sound is enabled by default**. Playback starts on the first click, tap or keypress to satisfy browser autoplay rules. Mute is available immediately, including before playback starts, and stays muted through later interactions; Enable sound starts it again. Button sounds, transition sounds and ambient pads are independently switchable with a shared volume control. Choose **Warm**, **Airy**, **Analog** or **Deep** to change the pad texture/register. Each state has a distinct harmonic/timbral pad; state changes crossfade pad banks and retire the old voices. Short cues distinguish arrivals, thought, delight, uncertainty and error; ordinary buttons use a gentle tick. Hidden tabs fade to silence. Mute closes the AudioContext. Visual pause does not mute audio.
+Soundscape is open at the top of the control panel and **sound is enabled by default**. Playback starts on the first click, tap or keypress to satisfy browser autoplay rules. Mute is available immediately, including before playback starts, and stays muted through later interactions; Enable sound starts it again. Button sounds, transition sounds and ambient pads are independently switchable with a shared volume control. Choose **Warm**, **Airy**, **Analog** or **Deep** to change the pad texture/register. Each state has a distinct harmonic/timbral pad; state changes crossfade pad banks and retire the old voices. Short cues distinguish arrivals, thought, delight, uncertainty and error; ordinary buttons use a gentle tick. Hidden tabs fade to silence. Mute closes the AudioContext. Visual pause does not mute audio.
 
 Sound is synthesized locally with Web Audio. No downloaded samples, AI generation, microphone, inference or external audio services are used. Sound settings are memory-only and are not part of a Mood export.
 
