@@ -32,7 +32,7 @@ All styles and states start in the same head-on orientation: three concentric ci
 
 ## Sound
 
-Sound is **off until Enable sound**. Button sounds, transition sounds and ambient pads are independently switchable with a shared volume control. Choose **Warm**, **Airy**, **Analog** or **Deep** to change the pad texture/register. Each state has a distinct harmonic/timbral pad; state changes crossfade pad banks and retire the old voices. Short cues distinguish arrivals, thought, delight, uncertainty and error; ordinary buttons use a gentle tick. Hidden tabs fade to silence. Mute closes the AudioContext. Visual pause does not mute audio.
+Sound controls are directly below the header and **sound is enabled by default**. Playback starts on the first click, tap or keypress to satisfy browser autoplay rules. Mute is available immediately, including before playback starts, and stays muted through later interactions; Enable sound starts it again. Button sounds, transition sounds and ambient pads are independently switchable with a shared volume control. Choose **Warm**, **Airy**, **Analog** or **Deep** to change the pad texture/register. Each state has a distinct harmonic/timbral pad; state changes crossfade pad banks and retire the old voices. Short cues distinguish arrivals, thought, delight, uncertainty and error; ordinary buttons use a gentle tick. Hidden tabs fade to silence. Mute closes the AudioContext. Visual pause does not mute audio.
 
 Sound is synthesized locally with Web Audio. No downloaded samples, AI generation, microphone, inference or external audio services are used. Sound settings are memory-only and are not part of a Mood export.
 

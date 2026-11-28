@@ -4,7 +4,7 @@ Updated November 28, 2026. Read [AGENTS.md](AGENTS.md), the [documentation index
 
 ## TL;DR
 
-Gyro is now published for team review at [the public demo](https://crux-garden-gyro.thesantiagodog.chatgpt.site), from `codex/gyro-poc` (source `8a2d14f`). Start with `npm run gyro`; seven editable states, four visual styles, three presentation contexts, per-ring shades, solid whole-ring color fades and optional state/UI audio with four pad choices are ready for review. All states share the same head-on concentric starting pose; transitions ease back to it before restarting the animation. Per-state starting angles were reverted at the user’s request. No live AI or microphone connection. See [Gyro handoff](docs/handoffs/gyro-poc.md) for validation and code availability. Existing Home presentation changes are preserved.
+Gyro is now published for team review at [the public demo](https://crux-garden-gyro.thesantiagodog.chatgpt.site), from `codex/gyro-poc` (source `2c574d7`, Sites version 2). Start with `npm run gyro`; seven editable states, four visual styles, three presentation contexts, per-ring shades, solid whole-ring color fades and optional state/UI audio with four pad choices are ready for review. All states share the same head-on concentric starting pose; transitions ease back to it before restarting the animation. Per-state starting angles were reverted at the user’s request. Audio controls sit directly below the header, with sound enabled by default and playback starting on the first click, tap or keypress. Mute remains effective through further interactions. No live AI or microphone connection. See [Gyro handoff](docs/handoffs/gyro-poc.md) for validation and code availability. Existing Home presentation changes are preserved.
 
 ## Current state
 
